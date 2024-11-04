@@ -1,9 +1,9 @@
 namespace StainedGlass.Entities{
     public class SanctuaryRegion
     {
-        public string Slug {get; set;}
-        public string Name {get; set;}
-        public string Image {get; set;}
-        public HashSet<StainedGlass> Windows {get; set;}
+        public required string Slug {get; set;}
+        public required string Name {get; set;}
+        public required string Image {get; set;}
+        public required HashSet<StainedGlass> Windows {get; set;}
     }
 }

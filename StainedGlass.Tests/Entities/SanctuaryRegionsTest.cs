@@ -1,6 +1,5 @@
 namespace StainedGlass.Tests.Entities;
 
-using System.Security.Principal;
 using StainedGlass.Entities;
 using System.Linq;
 
