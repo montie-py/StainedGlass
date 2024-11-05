@@ -1,8 +1,9 @@
 namespace StainedGlass.Entities;
 
-public class SanctuarySide
+internal class SanctuarySide : Entity
 {
-    public required string Slug { get; set; }
-    public required string Name { get; set; }
-    public required List<SanctuaryRegion> Regions { get; set; }
+    internal required string Slug { get; set; }
+    internal required string Name { get; set; }
+    internal required List<SanctuaryRegion> Regions { get; set; }
+    internal required Church Church { get; set; }
 }
