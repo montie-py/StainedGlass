@@ -13,12 +13,24 @@ public class SanctuarySidesTest
         var mockStainedGlass2 = new Mock<StainedGlass>();
         var mockStainedGlass3 = new Mock<StainedGlass>();
         var mockStainedGlass4 = new Mock<StainedGlass>();
+
+        var mockChurch = new Mock<Church>();
+
+        sanctuarySide = new SanctuarySide
+        {
+            Slug = "slug",
+            Name = "name",
+            Regions = null,
+            Church = mockChurch.Object,
+        };
+
         SanctuaryRegion sanctuaryRegion1 = new SanctuaryRegion
         {
             Slug = "slug1",
             Name = "name1",
             Image = "image1",
-            Windows = new HashSet<StainedGlass>(){mockStainedGlass1.Object, mockStainedGlass2.Object}
+            Windows = new HashSet<StainedGlass>(){mockStainedGlass1.Object, mockStainedGlass2.Object},
+            SanctuarySide = sanctuarySide,
         };
 
         SanctuaryRegion sanctuaryRegion2 = new SanctuaryRegion
@@ -26,16 +38,11 @@ public class SanctuarySidesTest
             Slug = "slug2",
             Name = "name2",
             Image = "image2",
-            Windows = new HashSet<StainedGlass>(){mockStainedGlass3.Object, mockStainedGlass4.Object}
+            Windows = new HashSet<StainedGlass>(){mockStainedGlass3.Object, mockStainedGlass4.Object},
+            SanctuarySide = sanctuarySide,
         };
 
-        sanctuarySide = new SanctuarySide
-        {
-            Slug = "slug",
-            Name = "name",
-            Regions = new List<SanctuaryRegion>(){sanctuaryRegion1, sanctuaryRegion2}
-        };
-
+        sanctuarySide.Regions = new List<SanctuaryRegion>(){sanctuaryRegion1, sanctuaryRegion2};
     }
 
     [Fact]

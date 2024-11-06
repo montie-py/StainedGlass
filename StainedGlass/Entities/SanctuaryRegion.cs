@@ -1,11 +1,11 @@
 namespace StainedGlass.Entities{
-    internal class SanctuaryRegion : Entity
+    public class SanctuaryRegion : Entity
     {
-        internal required string Slug {get; set;}
-        internal required string Name {get; set;}
-        internal required string Image {get; set;}
-        internal required HashSet<StainedGlass> Windows {get; set;}
-        internal required SanctuarySide SanctuarySide {get; set;}
+        public required string Slug {get; set;}
+        public required string Name {get; set;}
+        public required string Image {get; set;}
+        public required HashSet<StainedGlass> Windows {get; set;}
+        public required SanctuarySide SanctuarySide {get; set;}
 
         public override bool Equals(object obj)
         {

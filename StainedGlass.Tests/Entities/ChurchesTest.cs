@@ -5,7 +5,7 @@ namespace StainedGlass.Tests.Entities;
 
 public class ChurchesTest
 {
-    private readonly Churches churches;
+    private readonly Church church;
 
     public ChurchesTest()
     {
@@ -14,38 +14,43 @@ public class ChurchesTest
         var mockSanctuaryRegion3 = new Mock<SanctuaryRegion>();
         var mockSanctuaryRegion4 = new Mock<SanctuaryRegion>();
 
+        church = new Church
+        {
+            Slug = "slug",
+            Name = "name",
+            Image = "image",
+            Sides = null,
+        };
+
         var sanctuarySide1 = new SanctuarySide
         {
             Slug = "slug1",
             Name = "name1",
-            Regions = new List<SanctuaryRegion>(){mockSanctuaryRegion1.Object, mockSanctuaryRegion2.Object}
+            Regions = new List<SanctuaryRegion>(){mockSanctuaryRegion1.Object, mockSanctuaryRegion2.Object},
+            Church = church,
         };
+        
         var sanctuarySide2 = new SanctuarySide
         {
             Slug = "slug2",
             Name = "name2",
-            Regions = new List<SanctuaryRegion>(){mockSanctuaryRegion3.Object, mockSanctuaryRegion4.Object}
+            Regions = new List<SanctuaryRegion>(){mockSanctuaryRegion3.Object, mockSanctuaryRegion4.Object},
+            Church = church
         };
 
-        churches = new Churches
-        {
-            Slug = "slug",
-            Name = "slug",
-            Image = "image",
-            Sides = new HashSet<SanctuarySide>(){sanctuarySide1, sanctuarySide2}
-        };
+        church.Sides = new HashSet<SanctuarySide>(){sanctuarySide1, sanctuarySide2};
     }
 
     [Fact]
     public void Churches_PropertiesShouldBeSetCorrectly()
     {
-        Assert.Equal("slug", churches.Slug);
-        Assert.Equal("name", churches.Name);
-        Assert.Equal("image", churches.Image);
+        Assert.Equal("slug", church.Slug);
+        Assert.Equal("name", church.Name);
+        Assert.Equal("image", church.Image);
     }
 
     public void Churches_RegionsPropertyShouldBeSetCorrectly()
     {
-        Assert.True(churches.Sides.Any(side => side.Slug == "slug2"));
+        Assert.True(church.Sides.Any(side => side.Slug == "slug2"));
     }
 }
