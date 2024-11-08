@@ -6,5 +6,6 @@ public class SanctuaryRegionDTO : Transferable
     public required string Name {get; set;}
     public required string Image {get; set;}
     public required HashSet<StainedGlassDTO>? Windows {get; set;}
-    public required SanctuarySideDTO SanctuarySideDTO {get; set;} 
+    public required string SanctuarySideSlug {get; set;}
+    public required SanctuarySideDTO SanctuarySide {get; set;}
 }

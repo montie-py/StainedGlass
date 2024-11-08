@@ -1,5 +1,7 @@
+using StainedGlass.Entities.Transfer;
+
 namespace StainedGlass.Entities{
-    public class StainedGlass : Entity
+    internal class StainedGlass : Entity
     {
         public required string Slug {get; set;}
         public required string Title{get; set;}
@@ -17,6 +19,11 @@ namespace StainedGlass.Entities{
         public override int GetHashCode()
         {
             return HashCode.Combine(Slug, Title, Description);
+        }
+
+        public void Save()
+        {
+            EntitiesCollection.StainedGlasses.Add((StainedGlass)this);
         }
     }
 }

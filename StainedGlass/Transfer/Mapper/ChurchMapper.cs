@@ -7,25 +7,6 @@ internal class ChurchMapper : Mappable
 {
     SanctuarySideMapper sanctuarySideMapper = new();
 
-    public Entity GetEntity(Transferable transferable)
-    {
-        ChurchDTO churchDTO = transferable as ChurchDTO;
-        HashSet<SanctuarySide> sides = new();
-
-        foreach (var sideDTO in churchDTO.Sides)
-        {
-            sides.Add(sanctuarySideMapper.GetEntity(sideDTO) as SanctuarySide);
-        }
-
-        return new Church
-        {
-            Slug = churchDTO.Slug,
-            Name = churchDTO.Name,
-            Image = churchDTO.Image,
-            Sides = sides
-        };
-    }
-
     public Transferable GetDTO(Entity entity)
     {
         Church church = entity as Church;
@@ -42,6 +23,19 @@ internal class ChurchMapper : Mappable
             Name = church.Name,
             Image = church.Image,
             Sides = sidesDTO
+        };
+    }
+
+    public Entity GetEntity(Transferable transferable)
+    {
+        ChurchDTO churchDTO = transferable as ChurchDTO;
+
+        return new Church
+        {
+            Slug = churchDTO.Slug,
+            Name = churchDTO.Name,
+            Image = churchDTO.Image,
+            Sides = null
         };
     }
 }

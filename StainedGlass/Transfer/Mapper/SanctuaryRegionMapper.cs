@@ -1,4 +1,5 @@
 using StainedGlass.Entities;
+using StainedGlass.Entities.Transfer;
 using StainedGlass.Transfer.DTOs;
 
 namespace StainedGlass.Transfer.Mapper;
@@ -16,6 +17,8 @@ internal class SanctuaryRegionMapper : Mappable
         {
             WindowsDTOs.Add(stainedGlassMapper.GetDTO(window) as StainedGlassDTO);
         }
+
+        var sanctuarySideDTO = sanctuarySideMapper.GetDTO(region.SanctuarySide) as SanctuarySideDTO;
         
         return new SanctuaryRegionDTO
         {
@@ -23,27 +26,31 @@ internal class SanctuaryRegionMapper : Mappable
             Slug = region.Slug,
             Image = region.Image,
             Windows = WindowsDTOs,
-            SanctuarySideDTO = sanctuarySideMapper.GetDTO(region.SanctuarySide) as SanctuarySideDTO,
+            SanctuarySide = sanctuarySideDTO,
+            SanctuarySideSlug = sanctuarySideDTO.Slug,
         };
      }
 
      public Entity GetEntity(Transferable transferable)
      {
         SanctuaryRegionDTO sanctuaryRegionDTO = transferable as SanctuaryRegionDTO;
-        HashSet<Entities.StainedGlass> Windows = new();
 
-        foreach(StainedGlassDTO stainedGlassDTO in sanctuaryRegionDTO.Windows)
-        {
-            Windows.Add(stainedGlassMapper.GetEntity(stainedGlassDTO) as Entities.StainedGlass);
-        }
+        SanctuarySide sanctuarySide = EntitiesCollection.SanctuarySides.FirstOrDefault(s => s.Slug.Equals(sanctuaryRegionDTO.Slug));
 
-        return new SanctuaryRegion
+        SanctuaryRegion sanctuaryRegion = new SanctuaryRegion
         {
             Name = sanctuaryRegionDTO.Name,
             Slug = sanctuaryRegionDTO.Slug,
             Image = sanctuaryRegionDTO.Image,
-            Windows = Windows,
-            SanctuarySide = sanctuarySideMapper.GetEntity(sanctuaryRegionDTO.SanctuarySideDTO)  as SanctuarySide,
+            Windows = null,
+            SanctuarySide = sanctuarySide,
         };
+
+        if (sanctuarySide != null)
+        {
+            sanctuarySide.Regions.Add(sanctuaryRegion);
+        }
+
+        return sanctuaryRegion;
      }
 }
