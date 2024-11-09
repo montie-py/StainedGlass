@@ -31,7 +31,12 @@ internal class SanctuaryRegionMapper : Mappable
         };
      }
 
-     public Entity GetEntity(Transferable transferable)
+    public Transferable GetDTOBySlug(string slug)
+    {
+        return GetDTO(EntitiesCollection.SanctuaryRegions.FirstOrDefault(e => e.Slug.Equals(slug)));
+    }
+
+    public Entity GetEntity(Transferable transferable)
      {
         SanctuaryRegionDTO sanctuaryRegionDTO = transferable as SanctuaryRegionDTO;
 

@@ -1,5 +1,4 @@
 using StainedGlass.Entities;
-using StainedGlass.Entities.Transfer;
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer.DTOs;
@@ -15,5 +14,10 @@ public class SanctuarySideDTO : Transferable
     public Entity GetEntity(Transferable transferable)
     {
         return (new SanctuarySideMapper()).GetEntity(transferable);
+    }
+
+    public Mappable GetMapper()
+    {
+        return new SanctuarySideMapper();
     }
 }

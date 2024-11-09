@@ -8,7 +8,7 @@ internal class StainedGlassMapper : Mappable
 {
     SanctuaryRegionMapper sanctuaryRegionMapper = new();
 
-    public Transferable GetDTO(Entity entity)
+    public Transferable GetDTO(Entity? entity)
     {
         Entities.StainedGlass stainedGlass = entity as Entities.StainedGlass;
         SanctuaryRegionDTO sanctuaryRegionDTO = sanctuaryRegionMapper.GetDTO(stainedGlass.SanctuaryRegion) as SanctuaryRegionDTO;
@@ -21,6 +21,11 @@ internal class StainedGlassMapper : Mappable
             SanctuaryRegion = sanctuaryRegionDTO,
             SanctuaryRegionSlug = sanctuaryRegionDTO.Slug,
         };
+    }
+
+    public Transferable GetDTOBySlug(string slug)
+    {
+        return GetDTO(EntitiesCollection.StainedGlasses.FirstOrDefault(e => e.Slug.Equals(slug)));
     }
 
     public Entity GetEntity(Transferable transferable)

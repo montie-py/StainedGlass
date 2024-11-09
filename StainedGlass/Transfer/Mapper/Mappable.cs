@@ -4,6 +4,7 @@ namespace StainedGlass.Transfer.Mapper;
 
 public interface Mappable
 {
-    internal Transferable GetDTO(Entity entity);
-    internal Entity GetEntity(Transferable sanctuarySideDTO);
+    public Transferable GetDTO(Entity? entity);
+    public Transferable GetDTOBySlug(string slug);
+    public Entity GetEntity(Transferable sanctuarySideDTO);
 }

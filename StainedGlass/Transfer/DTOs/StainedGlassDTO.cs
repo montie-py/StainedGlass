@@ -1,5 +1,4 @@
 using StainedGlass.Entities;
-using StainedGlass.Entities.Transfer;
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer.DTOs;
@@ -17,5 +16,10 @@ public class StainedGlassDTO : Transferable
     public Entity GetEntity(Transferable transferable)
     {
         return (new StainedGlassMapper()).GetEntity(transferable);
+    }
+
+    public Mappable GetMapper()
+    {
+        return new StainedGlassMapper();
     }
 }

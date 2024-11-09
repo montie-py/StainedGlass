@@ -1,4 +1,5 @@
 using StainedGlass.Entities;
+using StainedGlass.Entities.Transfer;
 using StainedGlass.Transfer.DTOs;
 
 namespace StainedGlass.Transfer.Mapper;
@@ -24,6 +25,11 @@ internal class ChurchMapper : Mappable
             Image = church.Image,
             Sides = sidesDTO
         };
+    }
+
+    public Transferable GetDTOBySlug(string slug)
+    {
+        return GetDTO(EntitiesCollection.Churches.FirstOrDefault(e => e.Slug.Equals(slug)));
     }
 
     public Entity GetEntity(Transferable transferable)

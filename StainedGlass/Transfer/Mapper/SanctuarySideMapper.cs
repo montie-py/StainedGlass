@@ -8,7 +8,7 @@ internal class SanctuarySideMapper : Mappable
 {
     SanctuaryRegionMapper sanctuaryRegionMapper = new();
     ChurchMapper churchMapper = new();
-    public Transferable GetDTO(Entity entity)
+    public Transferable GetDTO(Entity? entity)
     {
         SanctuarySide? sanctuarySide = entity as SanctuarySide;
         List<SanctuaryRegionDTO> regionsDTO = new();
@@ -27,6 +27,11 @@ internal class SanctuarySideMapper : Mappable
             Church = churchDTO,
             ChurchSlug = churchDTO.Slug
         };
+    }
+
+    public Transferable GetDTOBySlug(string slug)
+    {
+        return GetDTO(EntitiesCollection.SanctuarySides.FirstOrDefault(e => e.Slug.Equals(slug)));
     }
 
     public Entity GetEntity(Transferable transferable)
