@@ -27,5 +27,7 @@ public class UseCaseInteractorTest
         };
 
         useCaseInteractor.StoreEntity(stainedGlassDTO);
+        StainedGlassDTO savedStainedGlassDTO = useCaseInteractor.GetDTOBySlug<StainedGlassDTO>("StainedGlassSlug");
+        Assert.Equal("StainedGlassSlug", savedStainedGlassDTO.Slug);
     }
 }
