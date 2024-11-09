@@ -1,3 +1,7 @@
+using StainedGlass.Entities;
+using StainedGlass.Entities.Transfer;
+using StainedGlass.Transfer.Mapper;
+
 namespace StainedGlass.Transfer.DTOs;
 
 public class SanctuaryRegionDTO : Transferable
@@ -8,4 +12,9 @@ public class SanctuaryRegionDTO : Transferable
     public required HashSet<StainedGlassDTO>? Windows {get; set;}
     public required string SanctuarySideSlug {get; set;}
     public required SanctuarySideDTO SanctuarySide {get; set;}
+
+    public Entity GetEntity(Transferable transferable)
+     {
+        return (new SanctuaryRegionMapper()).GetEntity(transferable); 
+     }
 }

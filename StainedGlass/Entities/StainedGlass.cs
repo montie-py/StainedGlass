@@ -1,4 +1,6 @@
 using StainedGlass.Entities.Transfer;
+using StainedGlass.Transfer.DTOs;
+using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Entities{
     internal class StainedGlass : Entity
@@ -8,6 +10,11 @@ namespace StainedGlass.Entities{
         public required string Description{get; set;}
         public required string Image{get; set;}
         public required SanctuaryRegion SanctuaryRegion{get; set;}
+
+        public void Save()
+        {
+            EntitiesCollection.StainedGlasses.Add((StainedGlass)this);
+        }
 
         public override bool Equals(object? obj)
         {
@@ -19,11 +26,6 @@ namespace StainedGlass.Entities{
         public override int GetHashCode()
         {
             return HashCode.Combine(Slug, Title, Description);
-        }
-
-        public void Save()
-        {
-            EntitiesCollection.StainedGlasses.Add((StainedGlass)this);
         }
     }
 }

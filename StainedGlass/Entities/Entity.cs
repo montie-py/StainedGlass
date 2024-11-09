@@ -1,6 +1,7 @@
 namespace StainedGlass.Entities;
 
-internal interface Entity
+public interface Entity
 {
     public void Save();
+
 }

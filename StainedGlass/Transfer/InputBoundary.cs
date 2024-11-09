@@ -4,5 +4,5 @@ namespace StainedGlass.Transfer;
 
 public interface InputBoundary
 {
-     public void SendData(Transferable dataDTO, Mappable mappable);
+     public void StoreEntity(Transferable dataDTO);
 }
