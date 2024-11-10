@@ -19,7 +19,6 @@ public class UseCaseInteractor : InputBoundary
 
         //TODO save entities in DB (sqlite? think about how the tables would be interacted between, OLTP or OLAP, and so on)
         entity.Save();
-        throw new NotImplementedException();
     }
 
     public T GetDTOBySlug<T>(string slug) where T : Transferable, new()

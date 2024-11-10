@@ -5,11 +5,11 @@ using StainedGlass.Transfer.DTOs;
 namespace StainedGlass.Transfer.Mapper;
 
 internal class SanctuarySideMapper : Mappable
-{
-    SanctuaryRegionMapper sanctuaryRegionMapper = new();
-    ChurchMapper churchMapper = new();
-    public Transferable GetDTO(Entity? entity)
+{    
+    public Transferable? GetDTO(Entity? entity)
     {
+        ChurchMapper churchMapper = new();
+        SanctuaryRegionMapper sanctuaryRegionMapper = new();
         SanctuarySide? sanctuarySide = entity as SanctuarySide;
         List<SanctuaryRegionDTO> regionsDTO = new();
         foreach (SanctuaryRegion? region in sanctuarySide.Regions)

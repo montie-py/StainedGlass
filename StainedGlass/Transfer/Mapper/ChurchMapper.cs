@@ -6,10 +6,11 @@ namespace StainedGlass.Transfer.Mapper;
 
 internal class ChurchMapper : Mappable
 {
-    SanctuarySideMapper sanctuarySideMapper = new();
 
-    public Transferable GetDTO(Entity entity)
+    public Transferable? GetDTO(Entity? entity)
     {
+        SanctuarySideMapper sanctuarySideMapper = new();
+
         Church church = entity as Church;
         HashSet<SanctuarySideDTO> sidesDTO = new();
 

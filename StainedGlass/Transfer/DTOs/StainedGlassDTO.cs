@@ -9,8 +9,8 @@ public class StainedGlassDTO : Transferable
     public string Title{get; set;}
     public string Description{get; set;}
     public string Image{get; set;}
-    public string SanctuaryRegionSlug {get; set;}
-    public SanctuaryRegionDTO SanctuaryRegion {get; set;}
+    public string? SanctuaryRegionSlug {get; set;}
+    public SanctuaryRegionDTO? SanctuaryRegion {get; set;}
 
 
     public Entity GetEntity(Transferable transferable)

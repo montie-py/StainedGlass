@@ -6,11 +6,16 @@ namespace StainedGlass.Transfer.Mapper;
 
 internal class SanctuaryRegionMapper : Mappable
 {
-    StainedGlassMapper stainedGlassMapper = new();
-    SanctuarySideMapper sanctuarySideMapper = new();
     
-    public Transferable GetDTO(Entity entity)
+    public Transferable? GetDTO(Entity? entity)
      {
+        if (entity == null) 
+        {
+            return null;
+        }
+        StainedGlassMapper stainedGlassMapper = new();
+        SanctuarySideMapper sanctuarySideMapper = new();
+
         SanctuaryRegion region = entity as SanctuaryRegion;
         HashSet<StainedGlassDTO> WindowsDTOs = new();
         foreach (Entities.StainedGlass window in region.Windows)

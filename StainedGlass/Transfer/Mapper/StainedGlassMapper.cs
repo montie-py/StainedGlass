@@ -6,21 +6,29 @@ namespace StainedGlass.Transfer.Mapper;
 
 internal class StainedGlassMapper : Mappable
 {
-    SanctuaryRegionMapper sanctuaryRegionMapper = new();
+    
 
-    public Transferable GetDTO(Entity? entity)
+    public Transferable? GetDTO(Entity? entity)
     {
+        SanctuaryRegionMapper sanctuaryRegionMapper = new();
         Entities.StainedGlass stainedGlass = entity as Entities.StainedGlass;
-        SanctuaryRegionDTO sanctuaryRegionDTO = sanctuaryRegionMapper.GetDTO(stainedGlass.SanctuaryRegion) as SanctuaryRegionDTO;
-        return new StainedGlassDTO
+        SanctuaryRegionDTO? sanctuaryRegionDTO = sanctuaryRegionMapper.GetDTO(stainedGlass.SanctuaryRegion) as SanctuaryRegionDTO;
+
+        var stainedGlassDTO = new StainedGlassDTO
         {
             Slug = stainedGlass.Slug,
             Title = stainedGlass.Title,
             Description = stainedGlass.Description,
             Image = stainedGlass.Image,
-            SanctuaryRegion = sanctuaryRegionDTO,
-            SanctuaryRegionSlug = sanctuaryRegionDTO.Slug,
+            SanctuaryRegion = sanctuaryRegionDTO
         };
+
+        if (sanctuaryRegionDTO != null)
+        {
+            stainedGlassDTO.SanctuaryRegionSlug = sanctuaryRegionDTO.Slug;
+        }
+
+        return stainedGlassDTO;
     }
 
     public Transferable GetDTOBySlug(string slug)
