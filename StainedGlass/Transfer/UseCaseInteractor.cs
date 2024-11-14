@@ -1,7 +1,4 @@
 using StainedGlass.Entities;
-using StainedGlass.Entities.Transfer;
-using StainedGlass.Transfer.DTOs;
-using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer;
 
@@ -24,8 +21,8 @@ public class UseCaseInteractor : InputBoundary
     public T GetDTOBySlug<T>(string slug) where T : Transferable, new()
     {
         T tranferable = new T();
-        DTOGeneric<T> dto = new(tranferable);
+        DTOGeneric<T> dtoGeneric = new(tranferable);
 
-        return dto.GetDTOBySlug(slug);
+        return dtoGeneric.GetDTOBySlug(slug);
     }
 }

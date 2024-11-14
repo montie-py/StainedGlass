@@ -22,4 +22,22 @@ public class StainedGlassDTO : Transferable
     {
         return new StainedGlassMapper();
     }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj == null || GetType() != obj.GetType()) 
+        { return false; }
+        
+        var other = (StainedGlassDTO)obj;
+
+        return Slug == other.Slug
+               && Title == other.Title
+               && Description == other.Description
+               && Image == other.Image;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Slug, Title, Description, Image);
+    }
 }

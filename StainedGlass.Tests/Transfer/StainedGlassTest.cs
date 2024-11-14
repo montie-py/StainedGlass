@@ -3,16 +3,15 @@ using StainedGlass.Transfer.DTOs;
 
 namespace StainedGlass.Tests.Transfer;
 
-public class UseCaseInteractorTest
+public class StainedGlassTest
 {
     InputBoundary useCaseInteractor;
 
-    public UseCaseInteractorTest()
+    public StainedGlassTest()
     {
         useCaseInteractor = new UseCaseInteractor();
     }
-
-
+    
     [Fact]
     public void StainedGlass_PropertiesShouldBeSetCorrectly()
     {
@@ -23,11 +22,12 @@ public class UseCaseInteractorTest
             Description = "StainedGlass Description",
             Image = "StainedGlass Image",
             SanctuaryRegion = null,
-            SanctuaryRegionSlug = ""
+            SanctuaryRegionSlug = null
         };
 
         useCaseInteractor.StoreEntity(stainedGlassDTO);
         StainedGlassDTO savedStainedGlassDTO = useCaseInteractor.GetDTOBySlug<StainedGlassDTO>("StainedGlassSlug");
-        Assert.Equal("StainedGlassSlug", savedStainedGlassDTO.Slug);
+        
+        Assert.Equal(stainedGlassDTO, savedStainedGlassDTO);
     }
 }

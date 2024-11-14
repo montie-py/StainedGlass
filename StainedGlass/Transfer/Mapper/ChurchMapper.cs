@@ -9,6 +9,11 @@ internal class ChurchMapper : Mappable
 
     public Transferable? GetDTO(Entity? entity)
     {
+        if (entity == null) 
+        {
+            return null;
+        }
+        
         SanctuarySideMapper sanctuarySideMapper = new();
 
         Church church = entity as Church;
@@ -37,12 +42,24 @@ internal class ChurchMapper : Mappable
     {
         ChurchDTO churchDTO = transferable as ChurchDTO;
 
-        return new Church
+        Church churchEntity = new Church
         {
             Slug = churchDTO.Slug,
             Name = churchDTO.Name,
             Image = churchDTO.Image,
             Sides = null
         };
+
+        if (churchDTO.Sides != null)
+        {
+            SanctuarySideMapper sanctuarySideMapper = new();
+
+            churchEntity.Sides = churchDTO.Sides.Select(
+                    e => sanctuarySideMapper.GetEntity(e) as SanctuarySide
+                    )
+                .ToHashSet();
+        }
+
+        return churchEntity;
     }
 }

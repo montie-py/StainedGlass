@@ -5,12 +5,12 @@ namespace StainedGlass.Transfer.DTOs;
 
 public class SanctuaryRegionDTO : Transferable
 {
-    public required string Slug {get; set;}
-    public required string Name {get; set;}
-    public required string Image {get; set;}
-    public required HashSet<StainedGlassDTO>? Windows {get; set;}
-    public required string SanctuarySideSlug {get; set;}
-    public required SanctuarySideDTO SanctuarySide {get; set;}
+    public string Slug {get; set;}
+    public string Name {get; set;}
+    public string Image {get; set;}
+    public HashSet<StainedGlassDTO>? Windows {get; set;}
+    public string SanctuarySideSlug {get; set;}
+    public SanctuarySideDTO SanctuarySide {get; set;}
 
     public Entity GetEntity(Transferable transferable)
      {
@@ -20,5 +20,20 @@ public class SanctuaryRegionDTO : Transferable
     public Mappable GetMapper()
     {
         return new SanctuaryRegionMapper();
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj == null || GetType() != obj.GetType()) 
+        { return false; }
+        
+        var other = (SanctuaryRegion)obj;
+        
+        return Name == other.Name && Image == other.Image && Slug == other.Slug;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name, Image, Slug);
     }
 }

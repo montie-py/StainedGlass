@@ -8,6 +8,11 @@ internal class SanctuarySideMapper : Mappable
 {    
     public Transferable? GetDTO(Entity? entity)
     {
+        if (entity == null) 
+        {
+            return null;
+        }
+        
         ChurchMapper churchMapper = new();
         SanctuaryRegionMapper sanctuaryRegionMapper = new();
         SanctuarySide? sanctuarySide = entity as SanctuarySide;
@@ -19,14 +24,20 @@ internal class SanctuarySideMapper : Mappable
 
         var churchDTO = churchMapper.GetDTO(sanctuarySide.Church) as ChurchDTO;
         
-        return new SanctuarySideDTO
+        var sanctuarySideDTO = new SanctuarySideDTO
         {
             Slug = sanctuarySide.Slug,
             Name = sanctuarySide.Name,
             Regions = regionsDTO,
-            Church = churchDTO,
-            ChurchSlug = churchDTO.Slug
+            Church = churchDTO
         };
+
+        if (churchDTO != null)
+        {
+            sanctuarySideDTO.ChurchSlug = churchDTO.Slug;
+        }
+        
+        return sanctuarySideDTO;
     }
 
     public Transferable GetDTOBySlug(string slug)
@@ -38,7 +49,9 @@ internal class SanctuarySideMapper : Mappable
     {
         SanctuarySideDTO sanctuarySideDTO = transferable as SanctuarySideDTO;
 
-        var sanctuarySideChurch = EntitiesCollection.Churches.FirstOrDefault(e => e.Slug.Equals(sanctuarySideDTO.ChurchSlug));
+        var sanctuarySideChurch = EntitiesCollection.Churches.FirstOrDefault(
+            e => e.Slug.Equals(sanctuarySideDTO.ChurchSlug)
+            );
 
         SanctuarySide sanctuarySide = new SanctuarySide
         {
@@ -47,6 +60,15 @@ internal class SanctuarySideMapper : Mappable
             Regions = null,
             Church = sanctuarySideChurch,
         };
+
+        if (sanctuarySideDTO.Regions != null)
+        {
+            SanctuaryRegionMapper sanctuaryRegionMapper = new();
+            sanctuarySide.Regions =
+                sanctuarySideDTO.Regions.Select(
+                    e => sanctuaryRegionMapper.GetEntity(e) as SanctuaryRegion
+                    ).ToList();
+        }
 
         if (sanctuarySideChurch != null) {
             sanctuarySideChurch.Sides.Add(sanctuarySide);

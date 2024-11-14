@@ -23,17 +23,23 @@ internal class SanctuaryRegionMapper : Mappable
             WindowsDTOs.Add(stainedGlassMapper.GetDTO(window) as StainedGlassDTO);
         }
 
-        var sanctuarySideDTO = sanctuarySideMapper.GetDTO(region.SanctuarySide) as SanctuarySideDTO;
+        SanctuarySideDTO sanctuarySideDTO = sanctuarySideMapper.GetDTO(region.SanctuarySide) as SanctuarySideDTO;
         
-        return new SanctuaryRegionDTO
+        var sanctuaryRegionDTO = new SanctuaryRegionDTO
         {
             Name = region.Name,
             Slug = region.Slug,
             Image = region.Image,
             Windows = WindowsDTOs,
             SanctuarySide = sanctuarySideDTO,
-            SanctuarySideSlug = sanctuarySideDTO.Slug,
         };
+
+        if (sanctuarySideDTO != null)
+        {
+            sanctuaryRegionDTO.SanctuarySideSlug = sanctuarySideDTO.Slug;
+        }
+
+        return sanctuaryRegionDTO;
      }
 
     public Transferable GetDTOBySlug(string slug)
@@ -45,8 +51,10 @@ internal class SanctuaryRegionMapper : Mappable
      {
         SanctuaryRegionDTO sanctuaryRegionDTO = transferable as SanctuaryRegionDTO;
 
-        SanctuarySide sanctuarySide = EntitiesCollection.SanctuarySides.FirstOrDefault(s => s.Slug.Equals(sanctuaryRegionDTO.Slug));
-
+        SanctuarySide sanctuarySide = EntitiesCollection.SanctuarySides.FirstOrDefault(
+            s => s.Slug.Equals(sanctuaryRegionDTO.Slug)
+            );
+        
         SanctuaryRegion sanctuaryRegion = new SanctuaryRegion
         {
             Name = sanctuaryRegionDTO.Name,
@@ -55,6 +63,18 @@ internal class SanctuaryRegionMapper : Mappable
             Windows = null,
             SanctuarySide = sanctuarySide,
         };
+        
+        if (sanctuaryRegionDTO.Windows != null)
+        {
+            var stainedGlassMapper = new StainedGlassMapper();
+            HashSet<Entities.StainedGlass> windows = new();
+            // sanctuaryRegion.Windows = (HashSet<Entities.StainedGlass>)sanctuaryRegionDTO.Windows.Select(
+            //     e => (Entities.StainedGlass)stainedGlassMapper.GetEntity(e)
+            //     );
+            sanctuaryRegion.Windows = sanctuaryRegionDTO.Windows.Select(
+                e => stainedGlassMapper.GetEntity(e) as Entities.StainedGlass
+                ).ToHashSet();
+        }
 
         if (sanctuarySide != null)
         {
