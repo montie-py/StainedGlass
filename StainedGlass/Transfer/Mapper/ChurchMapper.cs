@@ -4,7 +4,7 @@ using StainedGlass.Transfer.DTOs;
 
 namespace StainedGlass.Transfer.Mapper;
 
-internal class ChurchMapper : Mappable
+internal class ChurchMapper : NonRelatable
 {
 
     public Transferable? GetDTO(Entity? entity)
@@ -33,7 +33,7 @@ internal class ChurchMapper : Mappable
         };
     }
 
-    public Transferable GetDTOBySlug(string slug)
+    public Transferable? GetDTOBySlug(string slug)
     {
         return GetDTO(EntitiesCollection.Churches.FirstOrDefault(e => e.Slug.Equals(slug)));
     }

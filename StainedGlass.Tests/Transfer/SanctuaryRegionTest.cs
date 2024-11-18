@@ -15,7 +15,7 @@ public class SanctuaryRegionTest
     [Fact]
     public void SanctuaryRegion_PropertiesShouldBeSetCorrectly()
     {
-        var stainedGlassDTO = new StainedGlassDTO
+        var stainedGlassDTO = new ItemDTO
         {
             Title = "StainedGlass",
             Slug = "StainedGlassSlug",
@@ -30,7 +30,7 @@ public class SanctuaryRegionTest
             Name = "SanctuaryRegion",
             Slug = "SanctuaryRegionSlug",
             Image = "SanctuaryRegion Image",
-            Windows = new HashSet<StainedGlassDTO>(){stainedGlassDTO},
+            Windows = new HashSet<ItemDTO>(){stainedGlassDTO},
             SanctuarySide = null,
             SanctuarySideSlug = null
         };

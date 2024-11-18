@@ -7,8 +7,9 @@ public class SanctuaryRegionDTO : Transferable
 {
     public string Slug {get; set;}
     public string Name {get; set;}
+    public string Description {get; set;}
     public string Image {get; set;}
-    public HashSet<StainedGlassDTO>? Windows {get; set;}
+    public HashSet<ItemDTO>? Windows {get; set;}
     public string SanctuarySideSlug {get; set;}
     public SanctuarySideDTO SanctuarySide {get; set;}
 

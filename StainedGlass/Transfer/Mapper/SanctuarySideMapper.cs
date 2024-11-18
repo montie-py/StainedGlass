@@ -4,7 +4,7 @@ using StainedGlass.Transfer.DTOs;
 
 namespace StainedGlass.Transfer.Mapper;
 
-internal class SanctuarySideMapper : Mappable
+internal class SanctuarySideMapper : NonRelatable
 {    
     public Transferable? GetDTO(Entity? entity)
     {
@@ -40,7 +40,7 @@ internal class SanctuarySideMapper : Mappable
         return sanctuarySideDTO;
     }
 
-    public Transferable GetDTOBySlug(string slug)
+    public Transferable? GetDTOBySlug(string slug)
     {
         return GetDTO(EntitiesCollection.SanctuarySides.FirstOrDefault(e => e.Slug.Equals(slug)));
     }

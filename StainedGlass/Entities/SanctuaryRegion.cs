@@ -5,8 +5,9 @@ internal class SanctuaryRegion : Entity
 {
     public required string Slug {get; set;}
     public required string Name {get; set;}
+    public required string Description {get; set;}
     public required string Image {get; set;}
-    public required HashSet<StainedGlass>? Windows {get; set;}
+    public required HashSet<Item>? Windows {get; set;}
     public required SanctuarySide? SanctuarySide {get; set;}
 
     public void Save()

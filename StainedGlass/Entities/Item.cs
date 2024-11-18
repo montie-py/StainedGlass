@@ -3,23 +3,25 @@ using StainedGlass.Transfer.DTOs;
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Entities{
-    internal class StainedGlass : Entity
+    internal class Item : Entity
     {
         public required string Slug {get; set;}
         public required string Title{get; set;}
         public required string Description{get; set;}
         public required string Image{get; set;}
+        
+        public HashSet<Item> RelatedItems {get; set;}
         public required SanctuaryRegion SanctuaryRegion{get; set;}
 
         public void Save()
         {
-            EntitiesCollection.StainedGlasses.Add((StainedGlass)this);
+            EntitiesCollection.Items.Add((Item)this);
         }
 
         public override bool Equals(object? obj)
         {
             if (obj == null || GetType() != obj.GetType()) return false;
-            StainedGlass? other = obj as StainedGlass;
+            Item? other = obj as Item;
             return Slug == other.Slug && Title == other.Title && Description == other.Description;
         }
 
