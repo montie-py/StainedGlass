@@ -24,6 +24,7 @@ public class UseCaseInteractor : InputBoundary
 
         //TODO map it to the Entities
         Entity entity = _dataDTO.GetEntity(dataDTO);
+        entity.Replace(slug, entity);
     }
 
     public void RemoveEntity<T>(string slug) where T : Transferable, new()
