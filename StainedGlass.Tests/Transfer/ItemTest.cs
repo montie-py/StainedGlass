@@ -64,6 +64,6 @@ public class ItemTest
         useCaseInteractor.StoreEntity(stainedGlassDTO);
         ItemDTO savedItemDto = useCaseInteractor.GetDTOBySlug<ItemDTO>("StainedGlassSlug");
         
-        Assert.Equal(stainedGlassDTO.RelatedItems.First(), relatedStainedGlassDTO);
+        Assert.Equal(stainedGlassDTO.RelatedItems.First().Value, relatedStainedGlassDTO);
     }
 }

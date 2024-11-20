@@ -45,16 +45,19 @@ internal class SanctuaryRegionMapper : NonRelatable
 
     public Transferable? GetDTOBySlug(string slug)
     {
-        return GetDTO(EntitiesCollection.SanctuaryRegions.FirstOrDefault(e => e.Slug.Equals(slug)));
+        return GetDTO(EntitiesCollection.SanctuaryRegions[slug]);
+    }
+
+    public IEnumerable<Transferable?> GetAllDTOs()
+    {
+        return EntitiesCollection.SanctuaryRegions.Select(e => GetDTO(e.Value));
     }
 
     public Entity GetEntity(Transferable transferable)
      {
         SanctuaryRegionDTO sanctuaryRegionDTO = transferable as SanctuaryRegionDTO;
 
-        SanctuarySide sanctuarySide = EntitiesCollection.SanctuarySides.FirstOrDefault(
-            s => s.Slug.Equals(sanctuaryRegionDTO.Slug)
-            );
+        SanctuarySide sanctuarySide = EntitiesCollection.SanctuarySides[sanctuaryRegionDTO.Slug];
         
         SanctuaryRegion sanctuaryRegion = new SanctuaryRegion
         {
@@ -85,4 +88,9 @@ internal class SanctuaryRegionMapper : NonRelatable
 
         return sanctuaryRegion;
      }
+
+    public void RemoveEntity(string slug)
+    {
+        EntitiesCollection.SanctuaryRegions.Remove(slug);
+    }
 }

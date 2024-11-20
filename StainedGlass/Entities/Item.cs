@@ -10,12 +10,23 @@ namespace StainedGlass.Entities{
         public required string Description{get; set;}
         public required string Image{get; set;}
         
-        public HashSet<Item> RelatedItems {get; set;}
+        public Dictionary<string, Item> RelatedItems {get; set;}
         public required SanctuaryRegion SanctuaryRegion{get; set;}
 
         public void Save()
         {
-            EntitiesCollection.Items.Add((Item)this);
+            EntitiesCollection.Items.Add(Slug, this);
+        }
+
+        public void Replace(string slug, Entity entity)
+        {
+            entity.Slug = slug;
+            EntitiesCollection.Items[slug] = (Item)entity;
+        }
+
+        public void Remove(string slug)
+        {
+            EntitiesCollection.Items.Remove(slug);
         }
 
         public override bool Equals(object? obj)

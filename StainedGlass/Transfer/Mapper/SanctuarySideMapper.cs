@@ -42,16 +42,19 @@ internal class SanctuarySideMapper : NonRelatable
 
     public Transferable? GetDTOBySlug(string slug)
     {
-        return GetDTO(EntitiesCollection.SanctuarySides.FirstOrDefault(e => e.Slug.Equals(slug)));
+        return GetDTO(EntitiesCollection.SanctuarySides[slug]);
+    }
+
+    public IEnumerable<Transferable?> GetAllDTOs()
+    {
+        return EntitiesCollection.SanctuarySides.Select(e => GetDTO(e.Value));
     }
 
     public Entity GetEntity(Transferable transferable)
     {
         SanctuarySideDTO sanctuarySideDTO = transferable as SanctuarySideDTO;
 
-        var sanctuarySideChurch = EntitiesCollection.Churches.FirstOrDefault(
-            e => e.Slug.Equals(sanctuarySideDTO.ChurchSlug)
-            );
+        var sanctuarySideChurch = EntitiesCollection.Churches[sanctuarySideDTO.ChurchSlug];
 
         SanctuarySide sanctuarySide = new SanctuarySide
         {
@@ -75,5 +78,10 @@ internal class SanctuarySideMapper : NonRelatable
         }
 
         return sanctuarySide;
+    }
+
+    public void RemoveEntity(string slug)
+    {
+        EntitiesCollection.SanctuarySides.Remove(slug);
     }
 }

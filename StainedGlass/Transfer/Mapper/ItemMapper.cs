@@ -29,10 +29,10 @@ internal class ItemMapper : Relatable
 
         if (computeRelatedItems && item.RelatedItems != null)
         {
-            foreach (Item relatedItem in item.RelatedItems)
+            foreach (Item relatedItem in item.RelatedItems.Values)
             {
                 itemDto.RelatedItemsSlugs.Add(relatedItem.Slug);
-                itemDto.RelatedItems.Add(GetDTO(relatedItem, computeRelatedItems : false) as ItemDTO);
+                itemDto.RelatedItems.Add(relatedItem.Slug, GetDTO(relatedItem, computeRelatedItems : false) as ItemDTO);
             }
         }
 
@@ -41,16 +41,19 @@ internal class ItemMapper : Relatable
 
     public Transferable? GetDTOBySlug(string slug)
     {
-        return GetDTO(EntitiesCollection.Items.FirstOrDefault(e => e.Slug.Equals(slug)));
+        return GetDTO(EntitiesCollection.Items[slug]);
+    }
+
+    public IEnumerable<Transferable?> GetAllDTOs()
+    {
+        return EntitiesCollection.Items.Select(e => GetDTO(e.Value));
     }
 
     public Entity GetEntity(Transferable transferable)
     {
         ItemDTO itemDto = transferable as ItemDTO;
 
-        SanctuaryRegion sanctuaryRegion = EntitiesCollection.SanctuaryRegions.FirstOrDefault(
-            s => s.Slug.Equals(itemDto.SanctuaryRegionSlug)
-            );
+        SanctuaryRegion sanctuaryRegion = EntitiesCollection.SanctuaryRegions[itemDto.SanctuaryRegionSlug];
 
         var window = new Item
         {
@@ -64,14 +67,14 @@ internal class ItemMapper : Relatable
         if (itemDto.RelatedItemsSlugs != null)
         {
             var relatedItems = EntitiesCollection.Items.Where(
-                e => itemDto.RelatedItemsSlugs.Contains(e.Slug)
-                ).ToHashSet();
+                e => itemDto.RelatedItemsSlugs.Contains(e.Value.Slug)
+                ).ToDictionary();
             window.RelatedItems = relatedItems;
             
             //save current item as a related item to its related items as well
-            foreach (Item relatedItem in relatedItems)
+            foreach (Item relatedItem in relatedItems.Values)
             {
-                relatedItem.RelatedItems.Add(window);
+                relatedItem.RelatedItems.Add(window.Slug, window);
             }
         }
 
@@ -81,5 +84,10 @@ internal class ItemMapper : Relatable
         }
 
         return window;
+    }
+
+    public void RemoveEntity(string slug)
+    {
+        EntitiesCollection.Items.Remove(slug);
     }
 }

@@ -12,7 +12,18 @@ internal class SanctuaryRegion : Entity
 
     public void Save()
     {
-        EntitiesCollection.SanctuaryRegions.Add((SanctuaryRegion)this);
+        EntitiesCollection.SanctuaryRegions.Add(Slug, this);
+    }
+
+    public void Replace(string slug, Entity entity)
+    {
+        entity.Slug = slug;
+        EntitiesCollection.SanctuaryRegions[slug] = (SanctuaryRegion)entity;
+    }
+
+    public void Remove(string slug)
+    {
+        EntitiesCollection.SanctuaryRegions.Remove(slug);
     }
 
     public override bool Equals(object obj)

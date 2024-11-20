@@ -10,7 +10,7 @@ public class ItemDTO : Transferable
     public string Description{get; set;}
     public string Image{get; set;}
     
-    public HashSet<ItemDTO>? RelatedItems {get; set;}
+    public Dictionary<string, ItemDTO>? RelatedItems {get; set;}
     public HashSet<string>? RelatedItemsSlugs {get; set;}
     public SanctuaryRegionDTO? SanctuaryRegion {get; set;}
     public string? SanctuaryRegionSlug {get; set;}

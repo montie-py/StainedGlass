@@ -11,6 +11,17 @@ internal class Church : Entity
 
     public void Save()
     {
-        EntitiesCollection.Churches.Add((Church)this);
+        EntitiesCollection.Churches.Add(Slug, this);
+    }
+
+    public void Replace(string slug, Entity entity)
+    {
+        entity.Slug = slug;
+        EntitiesCollection.Churches[slug] = (Church)entity;
+    }
+
+    public void Remove(string slug)
+    {
+        EntitiesCollection.Churches.Remove(slug);
     }
 }

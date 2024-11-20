@@ -10,11 +10,20 @@ public class ItemTypeDTO : Transferable
     
     public Entity GetEntity(Transferable transferable)
     {
-        return (new ItemMapper()).GetEntity(transferable);
+        return (new ItemTypeMapper()).GetEntity(transferable);
     }
 
     public Mappable GetMapper()
     {
         return new ItemTypeMapper();
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+            return false;
+        var other = (ItemTypeDTO)obj;
+        
+        return Slug == other.Slug && Name == other.Name;
     }
 }

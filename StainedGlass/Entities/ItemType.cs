@@ -9,6 +9,17 @@ public class ItemType : Entity
 
     public void Save()
     {
-        EntitiesCollection.ItemsTypes.Add(this.Slug, (ItemType)this);
+        EntitiesCollection.ItemsTypes.Add(Slug, this);
+    }
+
+    public void Replace(string slug, Entity entity)
+    {
+        entity.Slug = slug;
+        EntitiesCollection.ItemsTypes[slug] = (ItemType)entity;
+    }
+
+    public void Remove(string slug)
+    {
+        EntitiesCollection.ItemsTypes.Remove(slug);
     }
 }

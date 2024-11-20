@@ -35,7 +35,12 @@ internal class ChurchMapper : NonRelatable
 
     public Transferable? GetDTOBySlug(string slug)
     {
-        return GetDTO(EntitiesCollection.Churches.FirstOrDefault(e => e.Slug.Equals(slug)));
+        return GetDTO(EntitiesCollection.Churches[slug]);
+    }
+
+    public IEnumerable<Transferable?> GetAllDTOs()
+    {
+        return EntitiesCollection.Churches.Select(e => GetDTO(e.Value));
     }
 
     public Entity GetEntity(Transferable transferable)
@@ -61,5 +66,10 @@ internal class ChurchMapper : NonRelatable
         }
 
         return churchEntity;
+    }
+
+    public void RemoveEntity(string slug)
+    {
+        EntitiesCollection.Churches.Remove(slug);
     }
 }
