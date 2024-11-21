@@ -9,7 +9,7 @@ public class SanctuaryRegionDTO : Transferable
     public string Name {get; set;}
     public string Description {get; set;}
     public string Image {get; set;}
-    public HashSet<ItemDTO>? Windows {get; set;}
+    public HashSet<ItemDTO>? Windows { get; set; } = new();
     public string SanctuarySideSlug {get; set;}
     public SanctuarySideDTO SanctuarySide {get; set;}
 
@@ -28,7 +28,7 @@ public class SanctuaryRegionDTO : Transferable
         if (obj == null || GetType() != obj.GetType()) 
         { return false; }
         
-        var other = (SanctuaryRegion)obj;
+        var other = (SanctuaryRegionDTO)obj;
         
         return Name == other.Name && Image == other.Image && Slug == other.Slug;
     }

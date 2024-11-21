@@ -6,7 +6,7 @@ namespace StainedGlass.Transfer.Mapper;
 
 public class ItemTypeMapper : NonRelatable
 {
-    public Transferable? GetDTO(Entity? entity)
+    public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
     {
         var ItemTypeEntity = entity as ItemType;
         

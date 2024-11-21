@@ -13,12 +13,12 @@ public class ItemTest
     }
     
     [Fact]
-    public void StainedGlass_SanctuaryRegionNullRelatedItemsNull()
+    public void SanctuaryRegionNullRelatedItemsNull()
     {
         var stainedGlassDTO = new ItemDTO
         {
-            Title = "StainedGlass",
-            Slug = "StainedGlassSlug",
+            Title = "StainedGlass8",
+            Slug = "StainedGlassSlug8",
             Description = "StainedGlass Description",
             Image = "StainedGlass Image",
             SanctuaryRegion = null,
@@ -28,12 +28,13 @@ public class ItemTest
         };
 
         useCaseInteractor.StoreEntity(stainedGlassDTO);
-        ItemDTO savedItemDto = useCaseInteractor.GetDTOBySlug<ItemDTO>("StainedGlassSlug");
+        ItemDTO savedItemDto = useCaseInteractor.GetDTOBySlug<ItemDTO>("StainedGlassSlug8");
         
         Assert.Equal(stainedGlassDTO, savedItemDto);
     }
     
-    public void StainedGlass_SanctuaryRegionNull()
+    [Fact]
+    public void RelatedItemsSanctuaryRegionNull()
     {
         var relatedStainedGlassDTO = new ItemDTO
         {
@@ -64,6 +65,104 @@ public class ItemTest
         useCaseInteractor.StoreEntity(stainedGlassDTO);
         ItemDTO savedItemDto = useCaseInteractor.GetDTOBySlug<ItemDTO>("StainedGlassSlug");
         
-        Assert.Equal(stainedGlassDTO.RelatedItems.First().Value, relatedStainedGlassDTO);
+        Assert.Equal(relatedStainedGlassDTO, savedItemDto.RelatedItems.First().Value);
+    }
+
+    [Fact]
+    public void ItemsShouldBeLikewiseRelated()
+    {
+        var item1 = new ItemDTO
+        {
+            Title = "StainedGlass5",
+            Slug = "StainedGlassSlug5",
+            Description = "StainedGlass5Description",
+            Image = "StainedGlass Image",
+        };
+        useCaseInteractor.StoreEntity(item1);
+
+        var item2 = new ItemDTO
+        {
+            Title = "StainedGlass6",
+            Slug = "StainedGlassSlug6",
+            Description = "StainedGlass6Description",
+            Image = "StainedGlass Image",
+            RelatedItemsSlugs = new HashSet<string>(){item1.Slug}
+        };
+        useCaseInteractor.StoreEntity(item2);
+        
+        var item1FromDB = useCaseInteractor.GetDTOBySlug<ItemDTO>(item1.Slug);
+        var item2FromDB = useCaseInteractor.GetDTOBySlug<ItemDTO>(item2.Slug);
+        
+        Assert.Equal(item1, item2FromDB.RelatedItems.First().Value);
+        Assert.Equal(item2, item1FromDB.RelatedItems.First().Value);
+    }
+
+    [Fact]
+    public void ItemRegionNotNull()
+    {
+        var sanctuaryRegion = new SanctuaryRegionDTO
+        {
+            Name = "Region",
+            Slug = "RegionSlug",
+            Description = "Region Description",
+            Image = "Region Image",
+        };
+        
+        useCaseInteractor.StoreEntity(sanctuaryRegion);
+
+        var item = new ItemDTO
+        {
+            Title = "StainedGlass9",
+            Slug = "StainedGlassSlug9",
+            Description = "StainedGlass Description",
+            Image = "StainedGlass Image",
+            SanctuaryRegionSlug = "RegionSlug",
+        };
+        
+        useCaseInteractor.StoreEntity(item);
+        var savedItem = useCaseInteractor.GetDTOBySlug<ItemDTO>(item.Slug);
+        Assert.Equal(sanctuaryRegion, savedItem.SanctuaryRegion);
+    }
+    
+    [Fact]
+    public void ItemReplace()
+    {
+        var item = new ItemDTO
+        {
+            Title = "StainedGlass2",
+            Slug = "stainedGlassSlug2",
+            Description = "StainedGlass Description",
+            Image = "StainedGlass Image",
+        };
+        
+        useCaseInteractor.StoreEntity(item);
+
+        var newItem = new ItemDTO
+        {
+            Title = "StainedGlass3",
+            Slug = "stainedGlassSlug3",
+            Description = "StainedGlass Description",
+            Image = "StainedGlass Image",
+        };
+        
+        useCaseInteractor.ReplaceEntity("stainedGlassSlug2", newItem);
+        var dto = useCaseInteractor.GetDTOBySlug<ItemDTO>("stainedGlassSlug2");
+        Assert.Equal("StainedGlass3", dto.Title);
+    }
+
+    [Fact]
+    public void ItemDelete()
+    {
+        var item = new ItemDTO
+        {
+            Title = "StainedGlass4",
+            Slug = "stainedGlassSlug4",
+            Description = "StainedGlass Description",
+            Image = "StainedGlass Image",
+        };
+        useCaseInteractor.StoreEntity(item);
+        useCaseInteractor.RemoveEntity<ItemDTO>("stainedGlassSlug4");
+        var dtos = useCaseInteractor.GetAllDTOs<ItemDTO>() as List<ItemDTO>;
+        Assert.False(dtos.Exists(e => e.Title == "StainedGlass4"));
     }
 }

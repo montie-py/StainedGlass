@@ -7,7 +7,7 @@ public class SanctuarySideDTO : Transferable
 {
     public string Slug { get; set; }
     public string Name { get; set; }
-    public List<SanctuaryRegionDTO> Regions { get; set; }
+    public List<SanctuaryRegionDTO> Regions { get; set; } = new();
     public string ChurchSlug { get; set; }
     public ChurchDTO? Church { get; set; }
 

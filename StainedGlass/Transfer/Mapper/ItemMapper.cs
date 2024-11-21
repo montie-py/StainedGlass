@@ -6,12 +6,10 @@ namespace StainedGlass.Transfer.Mapper;
 
 internal class ItemMapper : Relatable
 {
-    public Transferable? GetDTO(Entity? entity, bool computeRelatedItems = true)
+    public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool computeRelatedItems = true)
     {
         SanctuaryRegionMapper sanctuaryRegionMapper = new();
         Item item = entity as Item;
-        SanctuaryRegionDTO? sanctuaryRegionDTO = 
-            sanctuaryRegionMapper.GetDTO(item.SanctuaryRegion) as SanctuaryRegionDTO;
 
         var itemDto = new ItemDTO
         {
@@ -19,12 +17,17 @@ internal class ItemMapper : Relatable
             Title = item.Title,
             Description = item.Description,
             Image = item.Image,
-            SanctuaryRegion = sanctuaryRegionDTO
         };
 
-        if (sanctuaryRegionDTO != null)
+        if (!skipParentElements)
         {
-            itemDto.SanctuaryRegionSlug = sanctuaryRegionDTO.Slug;
+            SanctuaryRegionDTO? sanctuaryRegionDTO = 
+                sanctuaryRegionMapper.GetDTO(item.SanctuaryRegion, skipChildrenElements : true) as SanctuaryRegionDTO;
+            if (sanctuaryRegionDTO != null)
+            {
+                itemDto.SanctuaryRegionSlug = sanctuaryRegionDTO.Slug;
+                itemDto.SanctuaryRegion = sanctuaryRegionDTO;
+            }
         }
 
         if (computeRelatedItems && item.RelatedItems != null)
@@ -53,7 +56,12 @@ internal class ItemMapper : Relatable
     {
         ItemDTO itemDto = transferable as ItemDTO;
 
-        SanctuaryRegion sanctuaryRegion = EntitiesCollection.SanctuaryRegions[itemDto.SanctuaryRegionSlug];
+        SanctuaryRegion sanctuaryRegion = null;
+
+        if (itemDto.SanctuaryRegionSlug != null)
+        {
+            sanctuaryRegion = EntitiesCollection.SanctuaryRegions[itemDto.SanctuaryRegionSlug];
+        }
 
         var window = new Item
         {
@@ -64,18 +72,18 @@ internal class ItemMapper : Relatable
             SanctuaryRegion = sanctuaryRegion
         };
 
-        if (itemDto.RelatedItemsSlugs != null)
+        if (itemDto.RelatedItemsSlugs != null && itemDto.RelatedItemsSlugs.Count > 0)
         {
+            //save current item as a related item to its related items as well
+            foreach (string relatedItemsSlug in itemDto.RelatedItemsSlugs)
+            {
+                EntitiesCollection.Items[relatedItemsSlug].RelatedItems.Add(window.Slug, window);
+            }
+            
             var relatedItems = EntitiesCollection.Items.Where(
                 e => itemDto.RelatedItemsSlugs.Contains(e.Value.Slug)
-                ).ToDictionary();
+            ).ToDictionary();
             window.RelatedItems = relatedItems;
-            
-            //save current item as a related item to its related items as well
-            foreach (Item relatedItem in relatedItems.Values)
-            {
-                relatedItem.RelatedItems.Add(window.Slug, window);
-            }
         }
 
         if (sanctuaryRegion != null) 

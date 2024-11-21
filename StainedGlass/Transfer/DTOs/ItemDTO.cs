@@ -9,11 +9,11 @@ public class ItemDTO : Transferable
     public string Title{get; set;}
     public string Description{get; set;}
     public string Image{get; set;}
-    
-    public Dictionary<string, ItemDTO>? RelatedItems {get; set;}
-    public HashSet<string>? RelatedItemsSlugs {get; set;}
-    public SanctuaryRegionDTO? SanctuaryRegion {get; set;}
-    public string? SanctuaryRegionSlug {get; set;}
+
+    public string? SanctuaryRegionSlug { get; set; }
+    public SanctuaryRegionDTO? SanctuaryRegion { set; get; } = new();
+    public Dictionary<string, ItemDTO>? RelatedItems { get; set; } = new();
+    public HashSet<string>? RelatedItemsSlugs { get; set; } = new();
 
 
     public Entity GetEntity(Transferable transferable)

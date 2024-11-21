@@ -7,7 +7,7 @@ namespace StainedGlass.Transfer.Mapper;
 internal class ChurchMapper : NonRelatable
 {
 
-    public Transferable? GetDTO(Entity? entity)
+    public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
     {
         if (entity == null) 
         {
@@ -19,9 +19,12 @@ internal class ChurchMapper : NonRelatable
         Church church = entity as Church;
         HashSet<SanctuarySideDTO> sidesDTO = new();
 
-        foreach (var side in church.Sides)
+        if (!skipChildrenElements)
         {
-            sidesDTO.Add(sanctuarySideMapper.GetDTO(side) as SanctuarySideDTO);
+            foreach (var side in church.Sides)
+            {
+                sidesDTO.Add(sanctuarySideMapper.GetDTO(side, skipParentElements: true) as SanctuarySideDTO);
+            }
         }
 
         return new ChurchDTO

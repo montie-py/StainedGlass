@@ -7,7 +7,7 @@ namespace StainedGlass.Transfer.Mapper;
 internal class SanctuaryRegionMapper : NonRelatable
 {
     
-    public Transferable? GetDTO(Entity? entity)
+    public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
      {
         if (entity == null) 
         {
@@ -18,13 +18,23 @@ internal class SanctuaryRegionMapper : NonRelatable
 
         SanctuaryRegion region = entity as SanctuaryRegion;
         HashSet<ItemDTO> WindowsDTOs = new();
-        foreach (Entities.Item window in region.Windows)
+        SanctuarySideDTO sanctuarySideDTO = null;
+
+        if (!skipChildrenElements)
         {
-            WindowsDTOs.Add(itemMapper.GetDTO(window) as ItemDTO);
+            foreach (Item window in region.Windows)
+            {
+                WindowsDTOs.Add(itemMapper.GetDTO(window, skipParentElements: true) as ItemDTO);
+            }
         }
 
-        SanctuarySideDTO sanctuarySideDTO = sanctuarySideMapper.GetDTO(region.SanctuarySide) as SanctuarySideDTO;
-        
+        if (!skipParentElements)
+        {
+            sanctuarySideDTO = sanctuarySideMapper.GetDTO(
+                region.SanctuarySide, skipParentElements: true, skipChildrenElements: true
+                ) as SanctuarySideDTO;
+        }
+
         var sanctuaryRegionDTO = new SanctuaryRegionDTO
         {
             Name = region.Name,
@@ -45,19 +55,23 @@ internal class SanctuaryRegionMapper : NonRelatable
 
     public Transferable? GetDTOBySlug(string slug)
     {
-        return GetDTO(EntitiesCollection.SanctuaryRegions[slug]);
+        return GetDTO(EntitiesCollection.SanctuaryRegions[slug], skipParentElements: true);
     }
 
     public IEnumerable<Transferable?> GetAllDTOs()
     {
-        return EntitiesCollection.SanctuaryRegions.Select(e => GetDTO(e.Value));
+        return EntitiesCollection.SanctuaryRegions.Select(
+            e => GetDTO(e.Value, skipParentElements: true)
+            );
     }
 
     public Entity GetEntity(Transferable transferable)
      {
         SanctuaryRegionDTO sanctuaryRegionDTO = transferable as SanctuaryRegionDTO;
 
-        SanctuarySide sanctuarySide = EntitiesCollection.SanctuarySides[sanctuaryRegionDTO.Slug];
+        SanctuarySide sanctuarySide = 
+            EntitiesCollection.SanctuarySides.ContainsKey(sanctuaryRegionDTO.Slug) ?
+                EntitiesCollection.SanctuarySides[sanctuaryRegionDTO.Slug] : null;
         
         SanctuaryRegion sanctuaryRegion = new SanctuaryRegion
         {

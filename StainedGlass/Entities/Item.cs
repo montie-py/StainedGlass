@@ -9,8 +9,8 @@ namespace StainedGlass.Entities{
         public required string Title{get; set;}
         public required string Description{get; set;}
         public required string Image{get; set;}
-        
-        public Dictionary<string, Item> RelatedItems {get; set;}
+
+        public Dictionary<string, Item> RelatedItems { get; set; } = new();
         public required SanctuaryRegion SanctuaryRegion{get; set;}
 
         public void Save()
