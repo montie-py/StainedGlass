@@ -38,6 +38,10 @@ internal class ChurchMapper : NonRelatable
 
     public Transferable? GetDTOBySlug(string slug)
     {
+        if (!EntitiesCollection.Churches.ContainsKey(slug))
+        {
+            return null;
+        }
         return GetDTO(EntitiesCollection.Churches[slug]);
     }
 

@@ -52,6 +52,10 @@ internal class SanctuarySideMapper : NonRelatable
 
     public Transferable? GetDTOBySlug(string slug)
     {
+        if (!EntitiesCollection.SanctuarySides.ContainsKey(slug))
+        {
+            return null;
+        }
         return GetDTO(EntitiesCollection.SanctuarySides[slug], skipParentElements: true);
     }
 
@@ -66,7 +70,11 @@ internal class SanctuarySideMapper : NonRelatable
     {
         SanctuarySideDTO sanctuarySideDTO = transferable as SanctuarySideDTO;
 
-        var sanctuarySideChurch = EntitiesCollection.Churches[sanctuarySideDTO.ChurchSlug];
+        Church sanctuarySideChurch = 
+            (
+                sanctuarySideDTO.ChurchSlug != null 
+                && EntitiesCollection.Churches.ContainsKey(sanctuarySideDTO.ChurchSlug)
+                ) ? EntitiesCollection.Churches[sanctuarySideDTO.ChurchSlug] : null;
 
         SanctuarySide sanctuarySide = new SanctuarySide
         {

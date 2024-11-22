@@ -19,6 +19,10 @@ public class ItemTypeMapper : NonRelatable
 
     public Transferable? GetDTOBySlug(string slug)
     {
+        if (!EntitiesCollection.ItemsTypes.ContainsKey(slug))
+        {
+            return null;
+        }
         return GetDTO(EntitiesCollection.ItemsTypes[slug]);
     }
 

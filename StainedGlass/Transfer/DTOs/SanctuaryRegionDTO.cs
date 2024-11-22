@@ -9,7 +9,7 @@ public class SanctuaryRegionDTO : Transferable
     public string Name {get; set;}
     public string Description {get; set;}
     public string Image {get; set;}
-    public HashSet<ItemDTO>? Windows { get; set; } = new();
+    public HashSet<ItemDTO>? Items { get; set; } = new();
     public string SanctuarySideSlug {get; set;}
     public SanctuarySideDTO SanctuarySide {get; set;}
 

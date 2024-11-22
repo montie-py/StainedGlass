@@ -28,7 +28,7 @@ public class ItemTest
         };
 
         useCaseInteractor.StoreEntity(stainedGlassDTO);
-        ItemDTO savedItemDto = useCaseInteractor.GetDTOBySlug<ItemDTO>("StainedGlassSlug8");
+        ItemDTO savedItemDto = useCaseInteractor.GetDTOBySlug<ItemDTO>(stainedGlassDTO.Slug);
         
         Assert.Equal(stainedGlassDTO, savedItemDto);
     }
@@ -58,12 +58,12 @@ public class ItemTest
             Image = "StainedGlass Image",
             SanctuaryRegion = null,
             SanctuaryRegionSlug = null,
-            RelatedItemsSlugs = new HashSet<string>(){"StainedGlassRelatedSlug"},
+            RelatedItemsSlugs = new HashSet<string>(){relatedStainedGlassDTO.Slug},
             RelatedItems = null,
         };
 
         useCaseInteractor.StoreEntity(stainedGlassDTO);
-        ItemDTO savedItemDto = useCaseInteractor.GetDTOBySlug<ItemDTO>("StainedGlassSlug");
+        ItemDTO savedItemDto = useCaseInteractor.GetDTOBySlug<ItemDTO>(stainedGlassDTO.Slug);
         
         Assert.Equal(relatedStainedGlassDTO, savedItemDto.RelatedItems.First().Value);
     }
@@ -146,7 +146,7 @@ public class ItemTest
         };
         
         useCaseInteractor.ReplaceEntity("stainedGlassSlug2", newItem);
-        var dto = useCaseInteractor.GetDTOBySlug<ItemDTO>("stainedGlassSlug2");
+        var dto = useCaseInteractor.GetDTOBySlug<ItemDTO>(item.Slug);
         Assert.Equal("StainedGlass3", dto.Title);
     }
 
@@ -161,7 +161,7 @@ public class ItemTest
             Image = "StainedGlass Image",
         };
         useCaseInteractor.StoreEntity(item);
-        useCaseInteractor.RemoveEntity<ItemDTO>("stainedGlassSlug4");
+        useCaseInteractor.RemoveEntity<ItemDTO>(item.Slug);
         var dtos = useCaseInteractor.GetAllDTOs<ItemDTO>() as List<ItemDTO>;
         Assert.False(dtos.Exists(e => e.Title == "StainedGlass4"));
     }

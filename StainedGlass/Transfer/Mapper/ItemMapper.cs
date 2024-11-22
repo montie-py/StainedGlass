@@ -44,6 +44,10 @@ internal class ItemMapper : Relatable
 
     public Transferable? GetDTOBySlug(string slug)
     {
+        if (!EntitiesCollection.Items.ContainsKey(slug))
+        {
+            return null;
+        }
         return GetDTO(EntitiesCollection.Items[slug]);
     }
 
@@ -88,7 +92,7 @@ internal class ItemMapper : Relatable
 
         if (sanctuaryRegion != null) 
         {
-            sanctuaryRegion.Windows.Add(window);
+            sanctuaryRegion.Items.Add(window);
         }
 
         return window;
