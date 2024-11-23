@@ -21,10 +21,6 @@ public class ItemTest
             Slug = "StainedGlassSlug8",
             Description = "StainedGlass Description",
             Image = "StainedGlass Image",
-            SanctuaryRegion = null,
-            SanctuaryRegionSlug = null,
-            RelatedItemsSlugs = null,
-            RelatedItems = null,
         };
 
         useCaseInteractor.StoreEntity(stainedGlassDTO);

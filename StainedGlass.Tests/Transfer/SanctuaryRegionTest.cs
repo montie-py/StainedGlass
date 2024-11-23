@@ -89,7 +89,7 @@ public class SanctuaryRegionTest
     }
 
     [Fact]
-    public void ReplaceOrigin()
+    public void ReplaceRegion()
     {
         var sanctuaryRegion = new SanctuaryRegionDTO
         {
@@ -115,7 +115,7 @@ public class SanctuaryRegionTest
     }
 
     [Fact]
-    public void RemoveOrigin()
+    public void RemoveRegion()
     {
         var sanctuaryRegion = new SanctuaryRegionDTO
         {
