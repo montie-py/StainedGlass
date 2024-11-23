@@ -20,6 +20,7 @@ public class SanctuaryRegionTest
             Name = "SanctuaryRegion6",
             Slug = "SanctuaryRegionSlug6",
             Image = "SanctuaryRegion Image",
+            Description = "SanctuaryRegion Description",
         };
         useCaseInteractor.StoreEntity(sanctuaryRegion);
         var savedSanctuaryRegion = useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(sanctuaryRegion.Slug);

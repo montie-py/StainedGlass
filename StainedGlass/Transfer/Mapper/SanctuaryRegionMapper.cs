@@ -38,7 +38,7 @@ internal class SanctuaryRegionMapper : NonRelatable
         var sanctuaryRegionDTO = new SanctuaryRegionDTO
         {
             Name = region.Name,
-            Description = region.Name,
+            Description = region.Description,
             Slug = region.Slug,
             Image = region.Image,
             Items = WindowsDTOs,

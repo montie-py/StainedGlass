@@ -31,6 +31,7 @@ internal class ChurchMapper : NonRelatable
         {
             Slug = church.Slug,
             Name = church.Name,
+            Description = church.Description,
             Image = church.Image,
             Sides = sidesDTO
         };
@@ -58,8 +59,8 @@ internal class ChurchMapper : NonRelatable
         {
             Slug = churchDTO.Slug,
             Name = churchDTO.Name,
+            Description = churchDTO.Description,
             Image = churchDTO.Image,
-            Sides = null
         };
 
         if (churchDTO.Sides != null)

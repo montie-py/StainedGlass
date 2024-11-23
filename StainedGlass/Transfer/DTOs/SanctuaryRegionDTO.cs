@@ -30,7 +30,7 @@ public class SanctuaryRegionDTO : Transferable
         
         var other = (SanctuaryRegionDTO)obj;
         
-        return Name == other.Name && Image == other.Image && Slug == other.Slug;
+        return Name == other.Name && Image == other.Image && Slug == other.Slug && Description == other.Description;
     }
 
     public override int GetHashCode()

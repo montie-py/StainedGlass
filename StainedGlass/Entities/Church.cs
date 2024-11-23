@@ -5,9 +5,10 @@ namespace StainedGlass.Entities;
 internal class Church : Entity
 {
     public required string Slug {get; set;}
-    public required string Name {get; set;}
-    public required string Image {get; set;}
-    public required HashSet<SanctuarySide?>? Sides { get; set; } = new();
+    public string Name {get; set;}
+    public string Description {get; set;}
+    public string Image {get; set;}
+    public HashSet<SanctuarySide>? Sides { get; set; } = new();
 
     public void Save()
     {

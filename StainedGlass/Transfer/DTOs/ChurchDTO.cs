@@ -5,22 +5,15 @@ namespace StainedGlass.Transfer.DTOs;
 
 public class ChurchDTO : Transferable
 {
-    public required string Slug {get; set;}
-    public required string Name {get; set;}
-    public required string Image {get; set;}
-    public required HashSet<SanctuarySideDTO>? Sides { get; set; } = new();
+    public string Slug {get; set;}
+    public string Name {get; set;}
+    public string Description {get; set;}
+    public string Image {get; set;}
+    public  HashSet<SanctuarySideDTO>? Sides { get; set; } = new();
 
     public Entity GetEntity(Transferable transferable)
     {
-        ChurchDTO churchDTO = transferable as ChurchDTO;
-
-        return new Church
-        {
-            Slug = churchDTO.Slug,
-            Name = churchDTO.Name,
-            Image = churchDTO.Image,
-            Sides = null
-        };
+        return (new ChurchMapper()).GetEntity(transferable);
     }
     
     public Mappable GetMapper()
@@ -35,7 +28,10 @@ public class ChurchDTO : Transferable
 
         var other = (ChurchDTO)obj;
         
-        return Slug.Equals(other.Slug) && Name.Equals(other.Name) && Image.Equals(other.Image);
+        return Slug.Equals(other.Slug) 
+            && Name.Equals(other.Name) 
+            && Image.Equals(other.Image) 
+            && Description.Equals(other.Description);
     }
 
     public override int GetHashCode()
