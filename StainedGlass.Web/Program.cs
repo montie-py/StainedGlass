@@ -1,7 +1,12 @@
+using StainedGlass.Transfer;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+//add services to the container
+builder.Services.AddTransient<InputBoundary, UseCaseInteractor>();
 
 var app = builder.Build();
 

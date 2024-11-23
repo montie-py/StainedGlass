@@ -5,49 +5,48 @@ using StainedGlass.Transfer.DTOs;
 namespace StainedGlass.Web.Controllers;
 
 [Route("[controller]")]
-// [Route("[controller]/[action]")]
 [ApiController]
-public class ItemTypeController : ControllerBase
+public class SanctuaryRegionController : ControllerBase
 {
     private InputBoundary _useCaseInteractor;
 
-    public ItemTypeController(InputBoundary useCaseInteractor)
+    public SanctuaryRegionController(InputBoundary useCaseInteractor)
     {
         _useCaseInteractor = useCaseInteractor;
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var itemTypes = _useCaseInteractor.GetAllDTOs<ItemTypeDTO>();
-        return Ok(itemTypes);
+        var regions = _useCaseInteractor.GetAllDTOs<SanctuaryRegionDTO>();
+        return Ok(regions);
     }
 
     [HttpGet("{slug}")]
     public async Task<IActionResult> Get(string slug)
     {
-        var itemType = _useCaseInteractor.GetDTOBySlug<ItemTypeDTO>(slug);
-        return Ok(itemType);
+        var region = _useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(slug);
+        return Ok(region);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] ItemTypeDTO dto)
+    public async Task<IActionResult> Post(SanctuaryRegionDTO region)
     {
-        _useCaseInteractor.StoreEntity(dto);
+        _useCaseInteractor.StoreEntity(region);
         return Ok();
     }
 
     [HttpPut("{slug}")]
-    public async Task<IActionResult> Put(string slug, [FromBody] ItemTypeDTO dto)
+    public async Task<IActionResult> Put(string slug, SanctuaryRegionDTO region)
     {
-        _useCaseInteractor.ReplaceEntity(slug, dto);
+        _useCaseInteractor.ReplaceEntity(slug, region);
         return Ok();
     }
 
     [HttpDelete("{slug}")]
     public async Task<IActionResult> Delete(string slug)
     {
-        _useCaseInteractor.RemoveEntity<ItemTypeDTO>(slug);
+        _useCaseInteractor.RemoveEntity<SanctuaryRegionDTO>(slug);
         return Ok();
     }
 }
