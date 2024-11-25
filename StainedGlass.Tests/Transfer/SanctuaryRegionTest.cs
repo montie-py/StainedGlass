@@ -129,5 +129,7 @@ public class SanctuaryRegionTest
         useCaseInteractor.RemoveEntity<SanctuaryRegionDTO>(sanctuaryRegion.Slug);
         var allRegions = useCaseInteractor.GetAllDTOs<SanctuaryRegionDTO>() as List<SanctuaryRegionDTO>;
         Assert.False(allRegions.Exists(x => x.Slug == sanctuaryRegion.Slug));
+        
+        //todo: check if side doesn't have the deleted region anymore
     }
 }

@@ -5,7 +5,6 @@ using StainedGlass.Transfer.DTOs;
 namespace StainedGlass.Web.Controllers;
 
 [Route("[controller]")]
-[ApiController]
 public class SanctuarySideController : ControllerBase
 {
     private InputBoundary _useCaseInteractor;
@@ -30,20 +29,20 @@ public class SanctuarySideController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(SanctuarySideDTO side)
+    public async Task<IActionResult> Post([FromForm] SanctuarySideDTO side)
     {
         _useCaseInteractor.StoreEntity(side);
         return Ok();
     }
 
-    [HttpPut("{slug}")]
-    public async Task<IActionResult> Put(string slug, SanctuarySideDTO side)
+    [HttpPut]
+    public async Task<IActionResult> Put([FromForm] string slug, SanctuarySideDTO side)
     {
         _useCaseInteractor.ReplaceEntity(slug, side);
         return Ok();
     }
 
-    [HttpDelete("{slug}")]
+    [HttpDelete]
     public async Task<IActionResult> Delete(string slug)
     {
         _useCaseInteractor.RemoveEntity<SanctuarySideDTO>(slug);

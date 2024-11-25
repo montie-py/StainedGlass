@@ -160,5 +160,8 @@ public class ItemTest
         useCaseInteractor.RemoveEntity<ItemDTO>(item.Slug);
         var dtos = useCaseInteractor.GetAllDTOs<ItemDTO>() as List<ItemDTO>;
         Assert.False(dtos.Exists(e => e.Title == "StainedGlass4"));
+        
+        //todo: check if region doesn't have the deleted item anymore
     }
+    //todo: create a test of and item with itemtype
 }

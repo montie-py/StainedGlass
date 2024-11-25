@@ -23,6 +23,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+//for controllers to work
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+}); 
+
 app.UseAuthorization();
 
 app.MapRazorPages();

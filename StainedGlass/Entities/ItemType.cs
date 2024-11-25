@@ -9,7 +9,7 @@ public class ItemType : Entity
 
     public void Save()
     {
-        EntitiesCollection.ItemsTypes.Add(Slug, this);
+        EntitiesCollection.ItemsTypes.TryAdd(Slug, this);
     }
 
     public void Replace(string slug, Entity entity)

@@ -6,7 +6,6 @@ namespace StainedGlass.Web.Controllers;
 
 [Route("[controller]")]
 // [Route("[controller]/[action]")]
-[ApiController]
 public class ItemTypeController : ControllerBase
 {
     private InputBoundary _useCaseInteractor;
@@ -31,20 +30,20 @@ public class ItemTypeController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] ItemTypeDTO dto)
+    public async Task<IActionResult> Post([FromForm] ItemTypeDTO dto)
     {
         _useCaseInteractor.StoreEntity(dto);
         return Ok();
     }
 
-    [HttpPut("{slug}")]
-    public async Task<IActionResult> Put(string slug, [FromBody] ItemTypeDTO dto)
+    [HttpPut]
+    public async Task<IActionResult> Put(string slug, [FromForm] ItemTypeDTO dto)
     {
         _useCaseInteractor.ReplaceEntity(slug, dto);
         return Ok();
     }
 
-    [HttpDelete("{slug}")]
+    [HttpDelete]
     public async Task<IActionResult> Delete(string slug)
     {
         _useCaseInteractor.RemoveEntity<ItemTypeDTO>(slug);

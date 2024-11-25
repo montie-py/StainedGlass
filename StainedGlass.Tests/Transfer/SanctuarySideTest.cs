@@ -114,5 +114,7 @@ public class SanctuarySideTest
 
         var allSides = useCaseInteractor.GetAllDTOs<SanctuarySideDTO>() as List<SanctuarySideDTO>;
         Assert.False(allSides.Exists(s => s.Slug == side.Slug));
+        
+        //todo: check if church doesn't have the deleted side anymore
     }
 }

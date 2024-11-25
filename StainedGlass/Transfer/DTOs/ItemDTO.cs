@@ -9,6 +9,8 @@ public class ItemDTO : Transferable
     public string Title{get; set;}
     public string Description{get; set;}
     public string Image{get; set;}
+    public string ItemTypeSlug {get; set;}
+    public ItemTypeDTO ItemType{get; set;}
 
     public string? SanctuaryRegionSlug { get; set; }
     public SanctuaryRegionDTO? SanctuaryRegion { set; get; } = new();

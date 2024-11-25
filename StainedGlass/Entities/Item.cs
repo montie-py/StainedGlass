@@ -9,23 +9,44 @@ namespace StainedGlass.Entities{
         public required string Title{get; set;}
         public required string Description{get; set;}
         public required string Image{get; set;}
+        public required ItemType ItemType{get; set;}
 
         public Dictionary<string, Item> RelatedItems { get; set; } = new();
         public required SanctuaryRegion SanctuaryRegion{get; set;}
 
         public void Save()
         {
-            EntitiesCollection.Items.Add(Slug, this);
+            EntitiesCollection.Items.TryAdd(Slug, this);
         }
 
         public void Replace(string slug, Entity entity)
         {
             entity.Slug = slug;
+            var oldEntity = EntitiesCollection.Items[slug];
             EntitiesCollection.Items[slug] = (Item)entity;
+            EntitiesCollection.Items[slug].RelatedItems = oldEntity.RelatedItems;
+            EntitiesCollection.Items[slug].ItemType = oldEntity.ItemType;
+            EntitiesCollection.Items[slug].SanctuaryRegion = oldEntity.SanctuaryRegion;
         }
 
         public void Remove(string slug)
         {
+            //remove item from its region
+            var sanctuaryRegion = EntitiesCollection.SanctuaryRegions.Values.FirstOrDefault(e => 
+                e.Items?.FirstOrDefault(i => i.Slug == slug) != null
+                );
+            if (sanctuaryRegion != null)
+            {
+                var iterator = sanctuaryRegion.Items.GetEnumerator();
+                while (iterator.MoveNext())
+                {
+                    var item = iterator.Current;
+                    if (item.Slug == slug)
+                    {
+                        sanctuaryRegion.Items.Remove(item);
+                    }
+                }
+            }
             EntitiesCollection.Items.Remove(slug);
         }
 

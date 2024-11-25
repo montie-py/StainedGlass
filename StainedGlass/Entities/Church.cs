@@ -12,13 +12,15 @@ internal class Church : Entity
 
     public void Save()
     {
-        EntitiesCollection.Churches.Add(Slug, this);
+        EntitiesCollection.Churches.TryAdd(Slug, this);
     }
 
     public void Replace(string slug, Entity entity)
     {
         entity.Slug = slug;
+        var oldEntity = EntitiesCollection.Churches[slug];
         EntitiesCollection.Churches[slug] = (Church)entity;
+        EntitiesCollection.Churches[slug].Sides = oldEntity.Sides;
     }
 
     public void Remove(string slug)

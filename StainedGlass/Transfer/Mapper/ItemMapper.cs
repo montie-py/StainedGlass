@@ -61,10 +61,16 @@ internal class ItemMapper : Relatable
         ItemDTO itemDto = transferable as ItemDTO;
 
         SanctuaryRegion sanctuaryRegion = null;
+        ItemType itemType = null;
 
         if (itemDto.SanctuaryRegionSlug != null)
         {
             sanctuaryRegion = EntitiesCollection.SanctuaryRegions[itemDto.SanctuaryRegionSlug];
+        }
+
+        if (itemDto.ItemTypeSlug != null)
+        {
+            itemType = EntitiesCollection.ItemsTypes[itemDto.ItemTypeSlug];
         }
 
         var window = new Item
@@ -73,6 +79,7 @@ internal class ItemMapper : Relatable
             Title = itemDto.Title,
             Description = itemDto.Description,
             Image = itemDto.Image,
+            ItemType = itemType,
             SanctuaryRegion = sanctuaryRegion
         };
 
