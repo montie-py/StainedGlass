@@ -104,17 +104,32 @@ public class SanctuarySideTest
     [Fact]
     public void RemoveSide()
     {
+        var church = new ChurchDTO
+        {
+            Name = "Church",
+            Description = "Description",
+            Slug = "church",
+            Image = "image"
+        };
+        useCaseInteractor.StoreEntity(church);
+        
         var side = new SanctuarySideDTO
         {
             Name = "Sanctuary Side 6",
-            Slug = "sanctuary-side-6"
+            Slug = "sanctuary-side-6",
+            ChurchSlug = church.Slug
         };
         useCaseInteractor.StoreEntity(side);
+
+        var storedChurch = useCaseInteractor.GetDTOBySlug<ChurchDTO>(church.Slug);
+        Assert.True(storedChurch.Sides.Any(e => e.Slug == side.Slug));
+        
         useCaseInteractor.RemoveEntity<SanctuarySideDTO>(side.Slug);
 
         var allSides = useCaseInteractor.GetAllDTOs<SanctuarySideDTO>() as List<SanctuarySideDTO>;
         Assert.False(allSides.Exists(s => s.Slug == side.Slug));
         
-        //todo: check if church doesn't have the deleted side anymore
+        storedChurch = useCaseInteractor.GetDTOBySlug<ChurchDTO>(church.Slug);
+        Assert.False(storedChurch.Sides.Any(e => e.Slug == side.Slug));
     }
 }

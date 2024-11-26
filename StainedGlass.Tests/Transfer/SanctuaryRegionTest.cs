@@ -117,19 +117,30 @@ public class SanctuaryRegionTest
     [Fact]
     public void RemoveRegion()
     {
+        var sanctuarySide = new SanctuarySideDTO
+        {
+            Name = "SanctuarySide",
+            Slug = "SanctuarySideSlug",
+        };
+        useCaseInteractor.StoreEntity(sanctuarySide);
+        
         var sanctuaryRegion = new SanctuaryRegionDTO
         {
             Name = "SanctuaryRegion7",
             Slug = "SanctuaryRegionSlug7",
             Description = "SanctuaryRegion Description7",
             Image = "SanctuaryRegion Image",
+            SanctuarySideSlug = sanctuarySide.Slug
         };
         useCaseInteractor.StoreEntity(sanctuaryRegion);
+        var storedSide = useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(sanctuarySide.Slug);
+        Assert.True(storedSide.Regions.Any(e => e.Slug == "SanctuaryRegionSlug7"));
         
         useCaseInteractor.RemoveEntity<SanctuaryRegionDTO>(sanctuaryRegion.Slug);
         var allRegions = useCaseInteractor.GetAllDTOs<SanctuaryRegionDTO>() as List<SanctuaryRegionDTO>;
-        Assert.False(allRegions.Exists(x => x.Slug == sanctuaryRegion.Slug));
         
-        //todo: check if side doesn't have the deleted region anymore
+        Assert.False(allRegions.Exists(x => x.Slug == sanctuaryRegion.Slug));
+        storedSide = useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(sanctuarySide.Slug);
+        Assert.False(storedSide.Regions.Any(e => e.Slug == "SanctuaryRegionSlug7"));
     }
 }

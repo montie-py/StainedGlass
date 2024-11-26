@@ -23,24 +23,16 @@ internal class SanctuarySide : Entity
         EntitiesCollection.SanctuarySides[slug].Regions = oldEntity.Regions;
     }
 
-    public void Remove(string slug)
+    public void Remove()
     {
         //remove the side from its church
-        Church church = EntitiesCollection.Churches.Values.FirstOrDefault(e => 
-            e.Sides?.FirstOrDefault(s => s.Slug == slug) != null
+        var church = EntitiesCollection.Churches.Values.FirstOrDefault(e => 
+            e.Sides?.FirstOrDefault(s => s.Slug == Slug) != null
             );
         if (church != null)
         {
-            var iterator = church.Sides.GetEnumerator();
-            while (iterator.MoveNext())
-            {
-                SanctuarySide sanctuarySide = iterator.Current;
-                if (sanctuarySide.Slug == slug)
-                {
-                    church.Sides.Remove(sanctuarySide);
-                }
-            }
+            church.Sides?.RemoveWhere(e => e.Slug == Slug);
         }
-        EntitiesCollection.SanctuarySides.Remove(slug);
+        EntitiesCollection.SanctuarySides.Remove(Slug);
     }
 }

@@ -30,6 +30,13 @@ internal class ItemMapper : Relatable
             }
         }
 
+        if (item.ItemType != null)
+        {
+            ItemTypeMapper itemTypeMapper = new();
+            itemDto.ItemType = itemTypeMapper.GetDTO(item.ItemType) as ItemTypeDTO;
+            itemDto.ItemTypeSlug = item.ItemType.Slug;
+        }
+
         if (computeRelatedItems && item.RelatedItems != null)
         {
             foreach (Item relatedItem in item.RelatedItems.Values)
@@ -107,6 +114,6 @@ internal class ItemMapper : Relatable
 
     public void RemoveEntity(string slug)
     {
-        EntitiesCollection.Items.Remove(slug);
+        EntitiesCollection.Items[slug].Remove();
     }
 }

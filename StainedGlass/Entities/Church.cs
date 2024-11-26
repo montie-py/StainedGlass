@@ -23,8 +23,8 @@ internal class Church : Entity
         EntitiesCollection.Churches[slug].Sides = oldEntity.Sides;
     }
 
-    public void Remove(string slug)
+    public void Remove()
     {
-        EntitiesCollection.Churches.Remove(slug);
+        EntitiesCollection.Churches.Remove(Slug);
     }
 }

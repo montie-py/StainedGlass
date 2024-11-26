@@ -18,8 +18,8 @@ public class ItemType : Entity
         EntitiesCollection.ItemsTypes[slug] = (ItemType)entity;
     }
 
-    public void Remove(string slug)
+    public void Remove()
     {
-        EntitiesCollection.ItemsTypes.Remove(slug);
+        EntitiesCollection.ItemsTypes.Remove(Slug);
     }
 }

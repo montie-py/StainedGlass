@@ -108,6 +108,6 @@ internal class SanctuaryRegionMapper : NonRelatable
 
     public void RemoveEntity(string slug)
     {
-        EntitiesCollection.SanctuaryRegions.Remove(slug);
+        EntitiesCollection.SanctuaryRegions[slug].Remove();
     }
 }

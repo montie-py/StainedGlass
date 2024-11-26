@@ -24,26 +24,18 @@ internal class SanctuaryRegion : Entity
         EntitiesCollection.SanctuaryRegions[slug].Items = oldEntity.Items;
     }
 
-    public void Remove(string slug)
+    public void Remove()
     {
         //remove region from its side
-        SanctuarySide sanctuarySide = EntitiesCollection.SanctuarySides.Values.FirstOrDefault(e => 
-            e.Regions?.FirstOrDefault(r => r.Slug == slug) != null
+        var sanctuarySide = EntitiesCollection.SanctuarySides.Values.FirstOrDefault(e => 
+            e.Regions?.FirstOrDefault(r => r.Slug == Slug) != null
             );
         if (sanctuarySide != null)
         {
-            var iterator = sanctuarySide.Regions.GetEnumerator();
-            while (iterator.MoveNext())
-            {
-                var currentSide = iterator.Current;
-                if (currentSide.Slug == slug)
-                {
-                    sanctuarySide.Regions.Remove(iterator.Current);
-                }
-            }
+            sanctuarySide.Regions?.RemoveAll(e => e.Slug == Slug);
         }
         
-        EntitiesCollection.SanctuaryRegions.Remove(slug);
+        EntitiesCollection.SanctuaryRegions.Remove(Slug);
     }
 
     public override bool Equals(object obj)

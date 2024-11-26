@@ -78,6 +78,6 @@ internal class ChurchMapper : NonRelatable
 
     public void RemoveEntity(string slug)
     {
-        EntitiesCollection.Churches.Remove(slug);
+        EntitiesCollection.Churches[slug].Remove();
     }
 }

@@ -29,25 +29,17 @@ namespace StainedGlass.Entities{
             EntitiesCollection.Items[slug].SanctuaryRegion = oldEntity.SanctuaryRegion;
         }
 
-        public void Remove(string slug)
+        public void Remove()
         {
             //remove item from its region
             var sanctuaryRegion = EntitiesCollection.SanctuaryRegions.Values.FirstOrDefault(e => 
-                e.Items?.FirstOrDefault(i => i.Slug == slug) != null
+                e.Items?.FirstOrDefault(i => i.Slug == Slug) != null
                 );
             if (sanctuaryRegion != null)
             {
-                var iterator = sanctuaryRegion.Items.GetEnumerator();
-                while (iterator.MoveNext())
-                {
-                    var item = iterator.Current;
-                    if (item.Slug == slug)
-                    {
-                        sanctuaryRegion.Items.Remove(item);
-                    }
-                }
+                sanctuaryRegion.Items?.RemoveWhere(e => e.Slug == Slug);
             }
-            EntitiesCollection.Items.Remove(slug);
+            EntitiesCollection.Items.Remove(Slug);
         }
 
         public override bool Equals(object? obj)

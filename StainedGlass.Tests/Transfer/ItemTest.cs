@@ -149,19 +149,56 @@ public class ItemTest
     [Fact]
     public void ItemDelete()
     {
+        var region = new SanctuaryRegionDTO
+        {
+            Name = "Region",
+            Slug = "RegionSlug",
+            Description = "Region Description",
+            Image = "Region Image",
+        };
+        
+        useCaseInteractor.StoreEntity(region);
+        
         var item = new ItemDTO
         {
             Title = "StainedGlass4",
             Slug = "stainedGlassSlug4",
             Description = "StainedGlass Description",
             Image = "StainedGlass Image",
+            SanctuaryRegionSlug = "RegionSlug",
         };
         useCaseInteractor.StoreEntity(item);
+        var storedRegion = useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(region.Slug);
+        Assert.True(storedRegion.Items.Any(e => e.Slug == "stainedGlassSlug4"));
+        
         useCaseInteractor.RemoveEntity<ItemDTO>(item.Slug);
         var dtos = useCaseInteractor.GetAllDTOs<ItemDTO>() as List<ItemDTO>;
-        Assert.False(dtos.Exists(e => e.Title == "StainedGlass4"));
         
-        //todo: check if region doesn't have the deleted item anymore
+        Assert.False(dtos.Exists(e => e.Title == "StainedGlass4"));
+        storedRegion = useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(region.Slug);
+        Assert.False(storedRegion.Items.Any(e => e.Slug == "stainedGlassSlug4"));
     }
-    //todo: create a test of and item with itemtype
+
+    [Fact]
+    public void ItemWithItemTypeShouldBeStored()
+    {
+        var itemType = new ItemTypeDTO
+        {
+            Name = "ItemType",
+            Slug = "ItemTypeSlug",
+        };
+        useCaseInteractor.StoreEntity(itemType);
+        var item = new ItemDTO
+        {
+            Title = "StainedGlass8",
+            Slug = "StainedGlassSlug8",
+            Description = "StainedGlass Description",
+            Image = "StainedGlass Image",
+            ItemTypeSlug = itemType.Slug,
+        };
+        useCaseInteractor.StoreEntity(item);
+        var storedItem = useCaseInteractor.GetDTOBySlug<ItemDTO>(item.Slug);
+        
+        Assert.Equal(itemType.Slug, storedItem.ItemType.Slug);
+    }
 }
