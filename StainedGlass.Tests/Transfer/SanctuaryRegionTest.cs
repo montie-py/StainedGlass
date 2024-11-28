@@ -112,6 +112,8 @@ public class SanctuaryRegionTest
         useCaseInteractor.ReplaceEntity(sanctuaryRegion.Slug, anotherSanctuaryRegion);
         var replacedRegion = useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(sanctuaryRegion.Slug);
         Assert.Equal(anotherSanctuaryRegion.Name, replacedRegion.Name);
+        
+        //todo: check replacing with null and not null side
     }
 
     [Fact]

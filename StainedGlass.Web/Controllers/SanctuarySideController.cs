@@ -35,14 +35,14 @@ public class SanctuarySideController : ControllerBase
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Put([FromForm] string slug, SanctuarySideDTO side)
+    [HttpPut("{originalSlug}")]
+    public async Task<IActionResult> Put(string originalSlug, [FromForm] SanctuarySideDTO side)
     {
-        _useCaseInteractor.ReplaceEntity(slug, side);
+        _useCaseInteractor.ReplaceEntity(originalSlug, side);
         return Ok();
     }
 
-    [HttpDelete]
+    [HttpDelete("{slug}")]
     public async Task<IActionResult> Delete(string slug)
     {
         _useCaseInteractor.RemoveEntity<SanctuarySideDTO>(slug);

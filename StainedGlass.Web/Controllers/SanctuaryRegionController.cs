@@ -35,14 +35,14 @@ public class SanctuaryRegionController : ControllerBase
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Put(string slug,[FromForm] SanctuaryRegionDTO region)
+    [HttpPut("{originalSlug}")]
+    public async Task<IActionResult> Put(string originalSlug, [FromForm] SanctuaryRegionDTO region)
     {
-        _useCaseInteractor.ReplaceEntity(slug, region);
+        _useCaseInteractor.ReplaceEntity(originalSlug, region);
         return Ok();
     }
 
-    [HttpDelete]
+    [HttpDelete("{slug}")]
     public async Task<IActionResult> Delete(string slug)
     {
         _useCaseInteractor.RemoveEntity<SanctuaryRegionDTO>(slug);

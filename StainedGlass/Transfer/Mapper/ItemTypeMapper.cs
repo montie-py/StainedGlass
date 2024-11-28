@@ -43,6 +43,9 @@ public class ItemTypeMapper : NonRelatable
 
     public void RemoveEntity(string slug)
     {
-        EntitiesCollection.ItemsTypes[slug].Remove();
+        if (EntitiesCollection.ItemsTypes.ContainsKey(slug))
+        {
+            EntitiesCollection.ItemsTypes[slug].Remove();
+        }
     }
 }

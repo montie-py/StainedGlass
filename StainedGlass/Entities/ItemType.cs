@@ -14,6 +14,10 @@ public class ItemType : Entity
 
     public void Replace(string slug, Entity entity)
     {
+        if (!EntitiesCollection.ItemsTypes.ContainsKey(slug))
+        {
+            return;
+        }
         entity.Slug = slug;
         EntitiesCollection.ItemsTypes[slug] = (ItemType)entity;
     }

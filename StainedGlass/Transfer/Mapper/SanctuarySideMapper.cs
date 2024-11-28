@@ -102,6 +102,9 @@ internal class SanctuarySideMapper : NonRelatable
 
     public void RemoveEntity(string slug)
     {
-        EntitiesCollection.SanctuarySides[slug].Remove();
+        if (EntitiesCollection.SanctuarySides.ContainsKey(slug))
+        {
+            EntitiesCollection.SanctuarySides[slug].Remove();   
+        }
     }
 }

@@ -144,6 +144,8 @@ public class ItemTest
         useCaseInteractor.ReplaceEntity("stainedGlassSlug2", newItem);
         var dto = useCaseInteractor.GetDTOBySlug<ItemDTO>(item.Slug);
         Assert.Equal("StainedGlass3", dto.Title);
+        
+        //todo: check replacing with null and not null region and itemtype
     }
 
     [Fact]

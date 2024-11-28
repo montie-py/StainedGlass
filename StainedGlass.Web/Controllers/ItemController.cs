@@ -34,14 +34,14 @@ public class ItemController : ControllerBase
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Put(string slug, [FromForm] ItemDTO item)
+    [HttpPut("{originalSlug}")]
+    public async Task<IActionResult> Put(string originalSlug, [FromForm] ItemDTO item)
     {
-        _useCaseInteractor.ReplaceEntity(slug, item);
+        _useCaseInteractor.ReplaceEntity(originalSlug, item);
         return Ok();
     }
 
-    [HttpDelete]
+    [HttpDelete("{slug}")]
     public async Task<IActionResult> Delete(string slug)
     {
         _useCaseInteractor.RemoveEntity<ItemDTO>(slug);

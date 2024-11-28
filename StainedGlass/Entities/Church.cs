@@ -17,6 +17,10 @@ internal class Church : Entity
 
     public void Replace(string slug, Entity entity)
     {
+        if (!EntitiesCollection.Churches.ContainsKey(slug))
+        {
+            return;
+        }
         entity.Slug = slug;
         var oldEntity = EntitiesCollection.Churches[slug];
         EntitiesCollection.Churches[slug] = (Church)entity;

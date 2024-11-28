@@ -21,12 +21,40 @@ namespace StainedGlass.Entities{
 
         public void Replace(string slug, Entity entity)
         {
+            if (!EntitiesCollection.Items.ContainsKey(slug))
+            {
+                return;
+            }
             entity.Slug = slug;
             var oldEntity = EntitiesCollection.Items[slug];
             EntitiesCollection.Items[slug] = (Item)entity;
-            EntitiesCollection.Items[slug].RelatedItems = oldEntity.RelatedItems;
-            EntitiesCollection.Items[slug].ItemType = oldEntity.ItemType;
-            EntitiesCollection.Items[slug].SanctuaryRegion = oldEntity.SanctuaryRegion;
+            //if old entity has an assigned itemType - new one cannot lack one
+            if (EntitiesCollection.Items[slug].ItemType is null)
+            {
+                EntitiesCollection.Items[slug].ItemType = oldEntity.ItemType;
+            }
+            //if old entity has an assigned region - new one cannot lack one
+            if (EntitiesCollection.Items[slug].SanctuaryRegion is null)
+            {
+                EntitiesCollection.Items[slug].SanctuaryRegion = oldEntity.SanctuaryRegion;
+            }
+
+            //if the item has related items - update this related item with the newer version
+            if (RelatedItems.Count > 0)
+            {
+                foreach (var relatedItem in RelatedItems.Values)
+                {
+                    //if a related item doesn't have the present item as a related one - add it
+                    if (!relatedItem.RelatedItems.ContainsKey(Slug))
+                    {
+                        relatedItem.RelatedItems.Add(Slug, (Item)entity);
+                    }
+                    else
+                    {
+                        relatedItem.RelatedItems[Slug] = (Item)entity;   
+                    }
+                }
+            }
         }
 
         public void Remove()
@@ -38,6 +66,15 @@ namespace StainedGlass.Entities{
             if (sanctuaryRegion != null)
             {
                 sanctuaryRegion.Items?.RemoveWhere(e => e.Slug == Slug);
+            }
+
+            //remove this item from its related items as well
+            if (RelatedItems.Count > 0)
+            {
+                foreach (var relatedItem in RelatedItems.Values)
+                {
+                    relatedItem.RelatedItems.Remove(Slug);
+                }
             }
             EntitiesCollection.Items.Remove(Slug);
         }

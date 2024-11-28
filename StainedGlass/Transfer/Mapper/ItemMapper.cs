@@ -95,7 +95,10 @@ internal class ItemMapper : Relatable
             //save current item as a related item to its related items as well
             foreach (string relatedItemsSlug in itemDto.RelatedItemsSlugs)
             {
-                EntitiesCollection.Items[relatedItemsSlug].RelatedItems.Add(window.Slug, window);
+                if (!EntitiesCollection.Items[relatedItemsSlug].RelatedItems.ContainsKey(window.Slug))
+                {
+                    EntitiesCollection.Items[relatedItemsSlug].RelatedItems.Add(window.Slug, window);
+                }
             }
             
             var relatedItems = EntitiesCollection.Items.Where(
@@ -114,6 +117,9 @@ internal class ItemMapper : Relatable
 
     public void RemoveEntity(string slug)
     {
-        EntitiesCollection.Items[slug].Remove();
+        if (EntitiesCollection.Items.ContainsKey(slug))
+        {
+            EntitiesCollection.Items[slug].Remove();
+        }
     }
 }

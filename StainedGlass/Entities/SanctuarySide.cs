@@ -16,10 +16,20 @@ internal class SanctuarySide : Entity
 
     public void Replace(string slug, Entity entity)
     {
+        if (!EntitiesCollection.SanctuarySides.ContainsKey(slug))
+        {
+            return;
+        }
         entity.Slug = slug;
         var oldEntity = EntitiesCollection.SanctuarySides[slug];
         EntitiesCollection.SanctuarySides[slug] = (SanctuarySide)entity;
-        EntitiesCollection.SanctuarySides[slug].Church = oldEntity.Church;
+        
+        //if old entity has an assigned church - new one cannot lack one
+        if (EntitiesCollection.SanctuarySides[slug].Church is null)
+        {
+            EntitiesCollection.SanctuarySides[slug].Church = oldEntity.Church;
+        }
+        
         EntitiesCollection.SanctuarySides[slug].Regions = oldEntity.Regions;
     }
 

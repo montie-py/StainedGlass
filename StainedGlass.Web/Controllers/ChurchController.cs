@@ -35,14 +35,14 @@ public class ChurchController : ControllerBase
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Put(string slug, [FromForm]ChurchDTO church)
+    [HttpPut("{originalSlug}")]
+    public async Task<IActionResult> Put(string originalSlug, [FromForm]ChurchDTO church)
     {
-        _useCaseInteractor.ReplaceEntity(slug, church);
+        _useCaseInteractor.ReplaceEntity(originalSlug, church);
         return Ok();
     }
 
-    [HttpDelete]
+    [HttpDelete("{slug}")]
     public async Task<IActionResult> Delete(string slug)
     {
         _useCaseInteractor.RemoveEntity<ChurchDTO>(slug);

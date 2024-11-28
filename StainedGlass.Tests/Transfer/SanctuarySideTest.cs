@@ -99,6 +99,8 @@ public class SanctuarySideTest
 
         var replacedSide = useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(oldside.Slug);
         Assert.Equal(newside.Name, replacedSide.Name);
+        
+        //todo: check replacing with null and not null church
     }
 
     [Fact]
