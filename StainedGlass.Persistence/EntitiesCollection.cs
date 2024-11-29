@@ -1,4 +1,6 @@
-namespace StainedGlass.Entities.Transfer;
+using StainedGlass.Persistence.Entities;
+
+namespace StainedGlass.Persistence;
 
 internal static class EntitiesCollection
 {

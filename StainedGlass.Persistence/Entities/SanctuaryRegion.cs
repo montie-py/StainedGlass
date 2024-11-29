@@ -1,7 +1,5 @@
-using StainedGlass.Entities.Transfer;
-
-namespace StainedGlass.Entities;
-internal class SanctuaryRegion : Entity
+namespace StainedGlass.Persistence.Entities;
+internal class SanctuaryRegion : IEntity
 {
     public required string Slug {get; set;}
     public required string Name {get; set;}
@@ -15,7 +13,7 @@ internal class SanctuaryRegion : Entity
         EntitiesCollection.SanctuaryRegions.TryAdd(Slug, this);
     }
 
-    public void Replace(string slug, Entity entity)
+    public void Replace(string slug, IEntity entity)
     {
         if (!EntitiesCollection.SanctuaryRegions.ContainsKey(slug))
         {

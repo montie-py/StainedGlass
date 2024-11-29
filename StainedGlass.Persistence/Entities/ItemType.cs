@@ -1,8 +1,6 @@
-﻿using StainedGlass.Entities.Transfer;
+﻿namespace StainedGlass.Persistence.Entities;
 
-namespace StainedGlass.Entities;
-
-public class ItemType : Entity
+public class ItemType : IEntity
 {
     public string Name { get; set; }
     public string Slug { get; set; }
@@ -12,7 +10,7 @@ public class ItemType : Entity
         EntitiesCollection.ItemsTypes.TryAdd(Slug, this);
     }
 
-    public void Replace(string slug, Entity entity)
+    public void Replace(string slug, IEntity entity)
     {
         if (!EntitiesCollection.ItemsTypes.ContainsKey(slug))
         {

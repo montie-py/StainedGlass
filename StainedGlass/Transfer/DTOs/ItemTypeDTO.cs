@@ -7,6 +7,15 @@ public class ItemTypeDTO : Transferable
 {
     public string Slug { get; set; }
     public string Name { get; set; }
+
+    public static implicit operator Persistence.Transfer.ItemTypeDTO(ItemTypeDTO itemTypeDto)
+    {
+        return new Persistence.Transfer.ItemTypeDTO
+        {
+            Name = itemTypeDto.Name,
+            Slug = itemTypeDto.Slug
+        };
+    }
     
     public Entity GetEntity(Transferable transferable)
     {

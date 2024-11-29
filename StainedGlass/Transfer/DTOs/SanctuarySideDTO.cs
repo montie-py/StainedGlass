@@ -11,6 +11,16 @@ public class SanctuarySideDTO : Transferable
     public string ChurchSlug { get; set; }
     public ChurchDTO? Church { get; set; }
 
+    public static implicit operator Persistence.Transfer.SanctuarySideDTO(SanctuarySideDTO sanctuarySideDto)
+    {
+        return new Persistence.Transfer.SanctuarySideDTO()
+        {
+            Name = sanctuarySideDto.Name,
+            Slug = sanctuarySideDto.Slug,
+            ChurchSlug = sanctuarySideDto.ChurchSlug
+        };
+    }
+
     public Entity GetEntity(Transferable transferable)
     {
         return (new SanctuarySideMapper()).GetEntity(transferable);

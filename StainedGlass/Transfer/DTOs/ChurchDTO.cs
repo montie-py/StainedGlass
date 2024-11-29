@@ -11,6 +11,17 @@ public class ChurchDTO : Transferable
     public string Image {get; set;}
     public  HashSet<SanctuarySideDTO>? Sides { get; set; } = new();
 
+    public static implicit operator Persistence.Transfer.ChurchDTO(ChurchDTO churchDto)
+    {
+        return new Persistence.Transfer.ChurchDTO
+        {
+            Name = churchDto.Name,
+            Slug = churchDto.Slug,
+            Description = churchDto.Description,
+            Image = churchDto.Image
+        };
+    }
+
     public Entity GetEntity(Transferable transferable)
     {
         return (new ChurchMapper()).GetEntity(transferable);

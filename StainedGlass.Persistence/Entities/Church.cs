@@ -1,8 +1,8 @@
-using StainedGlass.Entities.Transfer;
 
-namespace StainedGlass.Entities;
 
-internal class Church : Entity
+namespace StainedGlass.Persistence.Entities;
+
+internal class Church : IEntity
 {
     public required string Slug {get; set;}
     public string Name {get; set;}
@@ -15,7 +15,7 @@ internal class Church : Entity
         EntitiesCollection.Churches.TryAdd(Slug, this);
     }
 
-    public void Replace(string slug, Entity entity)
+    public void Replace(string slug, IEntity entity)
     {
         if (!EntitiesCollection.Churches.ContainsKey(slug))
         {

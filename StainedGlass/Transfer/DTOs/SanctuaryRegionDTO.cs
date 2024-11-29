@@ -13,6 +13,18 @@ public class SanctuaryRegionDTO : Transferable
     public string SanctuarySideSlug {get; set;}
     public SanctuarySideDTO SanctuarySide {get; set;}
 
+    public static implicit operator Persistence.Transfer.SanctuaryRegionDTO(SanctuaryRegionDTO sanctuaryRegion)
+    {
+        return new Persistence.Transfer.SanctuaryRegionDTO
+        {
+            Name = sanctuaryRegion.Name,
+            Description = sanctuaryRegion.Description,
+            Image = sanctuaryRegion.Image,
+            Slug = sanctuaryRegion.Slug,
+            SanctuarySideSlug = sanctuaryRegion.SanctuarySideSlug,
+        };
+    }
+
     public Entity GetEntity(Transferable transferable)
      {
         return (new SanctuaryRegionMapper()).GetEntity(transferable); 

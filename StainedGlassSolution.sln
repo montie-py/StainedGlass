@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StainedGlass.Tests", "Stain
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StainedGlass.Web", "StainedGlass.Web\StainedGlass.Web.csproj", "{49297C98-8344-452B-A40A-58876EDA30A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StainedGlass.Persistence", "StainedGlass.Persistence\StainedGlass.Persistence.csproj", "{51A31F39-8114-46B7-A9B3-4F0BB8AD320B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{49297C98-8344-452B-A40A-58876EDA30A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49297C98-8344-452B-A40A-58876EDA30A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49297C98-8344-452B-A40A-58876EDA30A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51A31F39-8114-46B7-A9B3-4F0BB8AD320B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51A31F39-8114-46B7-A9B3-4F0BB8AD320B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51A31F39-8114-46B7-A9B3-4F0BB8AD320B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51A31F39-8114-46B7-A9B3-4F0BB8AD320B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

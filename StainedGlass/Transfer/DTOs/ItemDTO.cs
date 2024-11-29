@@ -17,6 +17,30 @@ public class ItemDTO : Transferable
     public Dictionary<string, ItemDTO>? RelatedItems { get; set; } = new();
     public HashSet<string>? RelatedItemsSlugs { get; set; } = new();
 
+    public static implicit operator Persistence.Transfer.ItemDTO(ItemDTO itemDto)
+    {
+        Persistence.Transfer.ItemTypeDTO itemTypeDto = new();
+        Persistence.Transfer.SanctuaryRegionDTO sanctuaryRegionDto = new();
+        if (itemDto.ItemType != null)
+        {
+            itemTypeDto = new Persistence.Transfer.ItemTypeDTO
+            {
+                Name = itemDto.ItemType.Name,
+                Slug = itemDto.Slug
+            };
+        }
+        
+        return new Persistence.Transfer.ItemDTO
+        {
+            Title = itemDto.Title,
+            Description = itemDto.Description,
+            Image = itemDto.Image,
+            ItemType = itemTypeDto,
+            SanctuaryRegionSlug = itemDto.SanctuaryRegionSlug,
+            RelatedItemsSlugs = itemDto.RelatedItemsSlugs,
+        };
+    }
+
 
     public Entity GetEntity(Transferable transferable)
     {
