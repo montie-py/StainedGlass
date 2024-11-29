@@ -1,12 +1,14 @@
 namespace StainedGlass.Persistence.Entities;
 internal class SanctuaryRegion : IEntity
 {
-    public required string Slug {get; set;}
-    public required string Name {get; set;}
-    public required string Description {get; set;}
-    public required string Image {get; set;}
-    public required HashSet<Item>? Items { get; set; } = new();
-    public required SanctuarySide? SanctuarySide {get; set;}
+    public string Slug {get; set;}
+    public string Name {get; set;}
+    public string Description {get; set;}
+    public string Image {get; set;}
+    public string SanctuarySideSlug {get; set;}
+    public SanctuarySide? SanctuarySide {get; set;}
+    public ICollection<Item>? Items { get; set; }
+
 
     public void Save()
     {

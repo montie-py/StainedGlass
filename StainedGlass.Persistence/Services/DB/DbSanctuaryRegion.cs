@@ -8,11 +8,20 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
     public override void AddEntity(IPersistanceTransferStruct transferStruct)
     {
         var itemStruct = (SanctuaryRegionDTO)transferStruct;
-        //todo: create an entity from this struct
+        var sanctuaryRegion = new SanctuaryRegion
+        {
+            Name = itemStruct.Name,
+            Slug = itemStruct.Slug,
+            Description = itemStruct.Description,
+            Image = itemStruct.Image,
+            SanctuarySideSlug = itemStruct.SanctuarySideSlug
+        };
+        _dbContext.SanctuaryRegions.Add(sanctuaryRegion);
+        _dbContext.SaveChanges();
     }
 
     public override List<IEntity> GetEntities()
     {
-        throw new NotImplementedException();
+        return new List<IEntity>(_dbContext.SanctuaryRegions);
     }
 }

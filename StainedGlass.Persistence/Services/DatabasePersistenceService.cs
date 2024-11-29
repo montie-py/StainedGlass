@@ -12,5 +12,5 @@ internal abstract class DatabasePersistenceService : IPersistenceService
         _dbContext = new AppDbContext();
     }
     public abstract void AddEntity(IPersistanceTransferStruct transferStruct);
-    public abstract List<IEntity> GetEntities();
+    public abstract IEnumerable<IPersistanceTransferStruct> GetAllDtos();
 }

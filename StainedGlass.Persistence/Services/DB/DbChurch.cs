@@ -19,8 +19,14 @@ internal class DbChurch : DatabasePersistenceService
         _dbContext.SaveChanges();
     }
 
-    public override List<IEntity> GetEntities()
+    public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
     {
-        return new List<IEntity>(_dbContext.Churches.ToList());
+        List<ChurchDTO> churchDtos = new();
+        foreach (var churchEntity in _dbContext.Churches.ToList())
+        {
+            //todo: finish transformation into ChurchDTO
+        }
+
+        return churchDtos as IEnumerable<IPersistanceTransferStruct>;
     }
 }

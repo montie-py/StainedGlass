@@ -8,7 +8,7 @@ internal class Church : IEntity
     public string Name {get; set;}
     public string Description {get; set;}
     public string Image {get; set;}
-    public HashSet<SanctuarySide>? Sides { get; set; } = new();
+    public ICollection<SanctuarySide>? SanctuarySides { get; set; }
 
     public void Save()
     {
