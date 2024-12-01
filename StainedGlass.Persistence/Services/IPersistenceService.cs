@@ -5,6 +5,6 @@ namespace StainedGlass.Persistence.Services;
 
 public interface IPersistenceService
 {
-    internal void AddEntity(IPersistanceTransferStruct transferStruct);
-    internal IEnumerable<IPersistanceTransferStruct> GetAllDtos();
+    public void AddEntity(IPersistanceTransferStruct transferStruct);
+    public IEnumerable<IPersistanceTransferStruct> GetAllDtos();
 }

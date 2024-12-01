@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StainedGlass.Persistence.Templates;
 using StainedGlass.Transfer;
 using StainedGlass.Transfer.DTOs;
 
@@ -12,6 +13,7 @@ public class SanctuarySideController : ControllerBase
     public SanctuarySideController(InputBoundary useCaseInteractor)
     {
         _useCaseInteractor = useCaseInteractor;
+        ((UseCaseInteractor)_useCaseInteractor).SetPersistenceTemplate(new DatabasePersistenceTemplate());
     }
 
     [HttpGet]

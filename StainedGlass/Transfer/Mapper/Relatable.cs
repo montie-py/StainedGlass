@@ -1,6 +1,4 @@
-﻿using StainedGlass.Entities;
-
-namespace StainedGlass.Transfer.Mapper;
+﻿namespace StainedGlass.Transfer.Mapper;
 
 public interface Relatable : Mappable
 {

@@ -25,7 +25,7 @@ public class SanctuaryRegionDTO : Transferable
         };
     }
 
-    public Entity GetEntity(Transferable transferable)
+    public Entity GetInstance(Transferable transferable)
      {
         return (new SanctuaryRegionMapper()).GetEntity(transferable); 
      }

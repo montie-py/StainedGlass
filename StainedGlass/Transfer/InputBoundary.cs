@@ -1,5 +1,4 @@
-using StainedGlass.Entities;
-using StainedGlass.Transfer.DTOs;
+using StainedGlass.Persistence.Templates;
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer;

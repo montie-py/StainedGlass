@@ -1,4 +1,5 @@
-﻿using StainedGlass.Persistence.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
 
 namespace StainedGlass.Persistence.Services.DB;
@@ -36,8 +37,64 @@ internal class DbItem : DatabasePersistenceService
         }
     }
 
-    public override List<IEntity> GetEntities()
+    public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
     {
-        throw new NotImplementedException();
+        List<IPersistanceTransferStruct> itemDtos = new List<IPersistanceTransferStruct>();
+        
+        foreach (var dbItem in _dbContext.Items)
+        {
+            var relatedItems = dbItem.RelatedItems;
+            
+            if (relatedItems == null)
+            {
+                //if relateditems == null - use local GetRelatedItemsBySlug() method
+            }
+            
+            var relatedItemsDtos = new Dictionary<string, ItemDTO>();
+
+            //adding related items
+            if (relatedItems != null)
+            {
+                foreach (var relatedItem in relatedItems)
+                {
+                    var relatedItemDto = new ItemDTO
+                    {
+                        Title = relatedItem.Item.Title,
+                        Slug = relatedItem.Item.Slug,
+                        Description = relatedItem.Item.Description,
+                        Image = relatedItem.Item.Image,
+                    };
+                    relatedItemsDtos.Add(relatedItemDto.Slug, relatedItemDto);
+                }   
+            }
+            
+            //adding itemtype
+            var itemTypeDto = new ItemTypeDTO
+            {
+                Name = dbItem.ItemType.Name,
+                Slug = dbItem.ItemType.Slug,
+            };
+            var itemDto = new ItemDTO
+            {
+                Title = dbItem.Title,
+                Slug = dbItem.Slug,
+                Description = dbItem.Description,
+                Image = dbItem.Image,
+                ItemType = itemTypeDto,
+                RelatedItems = relatedItemsDtos
+            };
+            itemDtos.Add(itemDto);
+        }
+        return itemDtos;
+    }
+
+    private List<ItemRelation> GetRelatedItemsBySlug(string slug)
+    {
+        using (var context = new AppDbContext())
+        {
+            return context.Items
+                .Include(e => e.RelatedItems)
+                .FirstOrDefault(e => e.Slug == slug)!.RelatedItems.ToList();
+        }
     }
 }

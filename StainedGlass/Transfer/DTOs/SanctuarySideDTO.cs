@@ -21,7 +21,7 @@ public class SanctuarySideDTO : Transferable
         };
     }
 
-    public Entity GetEntity(Transferable transferable)
+    public Entity GetInstance(Transferable transferable)
     {
         return (new SanctuarySideMapper()).GetEntity(transferable);
     }

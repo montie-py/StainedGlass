@@ -22,7 +22,7 @@ public class ChurchDTO : Transferable
         };
     }
 
-    public Entity GetEntity(Transferable transferable)
+    public Entity GetInstance(Transferable transferable)
     {
         return (new ChurchMapper()).GetEntity(transferable);
     }

@@ -20,8 +20,22 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
         _dbContext.SaveChanges();
     }
 
-    public override List<IEntity> GetEntities()
+    public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
     {
-        return new List<IEntity>(_dbContext.SanctuaryRegions);
+        List<IPersistanceTransferStruct> sanctuaryRegionDtos = new List<IPersistanceTransferStruct>();
+
+        foreach (var sanctuaryRegion in _dbContext.SanctuaryRegions.ToList())
+        {
+            var sanctuaryRegionDto = new SanctuaryRegionDTO
+            {
+                Name = sanctuaryRegion.Name,
+                Slug = sanctuaryRegion.Slug,
+                Description = sanctuaryRegion.Description,
+                Image = sanctuaryRegion.Image,
+            };
+            sanctuaryRegionDtos.Add(sanctuaryRegionDto);
+        }
+        
+        return sanctuaryRegionDtos;
     }
 }

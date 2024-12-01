@@ -1,20 +1,23 @@
-using StainedGlass.Entities;
+
+using StainedGlass.Persistence.Services;
+using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer;
 
-public class UseCaseInteractor : InputBoundary
+public class UseCaseInteractor : Persistor, InputBoundary
 {
     private Transferable _dataDTO;
+
     public void StoreEntity(Transferable dataDTO)
     {
         _dataDTO = dataDTO;
-        //TODO send it through the usecases using Chain Of Responsabilities
+        var mapper = dataDTO.GetMapper();
+        //todo: send it through the usecases using Chain Of Responsabilities
 
-        //TODO map it to the Entities
-        Entity entity = _dataDTO.GetEntity(dataDTO);
+        mapper.SetInstance(_persistenceTemplate);
 
         //TODO save entities in DB (sqlite? think about how the tables would be interacted between, OLTP or OLAP, and so on)
-        entity.Save();
+        mapper.SaveEntity(_dataDTO);
     }
     
     public void ReplaceEntity(string slug, Transferable dataDTO)
@@ -23,7 +26,7 @@ public class UseCaseInteractor : InputBoundary
         //TODO send it through the usecases using Chain Of Responsabilities
 
         //TODO map it to the Entities
-        Entity entity = _dataDTO.GetEntity(dataDTO);
+        Entity entity = _dataDTO.GetInstance(dataDTO);
         entity.Replace(slug, entity);
     }
 

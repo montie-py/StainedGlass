@@ -17,7 +17,7 @@ public class ItemTypeDTO : Transferable
         };
     }
     
-    public Entity GetEntity(Transferable transferable)
+    public Entity GetInstance(Transferable transferable)
     {
         return (new ItemTypeMapper()).GetEntity(transferable);
     }

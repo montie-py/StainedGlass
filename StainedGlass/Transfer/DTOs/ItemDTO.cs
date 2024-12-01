@@ -1,4 +1,5 @@
-using StainedGlass.Entities;
+using StainedGlass.Persistence.Services;
+using StainedGlass.Persistence.Templates;
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer.DTOs;
@@ -20,7 +21,6 @@ public class ItemDTO : Transferable
     public static implicit operator Persistence.Transfer.ItemDTO(ItemDTO itemDto)
     {
         Persistence.Transfer.ItemTypeDTO itemTypeDto = new();
-        Persistence.Transfer.SanctuaryRegionDTO sanctuaryRegionDto = new();
         if (itemDto.ItemType != null)
         {
             itemTypeDto = new Persistence.Transfer.ItemTypeDTO
@@ -39,12 +39,6 @@ public class ItemDTO : Transferable
             SanctuaryRegionSlug = itemDto.SanctuaryRegionSlug,
             RelatedItemsSlugs = itemDto.RelatedItemsSlugs,
         };
-    }
-
-
-    public Entity GetEntity(Transferable transferable)
-    {
-        return (new ItemMapper()).GetEntity(transferable);
     }
 
     public Mappable GetMapper()

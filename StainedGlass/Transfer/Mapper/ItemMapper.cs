@@ -1,11 +1,22 @@
-using StainedGlass.Entities;
-using StainedGlass.Entities.Transfer;
+
+using StainedGlass.Persistence.Templates;
 using StainedGlass.Transfer.DTOs;
 
 namespace StainedGlass.Transfer.Mapper;
 
-internal class ItemMapper : Relatable
+internal class ItemMapper : Mapper, Relatable
 {
+    public override void SetInstance(IPersistenceTemplate template)
+    {
+        _persistenceService = template.GetItemInstance();
+    }
+    
+    public override void SaveEntity(Transferable transferable)
+    {
+        Persistence.Transfer.ItemDTO transferItemDTO = transferable as ItemDTO;
+        _persistenceService.AddEntity(transferItemDTO);
+    }
+    
     public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool computeRelatedItems = true)
     {
         SanctuaryRegionMapper sanctuaryRegionMapper = new();

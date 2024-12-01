@@ -18,8 +18,20 @@ internal class DbSanctuarySide : DatabasePersistenceService
         _dbContext.SaveChanges();
     }
 
-    public override List<IEntity> GetEntities()
+    public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
     {
-        return new List<IEntity>(_dbContext.SanctuarySides);
+        List<IPersistanceTransferStruct> sanctuarySideDtos = new List<IPersistanceTransferStruct>();
+
+        foreach (var sanctuarySide in _dbContext.SanctuarySides.ToList())
+        {
+            var sanctuarySideDto = new SanctuarySideDTO
+            {
+                Name = sanctuarySide.Name,
+                Slug = sanctuarySide.Slug,
+            };
+            sanctuarySideDtos.Add(sanctuarySideDto);
+        }
+        
+        return sanctuarySideDtos;
     }
 }

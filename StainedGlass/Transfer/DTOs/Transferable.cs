@@ -1,9 +1,8 @@
-using StainedGlass.Entities;
+using StainedGlass.Persistence.Services;
+using StainedGlass.Persistence.Templates;
 using StainedGlass.Transfer.Mapper;
 
 public interface Transferable
 {
-    public Entity GetEntity(Transferable transferable);
-
     public Mappable GetMapper();
 }

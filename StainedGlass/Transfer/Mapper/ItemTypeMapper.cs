@@ -1,11 +1,20 @@
-﻿using StainedGlass.Entities;
-using StainedGlass.Entities.Transfer;
+﻿using StainedGlass.Persistence.Templates;
 using StainedGlass.Transfer.DTOs;
 
 namespace StainedGlass.Transfer.Mapper;
 
-public class ItemTypeMapper : NonRelatable
+internal class ItemTypeMapper : Mapper, NonRelatable
 {
+    public override void SetInstance(IPersistenceTemplate template)
+    {
+        _persistenceService = template.GetItemTypeInstance();
+    }
+    
+    public override void SaveEntity(Transferable transferable)
+    {
+        Persistence.Transfer.ItemTypeDTO transferItemTypeDto = transferable as ItemTypeDTO;
+        _persistenceService.AddEntity(transferItemTypeDto);
+    }
     public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
     {
         var ItemTypeEntity = entity as ItemType;

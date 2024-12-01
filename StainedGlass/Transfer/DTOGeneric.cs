@@ -1,17 +1,15 @@
-using StainedGlass.Entities;
+
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer;
 
-internal class DTOGeneric<T> where T : Transferable
+internal class DTOGeneric<T> where T : Mappable
 {
-    private T _transferable;
     private Mappable mapper;
 
-    public DTOGeneric(T transferable)
+    public DTOGeneric(T mappable)
     {
-        _transferable = transferable;
-        mapper = _transferable.GetMapper();
+        mapper = mappable;
     }
 
     internal T GetDTOBySlug(string slug)

@@ -1,12 +1,21 @@
-using StainedGlass.Entities;
-using StainedGlass.Entities.Transfer;
+using StainedGlass.Persistence.Templates;
 using StainedGlass.Transfer.DTOs;
 
 namespace StainedGlass.Transfer.Mapper;
 
-internal class ChurchMapper : NonRelatable
+internal class ChurchMapper : Mapper, NonRelatable
 {
-
+    public override void SetInstance(IPersistenceTemplate template)
+    {
+        _persistenceService = template.GetChurchInstance();
+    } 
+    
+    public override void SaveEntity(Transferable transferable)
+    {
+        Persistence.Transfer.ChurchDTO transferChurchDto = transferable as ChurchDTO;
+        _persistenceService.AddEntity(transferChurchDto);
+    }
+    
     public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
     {
         if (entity == null) 

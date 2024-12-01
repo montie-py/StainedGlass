@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StainedGlass.Persistence.Templates;
 using StainedGlass.Transfer;
 using StainedGlass.Transfer.DTOs;
 
@@ -13,6 +14,7 @@ public class ItemTypeController : ControllerBase
     public ItemTypeController(InputBoundary useCaseInteractor)
     {
         _useCaseInteractor = useCaseInteractor;
+        ((UseCaseInteractor)_useCaseInteractor).SetPersistenceTemplate(new DatabasePersistenceTemplate());
     }
     
     [HttpGet]

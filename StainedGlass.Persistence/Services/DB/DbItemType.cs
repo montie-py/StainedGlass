@@ -17,8 +17,18 @@ internal class DbItemType : DatabasePersistenceService
         _dbContext.SaveChanges();
     }
 
-    public override List<IEntity> GetEntities()
+    public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
     {
-        return new List<IEntity>(_dbContext.ItemTypes);
+        List<IPersistanceTransferStruct> itemTypeDtos = new List<IPersistanceTransferStruct>();
+        foreach (var itemType in _dbContext.ItemTypes.ToList())
+        {
+            var itemTypeDto = new ItemTypeDTO
+            {
+                Name = itemType.Name,
+                Slug = itemType.Slug,
+            };
+            itemTypeDtos.Add(itemTypeDto);
+        }
+        return itemTypeDtos;
     }
 }

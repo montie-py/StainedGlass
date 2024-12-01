@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StainedGlass.Persistence.Templates;
 using StainedGlass.Transfer;
 using StainedGlass.Transfer.DTOs;
 
@@ -11,6 +12,7 @@ public class ItemController : ControllerBase
     public ItemController(InputBoundary useCaseInteractor) 
     {
         _useCaseInteractor = useCaseInteractor;
+        ((UseCaseInteractor)_useCaseInteractor).SetPersistenceTemplate(new DatabasePersistenceTemplate());
     }
 
     [HttpGet]
@@ -30,7 +32,7 @@ public class ItemController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromForm] ItemDTO item)
     {
-        _useCaseInteractor.StoreEntity(item);
+        _useCaseInteractor.StoreEntity<ItemMapp>(item);
         return Ok();
     }
 
