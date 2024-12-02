@@ -38,4 +38,21 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
         
         return sanctuaryRegionDtos;
     }
+
+    public override IPersistanceTransferStruct? GetDto(string slug)
+    {
+        var entity = _dbContext.SanctuaryRegions.FirstOrDefault(s => s.Slug == slug);
+        if (entity is null)
+        {
+            return null;
+        }
+
+        return new SanctuaryRegionDTO
+        {
+            Name = entity.Name,
+            Slug = entity.Slug,
+            Image = entity.Image,
+            Description = entity.Description,
+        };
+    }
 }

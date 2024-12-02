@@ -16,7 +16,6 @@ public class UseCaseInteractor : Persistor, InputBoundary
 
         mapper.SetInstance(_persistenceTemplate);
 
-        //TODO save entities in DB (sqlite? think about how the tables would be interacted between, OLTP or OLAP, and so on)
         mapper.SaveEntity(_dataDTO);
     }
     

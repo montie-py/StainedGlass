@@ -13,4 +13,5 @@ internal abstract class DatabasePersistenceService : IPersistenceService
     }
     public abstract void AddEntity(IPersistanceTransferStruct transferStruct);
     public abstract IEnumerable<IPersistanceTransferStruct> GetAllDtos();
+    public abstract IPersistanceTransferStruct? GetDto(string slug);
 }

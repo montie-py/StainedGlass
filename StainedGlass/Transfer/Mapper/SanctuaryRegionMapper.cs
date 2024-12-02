@@ -16,6 +16,45 @@ internal class SanctuaryRegionMapper : Mapper, NonRelatable
             transferable as SanctuaryRegionDTO;
         _persistenceService.AddEntity(transferSanctuaryRegionDto);
     }
+    
+    public override Transferable? GetDTOBySlug(string slug)
+    {
+        var nullableTransferSanctuaryRegionDto = _persistenceService.GetDto(slug);
+        if (nullableTransferSanctuaryRegionDto == null)
+        {
+            return null;
+        }
+        
+        var transferSanctuaryRegionDto = (SanctuaryRegionDTO)nullableTransferSanctuaryRegionDto;
+
+        return new SanctuaryRegionDTO
+        {
+            Name = transferSanctuaryRegionDto.Name,
+            Slug = transferSanctuaryRegionDto.Slug,
+            Description = transferSanctuaryRegionDto.Description,
+            Image = transferSanctuaryRegionDto.Image,
+        };
+    }
+    
+    public override IEnumerable<Transferable?> GetAllDTOs()
+    {
+        var transferSanctuaryRegionDtos =
+            _persistenceService.GetAllDtos() as IEnumerable<Persistence.Transfer.SanctuaryRegionDTO>;
+        var sanctuaryRegionDtos = new List<Transferable>();
+        foreach (var transferSanctuaryRegionDto in transferSanctuaryRegionDtos)
+        {
+            var sanctuaryRegionDto = new SanctuaryRegionDTO
+            {
+                Name = transferSanctuaryRegionDto.Name,
+                Slug = transferSanctuaryRegionDto.Slug,
+                Description = transferSanctuaryRegionDto.Description,
+                Image = transferSanctuaryRegionDto.Image,
+            };
+            sanctuaryRegionDtos.Add(sanctuaryRegionDto);
+        }
+
+        return sanctuaryRegionDtos;
+    }
     public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
      {
         if (entity == null) 
@@ -61,22 +100,6 @@ internal class SanctuaryRegionMapper : Mapper, NonRelatable
 
         return sanctuaryRegionDTO;
      }
-
-    public Transferable? GetDTOBySlug(string slug)
-    {
-        if (!EntitiesCollection.SanctuaryRegions.ContainsKey(slug))
-        {
-            return null;
-        }
-        return GetDTO(EntitiesCollection.SanctuaryRegions[slug], skipParentElements: true);
-    }
-
-    public IEnumerable<Transferable?> GetAllDTOs()
-    {
-        return EntitiesCollection.SanctuaryRegions.Select(
-            e => GetDTO(e.Value, skipParentElements: true)
-            );
-    }
 
     public Entity GetEntity(Transferable transferable)
      {

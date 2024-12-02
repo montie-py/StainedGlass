@@ -61,8 +61,6 @@ internal class DbItem : DatabasePersistenceService
                     {
                         Title = relatedItem.Item.Title,
                         Slug = relatedItem.Item.Slug,
-                        Description = relatedItem.Item.Description,
-                        Image = relatedItem.Item.Image,
                     };
                     relatedItemsDtos.Add(relatedItemDto.Slug, relatedItemDto);
                 }   
@@ -86,6 +84,50 @@ internal class DbItem : DatabasePersistenceService
             itemDtos.Add(itemDto);
         }
         return itemDtos;
+    }
+
+    public override IPersistanceTransferStruct? GetDto(string slug)
+    {
+        var entity = _dbContext.Items.FirstOrDefault(x => x.Slug == slug);
+        if (entity is null)
+        {
+            return null;
+        }
+
+        //adding related items
+        var relatedItems = new Dictionary<string, ItemDTO>();
+
+        if (entity.RelatedItems != null)
+        {
+            foreach (var relatedItem in entity.RelatedItems)
+            {
+                relatedItems.Add(
+                    relatedItem.Item.Slug, 
+                    new ItemDTO
+                        {
+                            Title = relatedItem.Item.Title,
+                            Slug = relatedItem.Item.Slug,
+                        }
+                    );
+            }
+        }
+        
+        //adding itemType
+        var itemTypeDto = new ItemTypeDTO
+        {
+            Name = entity.ItemType.Name,
+            Slug = entity.ItemType.Slug,
+        };
+
+        return new ItemDTO
+        {
+            Title = entity.Title,
+            Slug = entity.Slug,
+            Description = entity.Description,
+            Image = entity.Image,
+            RelatedItems = relatedItems,
+            ItemType = itemTypeDto
+        };
     }
 
     private List<ItemRelation> GetRelatedItemsBySlug(string slug)

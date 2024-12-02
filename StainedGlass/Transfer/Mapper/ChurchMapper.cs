@@ -1,3 +1,4 @@
+using StainedGlass.Persistence.Services.Entities;
 using StainedGlass.Persistence.Templates;
 using StainedGlass.Transfer.DTOs;
 
@@ -14,6 +15,44 @@ internal class ChurchMapper : Mapper, NonRelatable
     {
         Persistence.Transfer.ChurchDTO transferChurchDto = transferable as ChurchDTO;
         _persistenceService.AddEntity(transferChurchDto);
+    }
+    
+    public override Transferable? GetDTOBySlug(string slug)
+    {
+        var nullableTransferChurchDto = _persistenceService.GetDto(slug);
+        if (nullableTransferChurchDto is null)
+        {
+            return null;
+        }
+
+        var transferChurchDto = (Persistence.Transfer.ChurchDTO)nullableTransferChurchDto;
+
+        return new ChurchDTO
+        {
+            Name = transferChurchDto.Name,
+            Slug = transferChurchDto.Slug,
+            Image = transferChurchDto.Image,
+            Description = transferChurchDto.Description,
+        };
+    }
+    
+    public override IEnumerable<Transferable> GetAllDTOs()
+    {
+        var transferChurchDtos = _persistenceService.GetAllDtos() as IEnumerable<Persistence.Transfer.ChurchDTO>;
+        List<ChurchDTO> churchDtos = new();
+        foreach (var transferChurchDto in transferChurchDtos)
+        {
+            ChurchDTO dto = new ChurchDTO
+            {
+                Name = transferChurchDto.Name,
+                Slug = transferChurchDto.Slug,
+                Image = transferChurchDto.Image,
+                Description = transferChurchDto.Description
+            };
+            churchDtos.Add(dto);
+        }
+
+        return churchDtos;
     }
     
     public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
@@ -44,20 +83,6 @@ internal class ChurchMapper : Mapper, NonRelatable
             Image = church.Image,
             Sides = sidesDTO
         };
-    }
-
-    public Transferable? GetDTOBySlug(string slug)
-    {
-        if (!EntitiesCollection.Churches.ContainsKey(slug))
-        {
-            return null;
-        }
-        return GetDTO(EntitiesCollection.Churches[slug]);
-    }
-
-    public IEnumerable<Transferable?> GetAllDTOs()
-    {
-        return EntitiesCollection.Churches.Select(e => GetDTO(e.Value));
     }
 
     public Entity GetEntity(Transferable transferable)

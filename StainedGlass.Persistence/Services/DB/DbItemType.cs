@@ -31,4 +31,19 @@ internal class DbItemType : DatabasePersistenceService
         }
         return itemTypeDtos;
     }
+
+    public override IPersistanceTransferStruct? GetDto(string slug)
+    {
+        var entity = _dbContext.ItemTypes.FirstOrDefault(x => x.Name == slug);
+        if (entity is null)
+        {
+            return null;
+        }
+
+        return new ItemTypeDTO
+        {
+            Name = entity.Name,
+            Slug = entity.Slug,
+        };
+    }
 }

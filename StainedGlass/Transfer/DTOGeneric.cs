@@ -3,13 +3,15 @@ using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer;
 
-internal class DTOGeneric<T> where T : Mappable
+internal class DTOGeneric<T> where T : Transferable
 {
+    private T _transferable;
     private Mappable mapper;
 
-    public DTOGeneric(T mappable)
+    public DTOGeneric(T transferable)
     {
-        mapper = mappable;
+        _transferable = transferable;
+        mapper = _transferable.GetMapper();
     }
 
     internal T GetDTOBySlug(string slug)

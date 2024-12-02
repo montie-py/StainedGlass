@@ -1,5 +1,3 @@
-using StainedGlass.Entities;
-using StainedGlass.Entities.Transfer;
 using StainedGlass.Persistence.Templates;
 using StainedGlass.Transfer.DTOs;
 
@@ -17,6 +15,40 @@ internal class SanctuarySideMapper : Mapper, NonRelatable
         Persistence.Transfer.SanctuarySideDTO transferSanctuarySideDTO = 
             transferable as SanctuarySideDTO;
         _persistenceService.AddEntity(transferSanctuarySideDTO);
+    }
+    
+    public override Transferable? GetDTOBySlug(string slug)
+    {
+        var nullableTransferSanctuarySideDto = _persistenceService.GetDto(slug);
+        if (nullableTransferSanctuarySideDto is null)
+        {
+            return null;
+        }
+
+        var transferSanctuarySideDto = (Persistence.Transfer.SanctuarySideDTO)nullableTransferSanctuarySideDto;
+
+        return new SanctuarySideDTO
+        {
+            Name = transferSanctuarySideDto.Name,
+            Slug = transferSanctuarySideDto.Slug,
+        };
+    }
+    
+    public override IEnumerable<Transferable?> GetAllDTOs()
+    {
+        var transferSanctuarySideDtos = 
+            _persistenceService.GetAllDtos() as IEnumerable<Persistence.Transfer.SanctuarySideDTO>;
+        var sanctuarySideDtos = new List<SanctuarySideDTO>();
+        foreach (var transferSanctuarySideDto in transferSanctuarySideDtos)
+        {
+            var sanctuarySideDto = new SanctuarySideDTO
+            {
+                Name = transferSanctuarySideDto.Name,
+                Slug = transferSanctuarySideDto.Slug,
+            };
+            sanctuarySideDtos.Add(sanctuarySideDto);
+        }
+        return sanctuarySideDtos;
     }
     
     public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
@@ -61,22 +93,6 @@ internal class SanctuarySideMapper : Mapper, NonRelatable
         }
         
         return sanctuarySideDTO;
-    }
-
-    public Transferable? GetDTOBySlug(string slug)
-    {
-        if (!EntitiesCollection.SanctuarySides.ContainsKey(slug))
-        {
-            return null;
-        }
-        return GetDTO(EntitiesCollection.SanctuarySides[slug], skipParentElements: true);
-    }
-
-    public IEnumerable<Transferable?> GetAllDTOs()
-    {
-        return EntitiesCollection.SanctuarySides.Select(
-            e => GetDTO(e.Value, skipParentElements: true)
-            );
     }
 
     public Entity GetEntity(Transferable transferable)

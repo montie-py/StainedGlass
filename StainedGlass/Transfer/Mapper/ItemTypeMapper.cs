@@ -15,6 +15,42 @@ internal class ItemTypeMapper : Mapper, NonRelatable
         Persistence.Transfer.ItemTypeDTO transferItemTypeDto = transferable as ItemTypeDTO;
         _persistenceService.AddEntity(transferItemTypeDto);
     }
+    
+    public override Transferable? GetDTOBySlug(string slug)
+    {
+        var nullableTransferItemTypeDto = _persistenceService.GetDto(slug);
+        if (nullableTransferItemTypeDto is null)
+        {
+            return null;
+        }
+
+        var transferItemTypeDto = (Persistence.Transfer.ItemTypeDTO)nullableTransferItemTypeDto;
+
+        return new ItemTypeDTO
+        {
+            Name = transferItemTypeDto.Name,
+            Slug = transferItemTypeDto.Slug,
+        };
+    }
+    
+    public override IEnumerable<Transferable?> GetAllDTOs()
+    {
+        var transferItemTypeDtos = _persistenceService.GetAllDtos() as IEnumerable<Persistence.Transfer.ItemTypeDTO>;
+        var itemTypeDtos = new List<Transferable?>();
+        foreach (var transferItemTypeDto in transferItemTypeDtos)
+        {
+            var itemTypeDto = new ItemTypeDTO
+            {
+                Name = transferItemTypeDto.Name,
+                Slug = transferItemTypeDto.Slug,
+            };
+            
+            itemTypeDtos.Add(itemTypeDto);
+        }
+
+        return itemTypeDtos;
+    }
+    
     public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
     {
         var ItemTypeEntity = entity as ItemType;
@@ -24,20 +60,6 @@ internal class ItemTypeMapper : Mapper, NonRelatable
             Name = ItemTypeEntity.Name,
             Slug = ItemTypeEntity.Slug,
         };
-    }
-
-    public Transferable? GetDTOBySlug(string slug)
-    {
-        if (!EntitiesCollection.ItemsTypes.ContainsKey(slug))
-        {
-            return null;
-        }
-        return GetDTO(EntitiesCollection.ItemsTypes[slug]);
-    }
-
-    public IEnumerable<Transferable?> GetAllDTOs()
-    {
-        return EntitiesCollection.ItemsTypes.Select(e => GetDTO(e.Value)).ToList();
     }
 
     public Entity GetEntity(Transferable transferable)
