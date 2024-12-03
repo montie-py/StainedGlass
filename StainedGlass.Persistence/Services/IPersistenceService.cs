@@ -8,4 +8,6 @@ public interface IPersistenceService
     public void AddEntity(IPersistanceTransferStruct transferStruct);
     public IEnumerable<IPersistanceTransferStruct> GetAllDtos();
     public IPersistanceTransferStruct? GetDto(string slug);
+    public void RemoveEntity(string slug);
+    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct);
 }

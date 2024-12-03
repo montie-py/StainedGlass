@@ -11,8 +11,7 @@ internal abstract class Mapper : Mappable
 
     public abstract IEnumerable<Transferable?> GetAllDTOs();
 
-    public abstract Entity GetEntity(Transferable transferable);
-
     public abstract void RemoveEntity(string slug);
     public abstract void SaveEntity(Transferable transferable);
+    public abstract void ReplaceEntity(string slug, Transferable transferable);
 }

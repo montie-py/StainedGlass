@@ -3,7 +3,7 @@ using StainedGlass.Transfer.DTOs;
 
 namespace StainedGlass.Transfer.Mapper;
 
-internal class ItemTypeMapper : Mapper, NonRelatable
+internal class ItemTypeMapper : Mapper
 {
     public override void SetInstance(IPersistenceTemplate template)
     {
@@ -51,32 +51,8 @@ internal class ItemTypeMapper : Mapper, NonRelatable
         return itemTypeDtos;
     }
     
-    public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
+    public override void RemoveEntity(string slug)
     {
-        var ItemTypeEntity = entity as ItemType;
-        
-        return new ItemTypeDTO
-        {
-            Name = ItemTypeEntity.Name,
-            Slug = ItemTypeEntity.Slug,
-        };
-    }
-
-    public Entity GetEntity(Transferable transferable)
-    {
-        ItemTypeDTO itemTypeDTO = transferable as ItemTypeDTO;
-        return new ItemType
-        {
-            Name = itemTypeDTO.Name,
-            Slug = itemTypeDTO.Slug,
-        };
-    }
-
-    public void RemoveEntity(string slug)
-    {
-        if (EntitiesCollection.ItemsTypes.ContainsKey(slug))
-        {
-            EntitiesCollection.ItemsTypes[slug].Remove();
-        }
+        _persistenceService.RemoveEntity(slug);
     }
 }

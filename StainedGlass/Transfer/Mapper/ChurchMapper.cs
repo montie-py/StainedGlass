@@ -4,7 +4,7 @@ using StainedGlass.Transfer.DTOs;
 
 namespace StainedGlass.Transfer.Mapper;
 
-internal class ChurchMapper : Mapper, NonRelatable
+internal class ChurchMapper : Mapper
 {
     public override void SetInstance(IPersistenceTemplate template)
     {
@@ -16,7 +16,12 @@ internal class ChurchMapper : Mapper, NonRelatable
         Persistence.Transfer.ChurchDTO transferChurchDto = transferable as ChurchDTO;
         _persistenceService.AddEntity(transferChurchDto);
     }
-    
+
+    public override void ReplaceEntity(string slug, Transferable transferable)
+    {
+        Persistence.Transfer.ChurchDTO transferChurchDto = transferable as ChurchDTO;
+    }
+
     public override Transferable? GetDTOBySlug(string slug)
     {
         var nullableTransferChurchDto = _persistenceService.GetDto(slug);
@@ -55,66 +60,8 @@ internal class ChurchMapper : Mapper, NonRelatable
         return churchDtos;
     }
     
-    public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
+    public override void RemoveEntity(string slug)
     {
-        if (entity == null) 
-        {
-            return null;
-        }
-        
-        SanctuarySideMapper sanctuarySideMapper = new();
-
-        Church church = entity as Church;
-        HashSet<SanctuarySideDTO> sidesDTO = new();
-
-        if (!skipChildrenElements)
-        {
-            foreach (var side in church.Sides)
-            {
-                sidesDTO.Add(sanctuarySideMapper.GetDTO(side, skipParentElements: true) as SanctuarySideDTO);
-            }
-        }
-
-        return new ChurchDTO
-        {
-            Slug = church.Slug,
-            Name = church.Name,
-            Description = church.Description,
-            Image = church.Image,
-            Sides = sidesDTO
-        };
-    }
-
-    public Entity GetEntity(Transferable transferable)
-    {
-        ChurchDTO churchDTO = transferable as ChurchDTO;
-
-        Church churchEntity = new Church
-        {
-            Slug = churchDTO.Slug,
-            Name = churchDTO.Name,
-            Description = churchDTO.Description,
-            Image = churchDTO.Image,
-        };
-
-        if (churchDTO.Sides != null)
-        {
-            SanctuarySideMapper sanctuarySideMapper = new();
-
-            churchEntity.Sides = churchDTO.Sides.Select(
-                    e => sanctuarySideMapper.GetEntity(e) as SanctuarySide
-                    )
-                .ToHashSet();
-        }
-
-        return churchEntity;
-    }
-
-    public void RemoveEntity(string slug)
-    {
-        if (EntitiesCollection.Churches.ContainsKey(slug))
-        {
-            EntitiesCollection.Churches[slug].Remove();
-        }
+        _persistenceService.RemoveEntity(slug);
     }
 }

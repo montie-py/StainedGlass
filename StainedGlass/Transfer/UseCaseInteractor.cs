@@ -1,7 +1,3 @@
-
-using StainedGlass.Persistence.Services;
-using StainedGlass.Transfer.Mapper;
-
 namespace StainedGlass.Transfer;
 
 public class UseCaseInteractor : Persistor, InputBoundary
@@ -25,8 +21,9 @@ public class UseCaseInteractor : Persistor, InputBoundary
         //TODO send it through the usecases using Chain Of Responsabilities
 
         //TODO map it to the Entities
-        Entity entity = _dataDTO.GetInstance(dataDTO);
-        entity.Replace(slug, entity);
+        var mapper = dataDTO.GetMapper();
+        mapper.SetInstance(_persistenceTemplate);
+        mapper.ReplaceEntity(slug, _dataDTO);
     }
 
     public void RemoveEntity<T>(string slug) where T : Transferable, new()

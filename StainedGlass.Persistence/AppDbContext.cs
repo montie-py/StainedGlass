@@ -41,7 +41,8 @@ internal class AppDbContext : DbContext
         modelBuilder.Entity<ItemType>()
             .HasMany(itemType => itemType.Items)
             .WithOne(item => item.ItemType)
-            .HasForeignKey(item => item.ItemTypeSlug);
+            .HasForeignKey(item => item.ItemTypeSlug)
+            .OnDelete(DeleteBehavior.SetNull);
 
         //item-relateditem relationship
         modelBuilder.Entity<ItemRelation>()
@@ -51,13 +52,13 @@ internal class AppDbContext : DbContext
             .HasOne(itemRelation => itemRelation.RelatedItem)
             .WithMany(item => item.RelatedItems)
             .HasForeignKey(itemRelation => itemRelation.ItemSlug)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
         
         modelBuilder.Entity<ItemRelation>()
             .HasOne(itemRelation => itemRelation.RelatedItem)
             .WithMany(item => item.RelatedToItems)
             .HasForeignKey(itemRelation => itemRelation.RelatedItemSlug)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
         
         // base.OnModelCreating(modelBuilder);
     }

@@ -7,7 +7,7 @@ internal class DbItemType : DatabasePersistenceService
 {
     public override void AddEntity(IPersistanceTransferStruct transferStruct)
     {
-        var itemStruct = (ItemTypeDTO)transferStruct;
+        var itemStruct = GetItemTypeDto(transferStruct);
         var itemTypeEntity = new ItemType
         {
             Name = itemStruct.Name,
@@ -45,5 +45,32 @@ internal class DbItemType : DatabasePersistenceService
             Name = entity.Name,
             Slug = entity.Slug,
         };
+    }
+
+    public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    {
+        var itemType = _dbContext.ItemTypes.FirstOrDefault(x => x.Slug == slug);
+
+        if (itemType != null)
+        {
+            var itemStruct = GetItemTypeDto(transferStruct);
+            itemType.Name = itemStruct.Name;
+            _dbContext.SaveChanges();
+        }
+    }
+    
+    public override void RemoveEntity(string slug)
+    {
+        var itemType = _dbContext.ItemTypes.FirstOrDefault(x => x.Slug == slug);
+        if (itemType != null)
+        {
+            _dbContext.ItemTypes.Remove(itemType);
+            _dbContext.SaveChanges();
+        }
+    }
+    
+    private static ItemTypeDTO GetItemTypeDto(IPersistanceTransferStruct transferStruct)
+    {
+        return (ItemTypeDTO)transferStruct;
     }
 }

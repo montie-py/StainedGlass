@@ -7,7 +7,7 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
 {
     public override void AddEntity(IPersistanceTransferStruct transferStruct)
     {
-        var itemStruct = (SanctuaryRegionDTO)transferStruct;
+        var itemStruct = GetSanctuaryRegionDto(transferStruct);
         var sanctuaryRegion = new SanctuaryRegion
         {
             Name = itemStruct.Name,
@@ -18,6 +18,11 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
         };
         _dbContext.SanctuaryRegions.Add(sanctuaryRegion);
         _dbContext.SaveChanges();
+    }
+
+    private static SanctuaryRegionDTO GetSanctuaryRegionDto(IPersistanceTransferStruct transferStruct)
+    {
+        return (SanctuaryRegionDTO)transferStruct;
     }
 
     public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
@@ -54,5 +59,30 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
             Image = entity.Image,
             Description = entity.Description,
         };
+    }
+    
+    public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    {
+        var sanctuaryRegion = _dbContext.SanctuaryRegions.FirstOrDefault(s => s.Slug == slug);
+        if (sanctuaryRegion != null)
+        {
+            var transferSanctuaryRegionDTO = GetSanctuaryRegionDto(transferStruct);
+            sanctuaryRegion.Name = transferSanctuaryRegionDTO.Name;
+            sanctuaryRegion.Description = transferSanctuaryRegionDTO.Description;
+            sanctuaryRegion.Image = transferSanctuaryRegionDTO.Image;
+            sanctuaryRegion.SanctuarySideSlug = transferSanctuaryRegionDTO.SanctuarySideSlug;
+            // _dbContext.SanctuaryRegions.Update(sanctuaryRegion);
+            _dbContext.SaveChanges();
+        }
+    }
+
+    public override void RemoveEntity(string slug)
+    {
+        var sanctuaryRegion = _dbContext.SanctuaryRegions.FirstOrDefault(s => s.Slug == slug);
+        if (sanctuaryRegion != null)
+        {
+            _dbContext.SanctuaryRegions.Remove(sanctuaryRegion);
+            _dbContext.SaveChanges();
+        }
     }
 }

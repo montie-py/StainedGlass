@@ -8,7 +8,7 @@ internal class DbItem : DatabasePersistenceService
 {
     public override void AddEntity(IPersistanceTransferStruct transferStruct)
     {
-        var itemStruct = (ItemDTO)transferStruct;
+        var itemStruct = GetItemDto(transferStruct);
         var newItem = new Item
         {
             Title = itemStruct.Title,
@@ -129,6 +129,73 @@ internal class DbItem : DatabasePersistenceService
             ItemType = itemTypeDto
         };
     }
+    
+    public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    {
+        var item = _dbContext.Items
+            .Include(x => x.RelatedItems)
+            .FirstOrDefault(x => x.Slug == slug);
+        if (item != null)
+        {
+            var transferItemDto = GetItemDto(transferStruct);
+            item.Title = transferItemDto.Title;
+            item.Image = transferItemDto.Image;
+            item.Description = transferItemDto.Description;
+            item.ItemTypeSlug = transferItemDto.ItemTypeSlug;
+
+            if (transferItemDto.RelatedItemsSlugs != null)
+            {
+                if (item.RelatedItems.Count > 0)
+                {
+                    foreach (var relatedItemSlug in transferItemDto.RelatedItemsSlugs)
+                    {
+                        //if there is no relateditem with such a slug - add one
+                        var existingRelatedItem = item.RelatedItems.FirstOrDefault(
+                            x => x.Item.Slug == relatedItemSlug
+                            );
+                        if (existingRelatedItem is null)
+                        {
+                            var newRelatedItem = _dbContext.Items.FirstOrDefault(x => x.Slug == relatedItemSlug);
+                            var itemRelation = new ItemRelation
+                            {
+                                Item = item,
+                                ItemSlug = item.Slug,
+                                RelatedItemSlug = relatedItemSlug,
+                                RelatedItem = newRelatedItem,
+                            };
+                            item.RelatedItems.Add(itemRelation);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var relatedItemSlug in transferItemDto.RelatedItemsSlugs)
+                    {
+                        var newRelatedItem = _dbContext.Items.FirstOrDefault(x => x.Slug == relatedItemSlug);
+                        var itemRelation = new ItemRelation
+                        {
+                            Item = item,
+                            ItemSlug = item.Slug,
+                            RelatedItemSlug = relatedItemSlug,
+                            RelatedItem = newRelatedItem,
+                        };
+                        item.RelatedItems.Add(itemRelation);
+                    }
+                }
+                
+            }
+        }
+    }
+
+    public override void RemoveEntity(string slug)
+    {
+        var item = _dbContext.Items.FirstOrDefault(x => x.Slug == slug);
+        if (item != null)
+        {
+            _dbContext.Items.Remove(item);
+            _dbContext.SaveChanges();
+        }
+    }
 
     private List<ItemRelation> GetRelatedItemsBySlug(string slug)
     {
@@ -138,5 +205,10 @@ internal class DbItem : DatabasePersistenceService
                 .Include(e => e.RelatedItems)
                 .FirstOrDefault(e => e.Slug == slug)!.RelatedItems.ToList();
         }
+    }
+    
+    private static ItemDTO GetItemDto(IPersistanceTransferStruct transferStruct)
+    {
+        return (ItemDTO)transferStruct;
     }
 }
