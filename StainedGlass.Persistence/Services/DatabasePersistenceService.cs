@@ -1,4 +1,4 @@
-﻿using StainedGlass.Persistence.Entities;
+﻿//the purpose of the class is holding and initializing the _dbContext property
 using StainedGlass.Persistence.Transfer;
 
 namespace StainedGlass.Persistence.Services;

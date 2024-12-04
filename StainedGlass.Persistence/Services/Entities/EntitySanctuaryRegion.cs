@@ -1,8 +1,9 @@
-﻿using StainedGlass.Transfer.Mapper;
+﻿using StainedGlass.Persistence.Transfer;
+using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Persistence.Services.Entities;
 
-public class SanctuaryRegion : NonRelatable
+public class EntitySanctuaryRegion : INonRelatable, IPersistenceService
 {
     public IEnumerable<Transferable?> GetAllDTOs()
     {
@@ -19,15 +20,58 @@ public class SanctuaryRegion : NonRelatable
         }
         return GetDTO(EntitiesCollection.SanctuaryRegions[slug], skipParentElements: true);
     }
-    
+
+    public void AddEntity(IPersistanceTransferStruct transferStruct)
+    {
+        EntitiesCollection.SanctuaryRegions.TryAdd(Slug, this);
+    }
+
+    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IPersistanceTransferStruct? GetDto(string slug)
+    {
+        throw new NotImplementedException();
+    }
+
     public void RemoveEntity(string slug)
     {
-        if (EntitiesCollection.SanctuaryRegions.ContainsKey(slug))
+        if (!EntitiesCollection.SanctuaryRegions.ContainsKey(slug))
         {
-            EntitiesCollection.SanctuaryRegions[slug].Remove();
+            return;
         }
+        
+        //remove region from its side
+        var sanctuarySide = EntitiesCollection.SanctuarySides.Values.FirstOrDefault(e => 
+            e.Regions?.FirstOrDefault(r => r.Slug == Slug) != null
+        );
+        if (sanctuarySide != null)
+        {
+            sanctuarySide.Regions?.RemoveAll(e => e.Slug == Slug);
+        }
+        
+        EntitiesCollection.SanctuaryRegions.Remove(Slug);
     }
-    
+
+    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    {
+        if (!EntitiesCollection.SanctuaryRegions.ContainsKey(slug))
+        {
+            return;
+        }
+        entity.Slug = slug;
+        var oldEntity = EntitiesCollection.SanctuaryRegions[slug];
+        EntitiesCollection.SanctuaryRegions[slug] = (SanctuaryRegion)entity;
+        //if old entity has an assigned side - new one cannot lack one
+        if (EntitiesCollection.SanctuaryRegions[slug].SanctuarySide is null)
+        {
+            EntitiesCollection.SanctuaryRegions[slug].SanctuarySide = oldEntity.SanctuarySide;
+        }
+        EntitiesCollection.SanctuaryRegions[slug].Items = oldEntity.Items;
+    }
+
     public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
      {
         if (entity == null) 

@@ -1,8 +1,9 @@
-﻿using StainedGlass.Transfer.Mapper;
+﻿using StainedGlass.Persistence.Transfer;
+using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Persistence.Services.Entities;
 
-public class ItemType : NonRelatable
+public class EntityItemType : INonRelatable, IPersistenceService
 {
     public IEnumerable<Transferable?> GetAllDTOs()
     {
@@ -17,15 +18,40 @@ public class ItemType : NonRelatable
         }
         return GetDTO(EntitiesCollection.ItemsTypes[slug]);
     }
-    
+
+    public void AddEntity(IPersistanceTransferStruct transferStruct)
+    {
+        EntitiesCollection.ItemsTypes.TryAdd(Slug, this);
+    }
+
+    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IPersistanceTransferStruct? GetDto(string slug)
+    {
+        throw new NotImplementedException();
+    }
+
     public void RemoveEntity(string slug)
     {
         if (EntitiesCollection.ItemsTypes.ContainsKey(slug))
         {
-            EntitiesCollection.ItemsTypes[slug].Remove();
+            EntitiesCollection.ItemsTypes.Remove(slug);
         }
     }
-    
+
+    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    {
+        if (!EntitiesCollection.ItemsTypes.ContainsKey(slug))
+        {
+            return;
+        }
+        entity.Slug = slug;
+        EntitiesCollection.ItemsTypes[slug] = (ItemType)entity;
+    }
+
     public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
     {
         var ItemTypeEntity = entity as ItemType;

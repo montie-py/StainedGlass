@@ -1,6 +1,6 @@
 using StainedGlass.Persistence.Entities;
 
-namespace StainedGlass.Persistence;
+namespace StainedGlass.Persistence.Services.Entities;
 
 internal static class EntitiesCollection
 {

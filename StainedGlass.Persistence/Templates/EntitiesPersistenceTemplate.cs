@@ -1,4 +1,5 @@
 ﻿using StainedGlass.Persistence.Services;
+using StainedGlass.Persistence.Services.Entities;
 
 namespace StainedGlass.Persistence.Templates;
 
@@ -6,26 +7,26 @@ public class EntitiesPersistenceTemplate : IPersistenceTemplate
 {
     public IPersistenceService GetItemInstance()
     {
-        throw new NotImplementedException();
+        return new EntityItem();
     }
 
     public IPersistenceService GetItemTypeInstance()
     {
-        throw new NotImplementedException();
+        return new EntityItemType();
     }
 
     public IPersistenceService GetSanctuaryRegionInstance()
     {
-        throw new NotImplementedException();
+        return new EntitySanctuaryRegion();
     }
 
     public IPersistenceService GetSanctuarySideInstance()
     {
-        throw new NotImplementedException();
+        return new EntitySanctuarySide();
     }
 
     public IPersistenceService GetChurchInstance()
     {
-        throw new NotImplementedException();
+        return new EntityChurch();
     }
 }

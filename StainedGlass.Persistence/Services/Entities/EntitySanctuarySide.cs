@@ -1,8 +1,9 @@
-﻿using StainedGlass.Transfer.Mapper;
+﻿using StainedGlass.Persistence.Transfer;
+using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Persistence.Services.Entities;
 
-public class SanctuarySide : NonRelatable
+public class EntitySanctuarySide : INonRelatable, IPersistenceService
 {
     public IEnumerable<Transferable?> GetAllDTOs()
     {
@@ -19,15 +20,59 @@ public class SanctuarySide : NonRelatable
         }
         return GetDTO(EntitiesCollection.SanctuarySides[slug], skipParentElements: true);
     }
-    
+
+    public void AddEntity(IPersistanceTransferStruct transferStruct)
+    {
+        EntitiesCollection.SanctuarySides.TryAdd(Slug, this);
+    }
+
+    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IPersistanceTransferStruct? GetDto(string slug)
+    {
+        throw new NotImplementedException();
+    }
+
     public void RemoveEntity(string slug)
     {
-        if (EntitiesCollection.SanctuarySides.ContainsKey(slug))
+        if (!EntitiesCollection.SanctuarySides.ContainsKey(slug))
         {
-            EntitiesCollection.SanctuarySides[slug].Remove();   
+           return;  
         }
+        
+        //remove the side from its church
+        var church = EntitiesCollection.Churches.Values.FirstOrDefault(e => 
+            e.Sides?.FirstOrDefault(s => s.Slug == Slug) != null
+        );
+        if (church != null)
+        {
+            church.Sides?.RemoveWhere(e => e.Slug == Slug);
+        }
+        EntitiesCollection.SanctuarySides.Remove(Slug);
     }
-    
+
+    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    {
+        if (!EntitiesCollection.SanctuarySides.ContainsKey(slug))
+        {
+            return;
+        }
+        entity.Slug = slug;
+        var oldEntity = EntitiesCollection.SanctuarySides[slug];
+        EntitiesCollection.SanctuarySides[slug] = (SanctuarySide)entity;
+        
+        //if old entity has an assigned church - new one cannot lack one
+        if (EntitiesCollection.SanctuarySides[slug].Church is null)
+        {
+            EntitiesCollection.SanctuarySides[slug].Church = oldEntity.Church;
+        }
+        
+        EntitiesCollection.SanctuarySides[slug].Regions = oldEntity.Regions;
+    }
+
     public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
     {
         if (entity == null) 
