@@ -9,75 +9,45 @@ public class EntityChurch : INonRelatable, IPersistenceService
     public void AddEntity(IPersistanceTransferStruct transferStruct)
     {
         var churchDto = (ChurchDTO)transferStruct;
-        var entity = new Church
-        {
-            Name = churchDto.Name,
-            Slug = churchDto.Slug,
-            Description = churchDto.Description,
-            Image = churchDto.Image,
-        };
+        var entity = GetEntity(churchDto) as Church;
         EntitiesCollection.Churches.TryAdd(churchDto.Slug, entity);    
     }
 
     public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
     {
-        var result = new List<IPersistanceTransferStruct>();
-
-        foreach (string churchSlug in EntitiesCollection.Churches.Keys)
-        {
-            result.Add(GetDtoBySlug(churchSlug));
-        }
-        return result;
+        return EntitiesCollection.Churches.Select(e => GetDTOForEntity(e.Value)).ToList();
     }
 
-    private IPersistanceTransferStruct? GetDtoBySlug(string slug)
+    public IPersistanceTransferStruct? GetDtoBySlug(string slug)
     {
         if (!EntitiesCollection.Churches.ContainsKey(slug))
         {
             return null;
         }
-        return GetDTO(EntitiesCollection.Churches[slug]);
-    }
-
-    public IPersistanceTransferStruct? GetDto(string slug)
-    {
-        
+        return GetDTOForEntity(EntitiesCollection.Churches[slug]);
     }
     
-    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
-    {
-        if (!EntitiesCollection.Churches.ContainsKey(slug))
-        {
-            return;
-        }
-        entity.Slug = slug;
-        var oldEntity = EntitiesCollection.Churches[slug];
-        EntitiesCollection.Churches[slug] = (Church)entity;
-        EntitiesCollection.Churches[slug].Sides = oldEntity.Sides;
-    }
-
-    public void RemoveEntity(string slug)
-    {
-        EntitiesCollection.Churches.Remove(slug);
-    }
-
-    public IPersistanceTransferStruct? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
+    public IPersistanceTransferStruct? GetDTOForEntity(
+        IEntity? entity, 
+        bool skipParentElements = false, 
+        bool skipChildrenElements = false
+        )
     {
         if (entity == null) 
         {
             return null;
         }
-        
-        SanctuarySideMapper sanctuarySideMapper = new();
 
-        EntityChurch church = entity as EntityChurch;
+        Church church = entity as Church;
         HashSet<SanctuarySideDTO> sidesDTO = new();
+
+        EntitySanctuarySide entitySanctuarySide = new();
 
         if (!skipChildrenElements)
         {
-            foreach (var side in church.Sides)
+            foreach (var side in church.SanctuarySides)
             {
-                sidesDTO.Add(sanctuarySideMapper.GetDTO(side, skipParentElements: true) as SanctuarySideDTO);
+                sidesDTO.Add((SanctuarySideDTO)entitySanctuarySide.GetDTOForEntity(side, skipParentElements: true));
             }
         }
 
@@ -90,25 +60,48 @@ public class EntityChurch : INonRelatable, IPersistenceService
             Sides = sidesDTO
         };
     }
-
-    public Entity GetEntity(Transferable transferable)
+    
+    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
-        ChurchDTO churchDTO = transferable as ChurchDTO;
-
-        EntityChurch churchEntity = new EntityChurch
+        if (!EntitiesCollection.Churches.ContainsKey(slug))
         {
-            Slug = churchDTO.Slug,
-            Name = churchDTO.Name,
-            Description = churchDTO.Description,
-            Image = churchDTO.Image,
+            return;
+        }
+
+        var entity = GetEntity(transferStruct);
+        entity.Slug = slug;
+        var oldEntity = EntitiesCollection.Churches[slug];
+        EntitiesCollection.Churches[slug] = (Church)entity;
+        EntitiesCollection.Churches[slug].SanctuarySides = oldEntity.SanctuarySides;
+    }
+
+    public void RemoveEntity(string slug)
+    {
+        EntitiesCollection.Churches.Remove(slug);
+    }
+
+    public IEntity GetEntity(IPersistanceTransferStruct transferable)
+    {
+        // ChurchDTO churchDTO = (ChurchDTO)transferable;
+        ChurchDTO? churchDTO = transferable as ChurchDTO?;
+        if (churchDTO is null)
+        {
+            return null;
+        }
+        
+        Church churchEntity = new Church
+        {
+            Slug = churchDTO.Value.Slug,
+            Name = churchDTO.Value.Name,
+            Description = churchDTO.Value.Description,
+            Image = churchDTO.Value.Image,
         };
 
-        if (churchDTO.Sides != null)
+        if (churchDTO.Value.Sides != null)
         {
-            SanctuarySideMapper sanctuarySideMapper = new();
-
-            churchEntity.Sides = churchDTO.Sides.Select(
-                    e => sanctuarySideMapper.GetEntity(e) as SanctuarySide
+            EntitySanctuarySide entitySanctuarySide = new();
+            churchEntity.SanctuarySides = churchDTO.Value.Sides.Select(
+                    e => entitySanctuarySide.GetEntity(e) as SanctuarySide
                 )
                 .ToHashSet();
         }

@@ -1,4 +1,3 @@
-using StainedGlass.Entities;
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer.DTOs;
@@ -19,11 +18,6 @@ public class SanctuarySideDTO : Transferable
             Slug = sanctuarySideDto.Slug,
             ChurchSlug = sanctuarySideDto.ChurchSlug
         };
-    }
-
-    public Entity GetInstance(Transferable transferable)
-    {
-        return (new SanctuarySideMapper()).GetEntity(transferable);
     }
 
     public Mappable GetMapper()

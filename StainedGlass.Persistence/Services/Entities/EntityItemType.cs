@@ -1,37 +1,30 @@
-﻿using StainedGlass.Persistence.Transfer;
+﻿using StainedGlass.Persistence.Entities;
+using StainedGlass.Persistence.Transfer;
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Persistence.Services.Entities;
 
 public class EntityItemType : INonRelatable, IPersistenceService
 {
-    public IEnumerable<Transferable?> GetAllDTOs()
+    public void AddEntity(IPersistanceTransferStruct transferStruct)
     {
-        return EntitiesCollection.ItemsTypes.Select(e => GetDTO(e.Value)).ToList();
+        var itemTypeDto = (ItemTypeDTO)transferStruct;
+        var entity = GetEntity(itemTypeDto) as ItemType;
+        EntitiesCollection.ItemsTypes.TryAdd(itemTypeDto.Slug, entity);
     }
-    
-    public Transferable? GetDTOBySlug(string slug)
+
+    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    {
+        return EntitiesCollection.ItemsTypes.Select(e => GetDTOForEntity(e.Value)).ToList();
+    }
+
+    public IPersistanceTransferStruct? GetDtoBySlug(string slug)
     {
         if (!EntitiesCollection.ItemsTypes.ContainsKey(slug))
         {
             return null;
         }
-        return GetDTO(EntitiesCollection.ItemsTypes[slug]);
-    }
-
-    public void AddEntity(IPersistanceTransferStruct transferStruct)
-    {
-        EntitiesCollection.ItemsTypes.TryAdd(Slug, this);
-    }
-
-    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IPersistanceTransferStruct? GetDto(string slug)
-    {
-        throw new NotImplementedException();
+        return GetDTOForEntity(EntitiesCollection.ItemsTypes[slug]);
     }
 
     public void RemoveEntity(string slug)
@@ -48,11 +41,17 @@ public class EntityItemType : INonRelatable, IPersistenceService
         {
             return;
         }
+
+        var entity = GetEntity(transferStruct);
         entity.Slug = slug;
         EntitiesCollection.ItemsTypes[slug] = (ItemType)entity;
     }
 
-    public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
+    public IPersistanceTransferStruct? GetDTOForEntity(
+        IEntity? entity, 
+        bool skipParentElements = false, 
+        bool skipChildrenElements = false
+        )
     {
         var ItemTypeEntity = entity as ItemType;
         
@@ -63,13 +62,17 @@ public class EntityItemType : INonRelatable, IPersistenceService
         };
     }
 
-    public Entity GetEntity(Transferable transferable)
+    public IEntity GetEntity(IPersistanceTransferStruct transferable)
     {
-        ItemTypeDTO itemTypeDTO = transferable as ItemTypeDTO;
+        ItemTypeDTO? itemTypeDTO = transferable as ItemTypeDTO?;
+        
+        if (itemTypeDTO == null)
+            return null;
+        
         return new ItemType
         {
-            Name = itemTypeDTO.Name,
-            Slug = itemTypeDTO.Slug,
+            Name = itemTypeDTO.Value.Name,
+            Slug = itemTypeDTO.Value.Slug,
         };
     }
 }

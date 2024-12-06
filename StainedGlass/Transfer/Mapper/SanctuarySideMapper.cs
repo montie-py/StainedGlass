@@ -16,10 +16,17 @@ internal class SanctuarySideMapper : Mapper
             transferable as SanctuarySideDTO;
         _persistenceService.AddEntity(transferSanctuarySideDTO);
     }
-    
+
+    public override void ReplaceEntity(string slug, Transferable transferable)
+    {
+        Persistence.Transfer.SanctuarySideDTO transferSanctuarySideDTO = 
+            transferable as SanctuarySideDTO;
+        _persistenceService.ReplaceEntity(slug, transferSanctuarySideDTO);
+    }
+
     public override Transferable? GetDTOBySlug(string slug)
     {
-        var nullableTransferSanctuarySideDto = _persistenceService.GetDto(slug);
+        var nullableTransferSanctuarySideDto = _persistenceService.GetDtoBySlug(slug);
         if (nullableTransferSanctuarySideDto is null)
         {
             return null;

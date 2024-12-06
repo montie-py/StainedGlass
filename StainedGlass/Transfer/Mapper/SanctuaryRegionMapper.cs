@@ -16,10 +16,17 @@ internal class SanctuaryRegionMapper : Mapper
             transferable as SanctuaryRegionDTO;
         _persistenceService.AddEntity(transferSanctuaryRegionDto);
     }
-    
+
+    public override void ReplaceEntity(string slug, Transferable transferable)
+    {
+        Persistence.Transfer.SanctuaryRegionDTO transferSanctuaryRegionDto =
+            transferable as SanctuaryRegionDTO;
+        _persistenceService.ReplaceEntity(slug, transferSanctuaryRegionDto);
+    }
+
     public override Transferable? GetDTOBySlug(string slug)
     {
-        var nullableTransferSanctuaryRegionDto = _persistenceService.GetDto(slug);
+        var nullableTransferSanctuaryRegionDto = _persistenceService.GetDtoBySlug(slug);
         if (nullableTransferSanctuaryRegionDto == null)
         {
             return null;

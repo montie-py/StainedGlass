@@ -1,4 +1,3 @@
-using StainedGlass.Entities;
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer.DTOs;
@@ -20,11 +19,6 @@ public class ChurchDTO : Transferable
             Description = churchDto.Description,
             Image = churchDto.Image
         };
-    }
-
-    public Entity GetInstance(Transferable transferable)
-    {
-        return (new ChurchMapper()).GetEntity(transferable);
     }
     
     public Mappable GetMapper()

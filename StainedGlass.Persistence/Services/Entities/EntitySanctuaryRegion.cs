@@ -1,103 +1,56 @@
-﻿using StainedGlass.Persistence.Transfer;
+﻿using StainedGlass.Persistence.Entities;
+using StainedGlass.Persistence.Transfer;
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Persistence.Services.Entities;
 
 public class EntitySanctuaryRegion : INonRelatable, IPersistenceService
 {
-    public IEnumerable<Transferable?> GetAllDTOs()
+    public void AddEntity(IPersistanceTransferStruct transferStruct)
+    {
+        var sanctuaryRegionDto = (SanctuaryRegionDTO)transferStruct;
+        var entity = GetEntity(sanctuaryRegionDto) as SanctuaryRegion;
+        
+        EntitiesCollection.SanctuaryRegions.TryAdd(sanctuaryRegionDto.Slug, entity);
+    }
+    
+    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
     {
         return EntitiesCollection.SanctuaryRegions.Select(
-            e => GetDTO(e.Value, skipParentElements: true)
+            e => GetDTOForEntity(e.Value, skipParentElements: true)
         );
     }
     
-    public Transferable? GetDTOBySlug(string slug)
+    public IPersistanceTransferStruct? GetDTOForEntity(
+        IEntity? entity, 
+        bool skipParentElements = false, 
+        bool skipChildrenElements = false
+    )
     {
-        if (!EntitiesCollection.SanctuaryRegions.ContainsKey(slug))
-        {
-            return null;
-        }
-        return GetDTO(EntitiesCollection.SanctuaryRegions[slug], skipParentElements: true);
-    }
-
-    public void AddEntity(IPersistanceTransferStruct transferStruct)
-    {
-        EntitiesCollection.SanctuaryRegions.TryAdd(Slug, this);
-    }
-
-    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IPersistanceTransferStruct? GetDto(string slug)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void RemoveEntity(string slug)
-    {
-        if (!EntitiesCollection.SanctuaryRegions.ContainsKey(slug))
-        {
-            return;
-        }
-        
-        //remove region from its side
-        var sanctuarySide = EntitiesCollection.SanctuarySides.Values.FirstOrDefault(e => 
-            e.Regions?.FirstOrDefault(r => r.Slug == Slug) != null
-        );
-        if (sanctuarySide != null)
-        {
-            sanctuarySide.Regions?.RemoveAll(e => e.Slug == Slug);
-        }
-        
-        EntitiesCollection.SanctuaryRegions.Remove(Slug);
-    }
-
-    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
-    {
-        if (!EntitiesCollection.SanctuaryRegions.ContainsKey(slug))
-        {
-            return;
-        }
-        entity.Slug = slug;
-        var oldEntity = EntitiesCollection.SanctuaryRegions[slug];
-        EntitiesCollection.SanctuaryRegions[slug] = (SanctuaryRegion)entity;
-        //if old entity has an assigned side - new one cannot lack one
-        if (EntitiesCollection.SanctuaryRegions[slug].SanctuarySide is null)
-        {
-            EntitiesCollection.SanctuaryRegions[slug].SanctuarySide = oldEntity.SanctuarySide;
-        }
-        EntitiesCollection.SanctuaryRegions[slug].Items = oldEntity.Items;
-    }
-
-    public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
-     {
         if (entity == null) 
         {
             return null;
         }
-        ItemMapper itemMapper = new();
-        SanctuarySideMapper sanctuarySideMapper = new();
+        EntityItem entityItem = new();
+        EntitySanctuarySide entitySanctuarySide = new();
 
         SanctuaryRegion region = entity as SanctuaryRegion;
         HashSet<ItemDTO> WindowsDTOs = new();
-        SanctuarySideDTO sanctuarySideDTO = null;
+        SanctuarySideDTO? sanctuarySideDTO = null;
 
         if (!skipChildrenElements)
         {
             foreach (Item window in region.Items)
             {
-                WindowsDTOs.Add(itemMapper.GetDTO(window, skipParentElements: true) as ItemDTO);
+                WindowsDTOs.Add((ItemDTO)entityItem.GetDTOForEntity(window, skipParentElements: true));
             }
         }
 
         if (!skipParentElements)
         {
-            sanctuarySideDTO = sanctuarySideMapper.GetDTO(
+            sanctuarySideDTO = (SanctuarySideDTO)entitySanctuarySide.GetDTOForEntity(
                 region.SanctuarySide, skipParentElements: true, skipChildrenElements: true
-                ) as SanctuarySideDTO;
+            );
         }
 
         var sanctuaryRegionDTO = new SanctuaryRegionDTO
@@ -112,38 +65,88 @@ public class EntitySanctuaryRegion : INonRelatable, IPersistenceService
 
         if (sanctuarySideDTO != null)
         {
-            sanctuaryRegionDTO.SanctuarySideSlug = sanctuarySideDTO.Slug;
+            sanctuaryRegionDTO.SanctuarySideSlug = sanctuarySideDTO.Value.Slug;
         }
 
         return sanctuaryRegionDTO;
-     }
+    }
 
-    public Entity GetEntity(Transferable transferable)
+    public IPersistanceTransferStruct? GetDtoBySlug(string slug)
+    {
+        if (!EntitiesCollection.ItemsTypes.ContainsKey(slug))
+        {
+            return null;
+        }
+        return GetDTOForEntity(EntitiesCollection.ItemsTypes[slug]);
+    }
+
+    public void RemoveEntity(string slug)
+    {
+        if (!EntitiesCollection.SanctuaryRegions.ContainsKey(slug))
+        {
+            return;
+        }
+        
+        //remove region from its side
+        var sanctuarySide = EntitiesCollection.SanctuarySides.Values.FirstOrDefault(e => 
+            e.Regions?.FirstOrDefault(r => r.Slug == slug) != null
+        );
+        if (sanctuarySide != null)
+        {
+            ((List<SanctuaryRegion>)sanctuarySide.Regions)?.RemoveAll(e => e.Slug == slug);
+        }
+        
+        EntitiesCollection.SanctuaryRegions.Remove(slug);
+    }
+
+    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    {
+        if (!EntitiesCollection.SanctuaryRegions.ContainsKey(slug))
+        {
+            return;
+        }
+
+        var entity = GetEntity(transferStruct);
+        entity.Slug = slug;
+        var oldEntity = EntitiesCollection.SanctuaryRegions[slug];
+        EntitiesCollection.SanctuaryRegions[slug] = (SanctuaryRegion)entity;
+        //if old entity has an assigned side - new one cannot lack one
+        if (EntitiesCollection.SanctuaryRegions[slug].SanctuarySide is null)
+        {
+            EntitiesCollection.SanctuaryRegions[slug].SanctuarySide = oldEntity.SanctuarySide;
+        }
+        EntitiesCollection.SanctuaryRegions[slug].Items = oldEntity.Items;
+    }
+
+    public IEntity GetEntity(IPersistanceTransferStruct transferable)
      {
-        SanctuaryRegionDTO sanctuaryRegionDTO = transferable as SanctuaryRegionDTO;
+        SanctuaryRegionDTO? sanctuaryRegionDTO = transferable as SanctuaryRegionDTO?;
+
+        if (sanctuaryRegionDTO == null)
+        {
+            return null;
+        }
 
         SanctuarySide sanctuarySide = 
             (
-                sanctuaryRegionDTO.SanctuarySideSlug != null 
-                && EntitiesCollection.SanctuarySides.ContainsKey(sanctuaryRegionDTO.SanctuarySideSlug)
-                ) ? EntitiesCollection.SanctuarySides[sanctuaryRegionDTO.SanctuarySideSlug] : null;
+                EntitiesCollection.SanctuarySides.ContainsKey(sanctuaryRegionDTO.Value.SanctuarySideSlug)
+                ) ? EntitiesCollection.SanctuarySides[sanctuaryRegionDTO.Value.SanctuarySideSlug] : null;
         
         SanctuaryRegion sanctuaryRegion = new SanctuaryRegion
         {
-            Name = sanctuaryRegionDTO.Name,
-            Description = sanctuaryRegionDTO.Description,
-            Slug = sanctuaryRegionDTO.Slug,
-            Image = sanctuaryRegionDTO.Image,
+            Name = sanctuaryRegionDTO.Value.Name,
+            Description = sanctuaryRegionDTO.Value.Description,
+            Slug = sanctuaryRegionDTO.Value.Slug,
+            Image = sanctuaryRegionDTO.Value.Image,
             Items = null,
             SanctuarySide = sanctuarySide,
         };
         
-        if (sanctuaryRegionDTO.Items != null)
+        if (sanctuaryRegionDTO.Value.Items != null)
         {
-            var stainedGlassMapper = new ItemMapper();
-            HashSet<Entities.Item> windows = new();
-            sanctuaryRegion.Items = sanctuaryRegionDTO.Items.Select(
-                e => stainedGlassMapper.GetEntity(e) as Entities.Item
+            var entityItem = new EntityItem();
+            sanctuaryRegion.Items = sanctuaryRegionDTO.Value.Items.Select(
+                e => entityItem.GetEntity(e) as Item
                 ).ToHashSet();
         }
 

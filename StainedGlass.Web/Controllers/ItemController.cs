@@ -32,7 +32,7 @@ public class ItemController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromForm] ItemDTO item)
     {
-        _useCaseInteractor.StoreEntity<ItemMapp>(item);
+        _useCaseInteractor.StoreEntity(item);
         return Ok();
     }
 

@@ -37,7 +37,7 @@ internal class DbChurch : DatabasePersistenceService
         return churchDtos;
     }
 
-    public override IPersistanceTransferStruct? GetDto(string slug)
+    public override IPersistanceTransferStruct? GetDtoBySlug(string slug)
     {
         var entity = _dbContext.Churches.FirstOrDefault(e => e.Slug == slug);
         if (entity is null)

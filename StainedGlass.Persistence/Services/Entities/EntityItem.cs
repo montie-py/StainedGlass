@@ -4,35 +4,28 @@ using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Persistence.Services.Entities;
 
-public class EntityItem : Relatable, IPersistenceService
+public class EntityItem : IRelatable, IPersistenceService
 {
-    public IEnumerable<Transferable?> GetAllDTOs()
+
+    public void AddEntity(IPersistanceTransferStruct transferStruct)
     {
-        return EntitiesCollection.Items.Select(e => GetDTO(e.Value));
+        var itemDto = (ItemDTO)transferStruct;
+        var entity = GetEntity(transferStruct) as Item;
+        EntitiesCollection.Items.TryAdd(itemDto.Slug, entity);
     }
-    
-    public Transferable? GetDTOBySlug(string slug)
+
+    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    {
+        return EntitiesCollection.Items.Select(e => GetDTOForEntity(e.Value));
+    }
+
+    public IPersistanceTransferStruct? GetDtoBySlug(string slug)
     {
         if (!EntitiesCollection.Items.ContainsKey(slug))
         {
             return null;
         }
-        return GetDTO(EntitiesCollection.Items[slug]);
-    }
-
-    public void AddEntity(IPersistanceTransferStruct transferStruct)
-    {
-        EntitiesCollection.Items.TryAdd(Slug, this);
-    }
-
-    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IPersistanceTransferStruct? GetDto(string slug)
-    {
-        throw new NotImplementedException();
+        return GetDTOForEntity(EntitiesCollection.Items[slug]);
     }
 
     public void RemoveEntity(string slug)
@@ -42,24 +35,29 @@ public class EntityItem : Relatable, IPersistenceService
             return;
         }
         
+        var item = EntitiesCollection.Items[slug];
+        
         //remove item from its region
         var sanctuaryRegion = EntitiesCollection.SanctuaryRegions.Values.FirstOrDefault(e => 
-            e.Items?.FirstOrDefault(i => i.Slug == Slug) != null
+            e.Items?.FirstOrDefault(i => i.Slug == slug) != null
         );
-        if (sanctuaryRegion != null)
+        if (sanctuaryRegion is null)
         {
-            sanctuaryRegion.Items?.RemoveWhere(e => e.Slug == Slug);
+            return;
         }
+        
+        ((HashSet<Item>)sanctuaryRegion.Items)?.RemoveWhere(e => e.Slug == slug);
 
         //remove this item from its related items as well
-        if (RelatedItems.Count > 0)
+        if (item.RelatedItems.Count > 0)
         {
-            foreach (var relatedItem in RelatedItems.Values)
+            foreach (var relatedItem in ((Dictionary<string, Item>)item.RelatedItems).Values)
             {
-                relatedItem.RelatedItems.Remove(Slug);
+                var itemRelations = relatedItem.RelatedItems as List<ItemRelation>;
+                itemRelations.RemoveAll(e => e.RelatedItemSlug == slug);
             }
         }
-        EntitiesCollection.Items.Remove(Slug);
+        EntitiesCollection.Items.Remove(slug);
     }
 
     public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
@@ -68,9 +66,11 @@ public class EntityItem : Relatable, IPersistenceService
         {
             return;
         }
+
+        var entity = GetEntity(transferStruct) as Item;
         entity.Slug = slug;
         var oldEntity = EntitiesCollection.Items[slug];
-        EntitiesCollection.Items[slug] = (Item)entity;
+        EntitiesCollection.Items[slug] = entity;
         //if old entity has an assigned itemType - new one cannot lack one
         if (EntitiesCollection.Items[slug].ItemType is null)
         {
@@ -83,26 +83,40 @@ public class EntityItem : Relatable, IPersistenceService
         }
 
         //if the item has related items - update this related item with the newer version
-        if (RelatedItems.Count > 0)
+        if (entity.RelatedItems.Count > 0)
         {
-            foreach (var relatedItem in RelatedItems.Values)
+            foreach (var relatedItem in ((Dictionary<string, Item>)entity.RelatedItems).Values)
             {
                 //if a related item doesn't have the present item as a related one - add it
-                if (!relatedItem.RelatedItems.ContainsKey(Slug))
+                
+                if (relatedItem.RelatedItems.FirstOrDefault(e => e.RelatedItemSlug == slug) == null)
                 {
-                    relatedItem.RelatedItems.Add(Slug, (Item)entity);
+                    var itemRelation = new ItemRelation
+                    {
+                        Item = relatedItem,
+                        ItemSlug = relatedItem.Slug,
+                        RelatedItemSlug = entity.Slug,
+                        RelatedItem = entity
+                    };
+                    relatedItem.RelatedItems.Add(itemRelation);   
                 }
                 else
                 {
-                    relatedItem.RelatedItems[Slug] = (Item)entity;   
+                    relatedItem.RelatedItems
+                        .FirstOrDefault(e => e.RelatedItemSlug == slug)
+                        .RelatedItem = entity;
                 }
             }
         }
     }
 
-    public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool computeRelatedItems = true)
+    public IPersistanceTransferStruct? GetDTOForEntity(
+        IEntity? entity, 
+        bool skipParentElements = false, 
+        bool computeRelatedItems = true
+        )
     {
-        SanctuaryRegionMapper sanctuaryRegionMapper = new();
+        EntitySanctuaryRegion entitySanctuaryRegion = new();
         Item item = entity as Item;
 
         var itemDto = new ItemDTO
@@ -116,82 +130,105 @@ public class EntityItem : Relatable, IPersistenceService
         if (!skipParentElements)
         {
             SanctuaryRegionDTO? sanctuaryRegionDTO = 
-                sanctuaryRegionMapper.GetDTO(item.SanctuaryRegion, skipChildrenElements : true) as SanctuaryRegionDTO;
+                entitySanctuaryRegion.GetDTOForEntity(
+                    item.SanctuaryRegion, 
+                    skipChildrenElements : true
+                    ) as SanctuaryRegionDTO?;
             if (sanctuaryRegionDTO != null)
             {
-                itemDto.SanctuaryRegionSlug = sanctuaryRegionDTO.Slug;
+                itemDto.SanctuaryRegionSlug = sanctuaryRegionDTO.Value.Slug;
                 itemDto.SanctuaryRegion = sanctuaryRegionDTO;
             }
         }
 
         if (item.ItemType != null)
         {
-            ItemTypeMapper itemTypeMapper = new();
-            itemDto.ItemType = itemTypeMapper.GetDTO(item.ItemType) as ItemTypeDTO;
+            EntityItemType entityItemType = new();
+            itemDto.ItemType = (ItemTypeDTO)entityItemType.GetDTOForEntity(item.ItemType);
             itemDto.ItemTypeSlug = item.ItemType.Slug;
         }
 
         if (computeRelatedItems && item.RelatedItems != null)
         {
-            foreach (EntityItem relatedItem in item.RelatedItems.Values)
+            foreach (ItemRelation relatedItem in item.RelatedItems)
             {
-                itemDto.RelatedItemsSlugs.Add(relatedItem.Slug);
-                itemDto.RelatedItems.Add(relatedItem.Slug, GetDTO(relatedItem, computeRelatedItems : false) as ItemDTO);
+                itemDto.RelatedItemsSlugs.Add(relatedItem.ItemSlug);
+                itemDto.RelatedItems.Add(
+                    relatedItem.ItemSlug, 
+                    (ItemDTO)GetDTOForEntity(relatedItem.RelatedItem, computeRelatedItems : false)
+                    );
             }
         }
 
         return itemDto;
     }
 
-    public Entity GetEntity(Transferable transferable)
+    public IEntity GetEntity(IPersistanceTransferStruct transferable)
     {
-        ItemDTO itemDto = transferable as ItemDTO;
+        ItemDTO? itemDto = transferable as ItemDTO?;
+
+        if (itemDto == null)
+        {
+            return null;
+        }
 
         SanctuaryRegion sanctuaryRegion = null;
         ItemType itemType = null;
 
-        if (itemDto.SanctuaryRegionSlug != null)
+        if (itemDto.Value.SanctuaryRegionSlug != null)
         {
-            sanctuaryRegion = EntitiesCollection.SanctuaryRegions[itemDto.SanctuaryRegionSlug];
+            sanctuaryRegion = EntitiesCollection.SanctuaryRegions[itemDto.Value.SanctuaryRegionSlug];
         }
 
-        if (itemDto.ItemTypeSlug != null)
+        if (itemDto.Value.ItemTypeSlug != null)
         {
-            itemType = EntitiesCollection.ItemsTypes[itemDto.ItemTypeSlug];
+            itemType = EntitiesCollection.ItemsTypes[itemDto.Value.ItemTypeSlug];
         }
 
-        var window = new EntityItem
+        var entity = new Item
         {
-            Slug = itemDto.Slug,
-            Title = itemDto.Title,
-            Description = itemDto.Description,
-            Image = itemDto.Image,
+            Slug = itemDto.Value.Slug,
+            Title = itemDto.Value.Title,
+            Description = itemDto.Value.Description,
+            Image = itemDto.Value.Image,
             ItemType = itemType,
             SanctuaryRegion = sanctuaryRegion
         };
 
-        if (itemDto.RelatedItemsSlugs != null && itemDto.RelatedItemsSlugs.Count > 0)
+        if (itemDto.Value.RelatedItemsSlugs != null && itemDto.Value.RelatedItemsSlugs.Count > 0)
         {
             //save current item as a related item to its related items as well
-            foreach (string relatedItemsSlug in itemDto.RelatedItemsSlugs)
+            foreach (string relatedItemsSlug in itemDto.Value.RelatedItemsSlugs)
             {
-                if (!EntitiesCollection.Items[relatedItemsSlug].RelatedItems.ContainsKey(window.Slug))
+                var currentRelatedItem =
+                    EntitiesCollection.Items[relatedItemsSlug].RelatedItems.FirstOrDefault(
+                        e => e.RelatedItemSlug == itemDto.Value.Slug);
+                if (currentRelatedItem is null)
                 {
-                    EntitiesCollection.Items[relatedItemsSlug].RelatedItems.Add(window.Slug, window);
+                    EntitiesCollection.Items[relatedItemsSlug].RelatedItems.Add(
+                        new ItemRelation
+                        {
+                            Item = EntitiesCollection.Items[relatedItemsSlug],
+                            ItemSlug = EntitiesCollection.Items[relatedItemsSlug].Slug,
+                            RelatedItem = entity,
+                            RelatedItemSlug = entity.Slug
+                        }
+                            );
                 }
             }
             
+            
             var relatedItems = EntitiesCollection.Items.Where(
-                e => itemDto.RelatedItemsSlugs.Contains(e.Value.Slug)
-            ).ToDictionary();
-            window.RelatedItems = relatedItems;
+                e => itemDto.Value.RelatedItemsSlugs.Contains(e.Value.Slug)
+            );
+            entity.RelatedItems = (ICollection<ItemRelation>)relatedItems;
         }
 
         if (sanctuaryRegion != null) 
         {
-            sanctuaryRegion.Items.Add(window);
+            sanctuaryRegion.Items.Add(entity);
         }
 
-        return window;
+        return entity;
     }
 }

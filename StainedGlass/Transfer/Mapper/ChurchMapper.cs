@@ -20,11 +20,12 @@ internal class ChurchMapper : Mapper
     public override void ReplaceEntity(string slug, Transferable transferable)
     {
         Persistence.Transfer.ChurchDTO transferChurchDto = transferable as ChurchDTO;
+        _persistenceService.ReplaceEntity(slug, transferChurchDto);
     }
 
     public override Transferable? GetDTOBySlug(string slug)
     {
-        var nullableTransferChurchDto = _persistenceService.GetDto(slug);
+        var nullableTransferChurchDto = _persistenceService.GetDtoBySlug(slug);
         if (nullableTransferChurchDto is null)
         {
             return null;

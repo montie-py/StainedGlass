@@ -1,4 +1,3 @@
-using StainedGlass.Entities;
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer.DTOs;
@@ -24,11 +23,6 @@ public class SanctuaryRegionDTO : Transferable
             SanctuarySideSlug = sanctuaryRegion.SanctuarySideSlug,
         };
     }
-
-    public Entity GetInstance(Transferable transferable)
-     {
-        return (new SanctuaryRegionMapper()).GetEntity(transferable); 
-     }
 
     public Mappable GetMapper()
     {

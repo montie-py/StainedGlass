@@ -1,39 +1,82 @@
-﻿using StainedGlass.Persistence.Transfer;
+﻿using StainedGlass.Persistence.Entities;
+using StainedGlass.Persistence.Transfer;
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Persistence.Services.Entities;
 
 public class EntitySanctuarySide : INonRelatable, IPersistenceService
 {
-    public IEnumerable<Transferable?> GetAllDTOs()
+    public void AddEntity(IPersistanceTransferStruct transferStruct)
+    {
+        var sanctuarySideDto = (SanctuarySideDTO)transferStruct;
+        var entity = GetEntity(sanctuarySideDto) as SanctuarySide;
+        EntitiesCollection.SanctuarySides.TryAdd(sanctuarySideDto.Slug, entity);
+    } 
+    
+    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
     {
         return EntitiesCollection.SanctuarySides.Select(
-            e => GetDTO(e.Value, skipParentElements: true)
+            e => GetDTOForEntity(e.Value, skipParentElements: true)
         );
     }
     
-    public Transferable? GetDTOBySlug(string slug)
+    public IPersistanceTransferStruct? GetDTOForEntity(
+        IEntity entity, 
+        bool skipParentElements = false, 
+        bool skipChildrenElements = false
+    )
+    {
+        if (entity == null) 
+        {
+            return null;
+        }
+        
+        EntityChurch entityChurch = new();
+        EntitySanctuaryRegion entitySanctuaryRegion = new();
+        SanctuarySide? sanctuarySide = entity as SanctuarySide;
+
+        List<SanctuaryRegionDTO> regionsDTO = new();
+        ChurchDTO churchDTO = new();
+        
+        if (!skipChildrenElements)
+        {
+            foreach (SanctuaryRegion? region in sanctuarySide.Regions)
+            {
+                regionsDTO.Add((SanctuaryRegionDTO)entitySanctuaryRegion.GetDTOForEntity(
+                    region, skipParentElements: true, skipChildrenElements: true
+                ));
+            }
+        }
+        
+        var sanctuarySideDTO = new SanctuarySideDTO
+        {
+            Slug = sanctuarySide.Slug,
+            Name = sanctuarySide.Name,
+            Regions = regionsDTO,
+            Church = churchDTO
+        };
+
+        if (!skipParentElements)
+        {
+            var nullableChurchDTO = entityChurch.GetDTOForEntity(sanctuarySide.Church) as ChurchDTO?;
+            if (nullableChurchDTO != null)
+            {
+                churchDTO = (ChurchDTO)nullableChurchDTO;
+                sanctuarySideDTO.Church = churchDTO;
+                sanctuarySideDTO.ChurchSlug = churchDTO.Slug;
+            }
+        }
+        
+        return sanctuarySideDTO;
+    }
+
+    public IPersistanceTransferStruct? GetDtoBySlug(string slug)
     {
         if (!EntitiesCollection.SanctuarySides.ContainsKey(slug))
         {
             return null;
         }
-        return GetDTO(EntitiesCollection.SanctuarySides[slug], skipParentElements: true);
-    }
-
-    public void AddEntity(IPersistanceTransferStruct transferStruct)
-    {
-        EntitiesCollection.SanctuarySides.TryAdd(Slug, this);
-    }
-
-    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IPersistanceTransferStruct? GetDto(string slug)
-    {
-        throw new NotImplementedException();
+        return GetDTOForEntity(EntitiesCollection.SanctuarySides[slug], skipParentElements: true);
     }
 
     public void RemoveEntity(string slug)
@@ -45,13 +88,13 @@ public class EntitySanctuarySide : INonRelatable, IPersistenceService
         
         //remove the side from its church
         var church = EntitiesCollection.Churches.Values.FirstOrDefault(e => 
-            e.Sides?.FirstOrDefault(s => s.Slug == Slug) != null
+            e.SanctuarySides?.FirstOrDefault(s => s.Slug == slug) != null
         );
         if (church != null)
         {
-            church.Sides?.RemoveWhere(e => e.Slug == Slug);
+            ((HashSet<SanctuarySide>)church.SanctuarySides).RemoveWhere(e => e.Slug == slug);
         }
-        EntitiesCollection.SanctuarySides.Remove(Slug);
+        EntitiesCollection.SanctuarySides.Remove(slug);
     }
 
     public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
@@ -60,6 +103,8 @@ public class EntitySanctuarySide : INonRelatable, IPersistenceService
         {
             return;
         }
+
+        var entity = GetEntity(transferStruct);
         entity.Slug = slug;
         var oldEntity = EntitiesCollection.SanctuarySides[slug];
         EntitiesCollection.SanctuarySides[slug] = (SanctuarySide)entity;
@@ -73,58 +118,20 @@ public class EntitySanctuarySide : INonRelatable, IPersistenceService
         EntitiesCollection.SanctuarySides[slug].Regions = oldEntity.Regions;
     }
 
-    public Transferable? GetDTO(Entity? entity, bool skipParentElements = false, bool skipChildrenElements = false)
+    public IEntity GetEntity(IPersistanceTransferStruct transferable)
     {
-        if (entity == null) 
+        SanctuarySideDTO? nullableSanctuarySideDTO = transferable as SanctuarySideDTO?;
+
+        if (nullableSanctuarySideDTO is null)
         {
             return null;
         }
+
+        var sanctuarySideDTO = nullableSanctuarySideDTO.Value;
         
-        ChurchMapper churchMapper = new();
-        SanctuaryRegionMapper sanctuaryRegionMapper = new();
-        SanctuarySide? sanctuarySide = entity as SanctuarySide;
-
-        List<SanctuaryRegionDTO> regionsDTO = new();
-        ChurchDTO churchDTO = null;
-        
-        if (!skipChildrenElements)
-        {
-            foreach (SanctuaryRegion? region in sanctuarySide.Regions)
-            {
-                regionsDTO.Add(sanctuaryRegionMapper.GetDTO(
-                    region, skipParentElements: true, skipChildrenElements: true
-                ) as SanctuaryRegionDTO);
-            }
-        }
-
-        var sanctuarySideDTO = new SanctuarySideDTO
-        {
-            Slug = sanctuarySide.Slug,
-            Name = sanctuarySide.Name,
-            Regions = regionsDTO,
-            Church = churchDTO
-        };
-
-        if (!skipParentElements)
-        {
-            churchDTO = churchMapper.GetDTO(sanctuarySide.Church) as ChurchDTO;
-            if (churchDTO != null)
-            {
-                sanctuarySideDTO.ChurchSlug = churchDTO.Slug;
-            }
-        }
-        
-        return sanctuarySideDTO;
-    }
-
-    public Entity GetEntity(Transferable transferable)
-    {
-        SanctuarySideDTO sanctuarySideDTO = transferable as SanctuarySideDTO;
-
         Church sanctuarySideChurch = 
             (
-                sanctuarySideDTO.ChurchSlug != null 
-                && EntitiesCollection.Churches.ContainsKey(sanctuarySideDTO.ChurchSlug)
+                EntitiesCollection.Churches.ContainsKey(sanctuarySideDTO.ChurchSlug)
                 ) ? EntitiesCollection.Churches[sanctuarySideDTO.ChurchSlug] : null;
 
         SanctuarySide sanctuarySide = new SanctuarySide
@@ -133,19 +140,19 @@ public class EntitySanctuarySide : INonRelatable, IPersistenceService
             Slug = sanctuarySideDTO.Slug,
             Regions = null,
             Church = sanctuarySideChurch,
+            ChurchSlug = sanctuarySideDTO.ChurchSlug
         };
 
         if (sanctuarySideDTO.Regions != null)
         {
-            SanctuaryRegionMapper sanctuaryRegionMapper = new();
             sanctuarySide.Regions =
                 sanctuarySideDTO.Regions.Select(
-                    e => sanctuaryRegionMapper.GetEntity(e) as SanctuaryRegion
+                    e => GetEntity(e) as SanctuaryRegion
                     ).ToList();
         }
 
         if (sanctuarySideChurch != null) {
-            sanctuarySideChurch.Sides.Add(sanctuarySide);
+            sanctuarySideChurch.SanctuarySides.Add(sanctuarySide);
         }
 
         return sanctuarySide;

@@ -1,5 +1,4 @@
-﻿using StainedGlass.Entities;
-using StainedGlass.Transfer.Mapper;
+﻿using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer.DTOs;
 
@@ -15,11 +14,6 @@ public class ItemTypeDTO : Transferable
             Name = itemTypeDto.Name,
             Slug = itemTypeDto.Slug
         };
-    }
-    
-    public Entity GetInstance(Transferable transferable)
-    {
-        return (new ItemTypeMapper()).GetEntity(transferable);
     }
 
     public Mappable GetMapper()

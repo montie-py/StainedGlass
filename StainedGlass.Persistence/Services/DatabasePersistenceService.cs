@@ -13,7 +13,7 @@ internal abstract class DatabasePersistenceService : IPersistenceService
     }
     public abstract void AddEntity(IPersistanceTransferStruct transferStruct);
     public abstract IEnumerable<IPersistanceTransferStruct> GetAllDtos();
-    public abstract IPersistanceTransferStruct? GetDto(string slug);
+    public abstract IPersistanceTransferStruct? GetDtoBySlug(string slug);
     public abstract void RemoveEntity(string slug);
     public abstract void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct);
 }

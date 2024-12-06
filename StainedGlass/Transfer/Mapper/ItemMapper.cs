@@ -17,10 +17,16 @@ internal class ItemMapper : Mapper
         Persistence.Transfer.ItemDTO transferItemDTO = transferable as ItemDTO;
         _persistenceService.AddEntity(transferItemDTO);
     }
-    
+
+    public override void ReplaceEntity(string slug, Transferable transferable)
+    {
+        Persistence.Transfer.ItemDTO transferItemDTO = transferable as ItemDTO;
+        _persistenceService.ReplaceEntity(slug, transferItemDTO);
+    }
+
     public override Transferable? GetDTOBySlug(string slug)
     {
-        var nullableTransferItemDto = _persistenceService.GetDto(slug);
+        var nullableTransferItemDto = _persistenceService.GetDtoBySlug(slug);
         if (nullableTransferItemDto is null)
         {
             return null;

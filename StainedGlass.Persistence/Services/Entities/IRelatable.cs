@@ -1,13 +1,14 @@
 ﻿using StainedGlass.Persistence.Entities;
+using StainedGlass.Persistence.Services.Entities;
 using StainedGlass.Persistence.Transfer;
 
-namespace StainedGlass.Persistence.Services.Entities;
+namespace StainedGlass.Transfer.Mapper;
 
-public interface INonRelatable : IInMemoryService
+public interface IRelatable : IInMemoryService
 {
     public IPersistanceTransferStruct? GetDTOForEntity(
         IEntity? entity, 
         bool skipParentElements = false, 
-        bool skipChildrenElements = false
+        bool computeRelatedItems = true
         );
 }

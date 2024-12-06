@@ -30,7 +30,7 @@
         public string Image {get; set;}
         public HashSet<ItemDTO>? Items { get; set; }
         public string SanctuarySideSlug {get; set;}
-        public SanctuarySideDTO SanctuarySide {get; set;}
+        public SanctuarySideDTO? SanctuarySide {get; set;}
     }
 
     public struct ItemDTO : IPersistanceTransferStruct

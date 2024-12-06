@@ -86,7 +86,7 @@ internal class DbItem : DatabasePersistenceService
         return itemDtos;
     }
 
-    public override IPersistanceTransferStruct? GetDto(string slug)
+    public override IPersistanceTransferStruct? GetDtoBySlug(string slug)
     {
         var entity = _dbContext.Items.FirstOrDefault(x => x.Slug == slug);
         if (entity is null)
