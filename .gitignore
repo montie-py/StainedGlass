@@ -366,4 +366,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
 /.vscode
+
+/Data/StainedGlass.db
+/Data/StainedGlass.db-shm
+/Data/StainedGlass.db-wal

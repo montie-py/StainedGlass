@@ -29,14 +29,14 @@ public class UseCaseInteractor : Persistor, InputBoundary
     public void RemoveEntity<T>(string slug) where T : Transferable, new()
     {
         T entity = new T();
-        DTOGeneric<T> dtoGeneric = new(entity);
+        DTOGeneric<T> dtoGeneric = new(_persistenceTemplate, entity);
         dtoGeneric.RemoveEntity(slug);
     }
 
     public T GetDTOBySlug<T>(string slug) where T : Transferable, new()
     {
         T tranferable = new T();
-        DTOGeneric<T> dtoGeneric = new(tranferable);
+        DTOGeneric<T> dtoGeneric = new(_persistenceTemplate, tranferable);
 
         return dtoGeneric.GetDTOBySlug(slug);
     }
@@ -44,7 +44,7 @@ public class UseCaseInteractor : Persistor, InputBoundary
     public IEnumerable<T> GetAllDTOs<T>() where T : Transferable, new()
     {
         T tranferable = new T();
-        DTOGeneric<T> dtoGeneric = new(tranferable);
+        DTOGeneric<T> dtoGeneric = new(_persistenceTemplate, tranferable);
 
         return dtoGeneric.GetAllDTOs();
     }

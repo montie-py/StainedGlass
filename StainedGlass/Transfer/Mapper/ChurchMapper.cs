@@ -44,9 +44,9 @@ internal class ChurchMapper : Mapper
     
     public override IEnumerable<Transferable> GetAllDTOs()
     {
-        var transferChurchDtos = _persistenceService.GetAllDtos() as IEnumerable<Persistence.Transfer.ChurchDTO>;
+        var transferChurchDtos = _persistenceService.GetAllDtos();
         List<ChurchDTO> churchDtos = new();
-        foreach (var transferChurchDto in transferChurchDtos)
+        foreach (Persistence.Transfer.ChurchDTO transferChurchDto in transferChurchDtos)
         {
             ChurchDTO dto = new ChurchDTO
             {

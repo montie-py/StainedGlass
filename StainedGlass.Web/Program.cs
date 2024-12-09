@@ -23,13 +23,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthorization();
+
 //for controllers to work
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 }); 
-
-app.UseAuthorization();
 
 app.MapRazorPages();
 

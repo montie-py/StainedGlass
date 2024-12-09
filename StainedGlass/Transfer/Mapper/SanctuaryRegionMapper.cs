@@ -46,9 +46,9 @@ internal class SanctuaryRegionMapper : Mapper
     public override IEnumerable<Transferable?> GetAllDTOs()
     {
         var transferSanctuaryRegionDtos =
-            _persistenceService.GetAllDtos() as IEnumerable<Persistence.Transfer.SanctuaryRegionDTO>;
+            _persistenceService.GetAllDtos();
         var sanctuaryRegionDtos = new List<Transferable>();
-        foreach (var transferSanctuaryRegionDto in transferSanctuaryRegionDtos)
+        foreach (Persistence.Transfer.SanctuaryRegionDTO transferSanctuaryRegionDto in transferSanctuaryRegionDtos)
         {
             var sanctuaryRegionDto = new SanctuaryRegionDTO
             {

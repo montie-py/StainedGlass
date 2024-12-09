@@ -14,7 +14,9 @@ internal class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite("Data Source=StainedGlass.db");
+        var relativePath = @"Data\StainedGlass.db";
+        var absolutePath = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).FullName, relativePath);
+        optionsBuilder.UseSqlite($"Data Source={absolutePath}");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,14 +51,14 @@ internal class AppDbContext : DbContext
             .HasKey(itemRelation => new { itemRelation.ItemSlug, itemRelation.RelatedItemSlug });
         
         modelBuilder.Entity<ItemRelation>()
-            .HasOne(itemRelation => itemRelation.RelatedItem)
-            .WithMany(item => item.RelatedItems)
+            .HasOne(itemRelation => itemRelation.Item)
+            .WithMany(item => item.RelatedToItems)
             .HasForeignKey(itemRelation => itemRelation.ItemSlug)
             .OnDelete(DeleteBehavior.SetNull);
         
         modelBuilder.Entity<ItemRelation>()
             .HasOne(itemRelation => itemRelation.RelatedItem)
-            .WithMany(item => item.RelatedToItems)
+            .WithMany(item => item.RelatedItems)
             .HasForeignKey(itemRelation => itemRelation.RelatedItemSlug)
             .OnDelete(DeleteBehavior.SetNull);
         

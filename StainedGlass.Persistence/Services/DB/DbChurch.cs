@@ -21,12 +21,14 @@ internal class DbChurch : DatabasePersistenceService
 
     public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
     {
+        var here = _dbContext.Churches.ToList();
         List<IPersistanceTransferStruct> churchDtos = new();
         foreach (var churchEntity in _dbContext.Churches.ToList())
         {
             ChurchDTO churchDto = new ChurchDTO
             {
                 Name = churchEntity.Name,
+                Slug = churchEntity.Slug,
                 Description = churchEntity.Description,
                 Image = churchEntity.Image,
             };

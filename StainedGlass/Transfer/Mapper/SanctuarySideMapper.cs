@@ -44,9 +44,9 @@ internal class SanctuarySideMapper : Mapper
     public override IEnumerable<Transferable?> GetAllDTOs()
     {
         var transferSanctuarySideDtos = 
-            _persistenceService.GetAllDtos() as IEnumerable<Persistence.Transfer.SanctuarySideDTO>;
+            _persistenceService.GetAllDtos();
         var sanctuarySideDtos = new List<SanctuarySideDTO>();
-        foreach (var transferSanctuarySideDto in transferSanctuarySideDtos)
+        foreach (Persistence.Transfer.SanctuarySideDTO transferSanctuarySideDto in transferSanctuarySideDtos)
         {
             var sanctuarySideDto = new SanctuarySideDTO
             {

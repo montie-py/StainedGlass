@@ -41,9 +41,9 @@ internal class ItemTypeMapper : Mapper
     
     public override IEnumerable<Transferable?> GetAllDTOs()
     {
-        var transferItemTypeDtos = _persistenceService.GetAllDtos() as IEnumerable<Persistence.Transfer.ItemTypeDTO>;
+        var transferItemTypeDtos = _persistenceService.GetAllDtos();
         var itemTypeDtos = new List<Transferable?>();
-        foreach (var transferItemTypeDto in transferItemTypeDtos)
+        foreach (Persistence.Transfer.ItemTypeDTO transferItemTypeDto in transferItemTypeDtos)
         {
             var itemTypeDto = new ItemTypeDTO
             {
