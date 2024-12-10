@@ -7,22 +7,17 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
 {
     public override void AddEntity(IPersistanceTransferStruct transferStruct)
     {
-        var itemStruct = GetSanctuaryRegionDto(transferStruct);
+        var sanctuaryRegionDto = (SanctuaryRegionDTO)GetDtoFromTransfer(transferStruct);
         var sanctuaryRegion = new SanctuaryRegion
         {
-            Name = itemStruct.Name,
-            Slug = itemStruct.Slug,
-            Description = itemStruct.Description,
-            Image = itemStruct.Image,
-            SanctuarySideSlug = itemStruct.SanctuarySideSlug
+            Name = sanctuaryRegionDto.Name,
+            Slug = sanctuaryRegionDto.Slug,
+            Description = sanctuaryRegionDto.Description,
+            Image = sanctuaryRegionDto.Image,
+            SanctuarySideSlug = sanctuaryRegionDto.SanctuarySideSlug
         };
         _dbContext.SanctuaryRegions.Add(sanctuaryRegion);
         _dbContext.SaveChanges();
-    }
-
-    private static SanctuaryRegionDTO GetSanctuaryRegionDto(IPersistanceTransferStruct transferStruct)
-    {
-        return (SanctuaryRegionDTO)transferStruct;
     }
 
     public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
@@ -31,14 +26,7 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
 
         foreach (var sanctuaryRegion in _dbContext.SanctuaryRegions.ToList())
         {
-            var sanctuaryRegionDto = new SanctuaryRegionDTO
-            {
-                Name = sanctuaryRegion.Name,
-                Slug = sanctuaryRegion.Slug,
-                Description = sanctuaryRegion.Description,
-                Image = sanctuaryRegion.Image,
-            };
-            sanctuaryRegionDtos.Add(sanctuaryRegionDto);
+            sanctuaryRegionDtos.Add(GetDtoFromEntity(sanctuaryRegion));
         }
         
         return sanctuaryRegionDtos;
@@ -52,13 +40,7 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
             return null;
         }
 
-        return new SanctuaryRegionDTO
-        {
-            Name = entity.Name,
-            Slug = entity.Slug,
-            Image = entity.Image,
-            Description = entity.Description,
-        };
+        return GetDtoFromEntity(entity);
     }
     
     public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
@@ -66,16 +48,16 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
         var sanctuaryRegion = _dbContext.SanctuaryRegions.FirstOrDefault(s => s.Slug == slug);
         if (sanctuaryRegion != null)
         {
-            var transferSanctuaryRegionDTO = GetSanctuaryRegionDto(transferStruct);
-            sanctuaryRegion.Name = transferSanctuaryRegionDTO.Name;
-            sanctuaryRegion.Description = transferSanctuaryRegionDTO.Description;
-            sanctuaryRegion.Image = transferSanctuaryRegionDTO.Image;
-            sanctuaryRegion.SanctuarySideSlug = transferSanctuaryRegionDTO.SanctuarySideSlug;
+            var sanctuaryRegionDTO = (SanctuaryRegionDTO)GetDtoFromTransfer(transferStruct);
+            sanctuaryRegion.Name = sanctuaryRegionDTO.Name;
+            sanctuaryRegion.Description = sanctuaryRegionDTO.Description;
+            sanctuaryRegion.Image = sanctuaryRegionDTO.Image;
+            sanctuaryRegion.SanctuarySideSlug = sanctuaryRegionDTO.SanctuarySideSlug;
             // _dbContext.SanctuaryRegions.Update(sanctuaryRegion);
             _dbContext.SaveChanges();
         }
     }
-
+    
     public override void RemoveEntity(string slug)
     {
         var sanctuaryRegion = _dbContext.SanctuaryRegions.FirstOrDefault(s => s.Slug == slug);
@@ -84,5 +66,35 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
             _dbContext.SanctuaryRegions.Remove(sanctuaryRegion);
             _dbContext.SaveChanges();
         }
+    }
+    
+    protected override IPersistanceTransferStruct GetDtoFromTransfer(IPersistanceTransferStruct transferStruct)
+    {
+        return (SanctuaryRegionDTO)transferStruct;
+    }
+
+    protected override IPersistanceTransferStruct GetDtoFromEntity(IEntity entity)
+    {
+        var sanctuaryRegionEntity = (SanctuaryRegion)entity;
+        SanctuarySideDTO sanctuarySideDto = new();
+
+        if (sanctuaryRegionEntity.SanctuarySide != null)
+        {
+            sanctuarySideDto = new SanctuarySideDTO
+            {
+                Name = sanctuaryRegionEntity.SanctuarySide.Name,
+                Slug = sanctuaryRegionEntity.SanctuarySide.Slug,
+            };
+        }
+
+        return new SanctuaryRegionDTO
+        {
+            Name = sanctuaryRegionEntity.Name,
+            Slug = sanctuaryRegionEntity.Slug,
+            Image = sanctuaryRegionEntity.Image,
+            Description = sanctuaryRegionEntity.Description,
+            SanctuarySideSlug = sanctuaryRegionEntity.SanctuarySideSlug,
+            SanctuarySide = sanctuarySideDto
+        };
     }
 }

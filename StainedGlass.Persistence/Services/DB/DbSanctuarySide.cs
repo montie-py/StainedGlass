@@ -1,4 +1,5 @@
-﻿using StainedGlass.Persistence.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
 
 namespace StainedGlass.Persistence.Services.DB;
@@ -7,7 +8,7 @@ internal class DbSanctuarySide : DatabasePersistenceService
 {
     public override void AddEntity(IPersistanceTransferStruct transferStruct)
     {
-        var itemStruct = GetSanctuarySideDto(transferStruct);
+        var itemStruct = (SanctuarySideDTO)GetDtoFromTransfer(transferStruct);
         var sanctuarySide = new SanctuarySide
         {
             Name = itemStruct.Name,
@@ -22,14 +23,11 @@ internal class DbSanctuarySide : DatabasePersistenceService
     {
         List<IPersistanceTransferStruct> sanctuarySideDtos = new List<IPersistanceTransferStruct>();
 
-        foreach (var sanctuarySide in _dbContext.SanctuarySides.ToList())
+        foreach (var sanctuarySideEntity in _dbContext.SanctuarySides
+                     .Include(s => s.Church)
+                     .ToList())
         {
-            var sanctuarySideDto = new SanctuarySideDTO
-            {
-                Name = sanctuarySide.Name,
-                Slug = sanctuarySide.Slug,
-            };
-            sanctuarySideDtos.Add(sanctuarySideDto);
+            sanctuarySideDtos.Add(GetDtoFromEntity(sanctuarySideEntity));
         }
         
         return sanctuarySideDtos;
@@ -37,17 +35,15 @@ internal class DbSanctuarySide : DatabasePersistenceService
 
     public override IPersistanceTransferStruct? GetDtoBySlug(string slug)
     {
-        var entity = _dbContext.SanctuarySides.FirstOrDefault(s => s.Slug == slug);
+        var entity = _dbContext.SanctuarySides
+            .Include(s => s.Church)
+            .FirstOrDefault(s => s.Slug == slug);
         if (entity is null)
         {
             return null;
         }
 
-        return new SanctuarySideDTO
-        {
-            Name = entity.Name,
-            Slug = entity.Slug,
-        };
+        return GetDtoFromEntity(entity);
     }
     
     public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
@@ -55,10 +51,11 @@ internal class DbSanctuarySide : DatabasePersistenceService
         var sanctuarySide = _dbContext.SanctuarySides.FirstOrDefault(s => s.Slug == slug);
         if (sanctuarySide != null)
         {
-            var transferSanctuarySideDto = GetSanctuarySideDto(transferStruct);
+            var transferSanctuarySideDto = (SanctuarySideDTO)GetDtoFromTransfer(transferStruct);
             sanctuarySide.Name = transferSanctuarySideDto.Name;
             sanctuarySide.ChurchSlug = transferSanctuarySideDto.ChurchSlug;
-            //_dbContext.SanctuarySides.Update(sanctuarySide);
+            // _dbContext.SanctuarySides.Update(sanctuarySide);
+            // _dbContext.Entry(sanctuarySide).State = EntityState.Modified;
             _dbContext.SaveChanges();
         }
     }
@@ -72,9 +69,35 @@ internal class DbSanctuarySide : DatabasePersistenceService
             _dbContext.SaveChanges();
         }
     }
-    
-    private static SanctuarySideDTO GetSanctuarySideDto(IPersistanceTransferStruct transferStruct)
+
+    protected override IPersistanceTransferStruct GetDtoFromTransfer(IPersistanceTransferStruct transferStruct)
     {
         return (SanctuarySideDTO)transferStruct;
+    }
+
+    protected override IPersistanceTransferStruct GetDtoFromEntity(IEntity entity)
+    {
+        ChurchDTO churchDto = new();
+
+        var sanctuarySideEntity = (SanctuarySide)entity;
+
+        if (sanctuarySideEntity.Church != null)
+        {
+            churchDto = new ChurchDTO
+            {
+                Name = sanctuarySideEntity.Church.Name,
+                Slug = sanctuarySideEntity.Church.Slug,
+                Description = sanctuarySideEntity.Church.Description,
+                Image = sanctuarySideEntity.Church.Image,
+            };
+        }
+
+        return new SanctuarySideDTO
+        {
+            Name = sanctuarySideEntity.Name,
+            Slug = sanctuarySideEntity.Slug,
+            ChurchSlug = sanctuarySideEntity.ChurchSlug,
+            Church = churchDto
+        };
     }
 }

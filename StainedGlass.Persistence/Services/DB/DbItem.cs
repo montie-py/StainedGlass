@@ -8,7 +8,7 @@ internal class DbItem : DatabasePersistenceService
 {
     public override void AddEntity(IPersistanceTransferStruct transferStruct)
     {
-        var itemStruct = GetItemDto(transferStruct);
+        var itemStruct = (ItemDTO)GetDtoFromTransfer(transferStruct);
         var newItem = new Item
         {
             Title = itemStruct.Title,
@@ -43,45 +43,7 @@ internal class DbItem : DatabasePersistenceService
         
         foreach (var dbItem in _dbContext.Items)
         {
-            var relatedItems = dbItem.RelatedItems;
-            
-            if (relatedItems == null)
-            {
-                //if relateditems == null - use local GetRelatedItemsBySlug() method
-            }
-            
-            var relatedItemsDtos = new Dictionary<string, ItemDTO>();
-
-            //adding related items
-            if (relatedItems != null)
-            {
-                foreach (var relatedItem in relatedItems)
-                {
-                    var relatedItemDto = new ItemDTO
-                    {
-                        Title = relatedItem.Item.Title,
-                        Slug = relatedItem.Item.Slug,
-                    };
-                    relatedItemsDtos.Add(relatedItemDto.Slug, relatedItemDto);
-                }   
-            }
-            
-            //adding itemtype
-            var itemTypeDto = new ItemTypeDTO
-            {
-                Name = dbItem.ItemType.Name,
-                Slug = dbItem.ItemType.Slug,
-            };
-            var itemDto = new ItemDTO
-            {
-                Title = dbItem.Title,
-                Slug = dbItem.Slug,
-                Description = dbItem.Description,
-                Image = dbItem.Image,
-                ItemType = itemTypeDto,
-                RelatedItems = relatedItemsDtos
-            };
-            itemDtos.Add(itemDto);
+            itemDtos.Add(GetDtoFromEntity(dbItem));
         }
         return itemDtos;
     }
@@ -94,40 +56,7 @@ internal class DbItem : DatabasePersistenceService
             return null;
         }
 
-        //adding related items
-        var relatedItems = new Dictionary<string, ItemDTO>();
-
-        if (entity.RelatedItems != null)
-        {
-            foreach (var relatedItem in entity.RelatedItems)
-            {
-                relatedItems.Add(
-                    relatedItem.Item.Slug, 
-                    new ItemDTO
-                        {
-                            Title = relatedItem.Item.Title,
-                            Slug = relatedItem.Item.Slug,
-                        }
-                    );
-            }
-        }
-        
-        //adding itemType
-        var itemTypeDto = new ItemTypeDTO
-        {
-            Name = entity.ItemType.Name,
-            Slug = entity.ItemType.Slug,
-        };
-
-        return new ItemDTO
-        {
-            Title = entity.Title,
-            Slug = entity.Slug,
-            Description = entity.Description,
-            Image = entity.Image,
-            RelatedItems = relatedItems,
-            ItemType = itemTypeDto
-        };
+        return GetDtoFromEntity(entity);
     }
     
     public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
@@ -137,7 +66,7 @@ internal class DbItem : DatabasePersistenceService
             .FirstOrDefault(x => x.Slug == slug);
         if (item != null)
         {
-            var transferItemDto = GetItemDto(transferStruct);
+            var transferItemDto = (ItemDTO)GetDtoFromTransfer(transferStruct);
             item.Title = transferItemDto.Title;
             item.Image = transferItemDto.Image;
             item.Description = transferItemDto.Description;
@@ -207,8 +136,47 @@ internal class DbItem : DatabasePersistenceService
         }
     }
     
-    private static ItemDTO GetItemDto(IPersistanceTransferStruct transferStruct)
+    protected override IPersistanceTransferStruct GetDtoFromTransfer(IPersistanceTransferStruct transferStruct)
     {
         return (ItemDTO)transferStruct;
+    }
+
+    protected override IPersistanceTransferStruct GetDtoFromEntity(IEntity entity)
+    {
+        var itemEntity = (Item)entity;
+        //adding related items
+        var relatedItems = new Dictionary<string, ItemDTO>();
+
+        if (itemEntity.RelatedItems != null)
+        {
+            foreach (var relatedItem in itemEntity.RelatedItems)
+            {
+                relatedItems.Add(
+                    relatedItem.Item.Slug, 
+                    new ItemDTO
+                    {
+                        Title = relatedItem.Item.Title,
+                        Slug = relatedItem.Item.Slug,
+                    }
+                );
+            }
+        }
+        
+        //adding itemType
+        var itemTypeDto = new ItemTypeDTO
+        {
+            Name = itemEntity.ItemType.Name,
+            Slug = itemEntity.ItemType.Slug,
+        };
+
+        return new ItemDTO
+        {
+            Title = itemEntity.Title,
+            Slug = itemEntity.Slug,
+            Description = itemEntity.Description,
+            Image = itemEntity.Image,
+            RelatedItems = relatedItems,
+            ItemType = itemTypeDto
+        };
     }
 }

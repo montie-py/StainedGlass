@@ -1,7 +1,9 @@
 
 using StainedGlass.Persistence.Services.Entities;
 using StainedGlass.Persistence.Templates;
-using StainedGlass.Transfer.DTOs;
+using StainedGlass.Persistence.Transfer;
+using ItemDTO = StainedGlass.Transfer.DTOs.ItemDTO;
+using ItemTypeDTO = StainedGlass.Transfer.DTOs.ItemTypeDTO;
 
 namespace StainedGlass.Transfer.Mapper;
 
@@ -31,8 +33,29 @@ internal class ItemMapper : Mapper
         {
             return null;
         }
-        
-        var transferItemDto = (Persistence.Transfer.ItemDTO)nullableTransferItemDto;
+
+        return GetDtoFromTransferable(nullableTransferItemDto);
+    }
+    
+    public override IEnumerable<Transferable?> GetAllDTOs()
+    {
+        var transferItemDtos = _persistenceService.GetAllDtos();
+        var itemDtos = new List<Transferable>();
+        foreach (IPersistanceTransferStruct transferItemDto in transferItemDtos)
+        {
+            itemDtos.Add(GetDtoFromTransferable(transferItemDto));
+        }
+        return itemDtos;
+    }
+    
+    public override void RemoveEntity(string slug)
+    {
+        _persistenceService.RemoveEntity(slug);
+    }
+    
+    protected override Transferable GetDtoFromTransferable(IPersistanceTransferStruct transferStruct)
+    {
+        var transferItemDto = (Persistence.Transfer.ItemDTO)transferStruct;
 
         //setting itemType
         var itemType = new ItemTypeDTO
@@ -61,48 +84,5 @@ internal class ItemMapper : Mapper
             ItemType = itemType,
             RelatedItems = relatedItems
         };
-    }
-    
-    public override IEnumerable<Transferable?> GetAllDTOs()
-    {
-        var transferItemDtos = _persistenceService.GetAllDtos();
-        var itemDtos = new List<ItemDTO>();
-        foreach (Persistence.Transfer.ItemDTO transferItemDto in transferItemDtos)
-        {
-            //setting itemtype
-            var itemType = new ItemTypeDTO
-            {
-                Name = transferItemDto.ItemType.Name,
-                Slug = transferItemDto.ItemType.Slug,
-            };
-            
-            //setting relateditems
-            var relatedItems = new Dictionary<string, ItemDTO>();
-            foreach (var relatedItem in transferItemDto.RelatedItems.Values)
-            {
-                relatedItems.Add(relatedItem.Slug, new ItemDTO
-                {
-                    Title = relatedItem.Title,
-                    Slug = relatedItem.Slug,
-                });
-            }
-            
-            var itemDto = new ItemDTO
-            {
-                Title = transferItemDto.Title,
-                Slug = transferItemDto.Slug,
-                Description = transferItemDto.Description,
-                Image = transferItemDto.Image,
-                ItemType = itemType,
-                RelatedItems = relatedItems
-            };
-            itemDtos.Add(itemDto);
-        }
-        return itemDtos;
-    }
-    
-    public override void RemoveEntity(string slug)
-    {
-        _persistenceService.RemoveEntity(slug);
     }
 }

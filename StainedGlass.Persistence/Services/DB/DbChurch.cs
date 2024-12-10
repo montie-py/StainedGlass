@@ -7,7 +7,7 @@ internal class DbChurch : DatabasePersistenceService
 {
     public override void AddEntity(IPersistanceTransferStruct transferStruct)
     {
-        var churchStruct = GetChurchDto(transferStruct);
+        var churchStruct = (ChurchDTO)GetDtoFromTransfer(transferStruct);
         var churchEntity = new Church
         {
             Name = churchStruct.Name,
@@ -25,15 +25,7 @@ internal class DbChurch : DatabasePersistenceService
         List<IPersistanceTransferStruct> churchDtos = new();
         foreach (var churchEntity in _dbContext.Churches.ToList())
         {
-            ChurchDTO churchDto = new ChurchDTO
-            {
-                Name = churchEntity.Name,
-                Slug = churchEntity.Slug,
-                Description = churchEntity.Description,
-                Image = churchEntity.Image,
-            };
-            
-            churchDtos.Add(churchDto);
+            churchDtos.Add(GetDtoFromEntity(churchEntity));
         }
 
         return churchDtos;
@@ -47,13 +39,7 @@ internal class DbChurch : DatabasePersistenceService
             return null;
         }
 
-        return new ChurchDTO
-        {
-            Name = entity.Name,
-            Description = entity.Description,
-            Image = entity.Image,
-            Slug = entity.Slug,
-        };
+        return GetDtoFromEntity(entity);
     }
 
     public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
@@ -61,7 +47,7 @@ internal class DbChurch : DatabasePersistenceService
         var church = _dbContext.Churches.FirstOrDefault(e => e.Slug == slug);
         if (church != null)
         {
-            var churchStruct = GetChurchDto(transferStruct);
+            var churchStruct = (ChurchDTO)GetDtoFromTransfer(transferStruct);
             church.Name = churchStruct.Name;
             church.Description = churchStruct.Description;
             church.Image = churchStruct.Image;
@@ -69,7 +55,7 @@ internal class DbChurch : DatabasePersistenceService
             _dbContext.SaveChanges();
         }
     }
-    
+
     public override void RemoveEntity(string slug)
     {
         var church = _dbContext.Churches.FirstOrDefault(e => e.Slug == slug);
@@ -79,9 +65,21 @@ internal class DbChurch : DatabasePersistenceService
             _dbContext.SaveChanges();
         }
     }
-
-    private ChurchDTO GetChurchDto(IPersistanceTransferStruct transferStruct)
+    
+    protected override IPersistanceTransferStruct GetDtoFromTransfer(IPersistanceTransferStruct transferStruct)
     {
         return (ChurchDTO)transferStruct;
+    }
+
+    protected override IPersistanceTransferStruct GetDtoFromEntity(IEntity entity)
+    {
+        var churchEntity = (Church)entity;
+        return new ChurchDTO
+        {
+            Name = churchEntity.Name,
+            Description = churchEntity.Description,
+            Image = churchEntity.Image,
+            Slug = churchEntity.Slug,
+        };
     }
 }

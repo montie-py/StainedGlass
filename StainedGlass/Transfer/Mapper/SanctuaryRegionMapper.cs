@@ -1,5 +1,6 @@
 using StainedGlass.Persistence.Templates;
-using StainedGlass.Transfer.DTOs;
+using StainedGlass.Persistence.Transfer;
+using SanctuaryRegionDTO = StainedGlass.Transfer.DTOs.SanctuaryRegionDTO;
 
 namespace StainedGlass.Transfer.Mapper;
 
@@ -31,16 +32,8 @@ internal class SanctuaryRegionMapper : Mapper
         {
             return null;
         }
-        
-        var transferSanctuaryRegionDto = (SanctuaryRegionDTO)nullableTransferSanctuaryRegionDto;
 
-        return new SanctuaryRegionDTO
-        {
-            Name = transferSanctuaryRegionDto.Name,
-            Slug = transferSanctuaryRegionDto.Slug,
-            Description = transferSanctuaryRegionDto.Description,
-            Image = transferSanctuaryRegionDto.Image,
-        };
+        return GetDtoFromTransferable(nullableTransferSanctuaryRegionDto);
     }
     
     public override IEnumerable<Transferable?> GetAllDTOs()
@@ -48,16 +41,9 @@ internal class SanctuaryRegionMapper : Mapper
         var transferSanctuaryRegionDtos =
             _persistenceService.GetAllDtos();
         var sanctuaryRegionDtos = new List<Transferable>();
-        foreach (Persistence.Transfer.SanctuaryRegionDTO transferSanctuaryRegionDto in transferSanctuaryRegionDtos)
+        foreach (IPersistanceTransferStruct transferSanctuaryRegionDto in transferSanctuaryRegionDtos)
         {
-            var sanctuaryRegionDto = new SanctuaryRegionDTO
-            {
-                Name = transferSanctuaryRegionDto.Name,
-                Slug = transferSanctuaryRegionDto.Slug,
-                Description = transferSanctuaryRegionDto.Description,
-                Image = transferSanctuaryRegionDto.Image,
-            };
-            sanctuaryRegionDtos.Add(sanctuaryRegionDto);
+            sanctuaryRegionDtos.Add(GetDtoFromTransferable(transferSanctuaryRegionDto));
         }
 
         return sanctuaryRegionDtos;
@@ -66,5 +52,18 @@ internal class SanctuaryRegionMapper : Mapper
     public override void RemoveEntity(string slug)
     {
         _persistenceService.RemoveEntity(slug);
+    }
+    
+    protected override Transferable GetDtoFromTransferable(IPersistanceTransferStruct transferStruct)
+    {
+        var transferSanctuaryRegionDto = (SanctuaryRegionDTO)transferStruct;
+
+        return new SanctuaryRegionDTO
+        {
+            Name = transferSanctuaryRegionDto.Name,
+            Slug = transferSanctuaryRegionDto.Slug,
+            Description = transferSanctuaryRegionDto.Description,
+            Image = transferSanctuaryRegionDto.Image,
+        };
     }
 }

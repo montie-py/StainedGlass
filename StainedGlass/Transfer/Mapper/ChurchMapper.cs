@@ -1,6 +1,7 @@
 using StainedGlass.Persistence.Services.Entities;
 using StainedGlass.Persistence.Templates;
-using StainedGlass.Transfer.DTOs;
+using StainedGlass.Persistence.Transfer;
+using ChurchDTO = StainedGlass.Transfer.DTOs.ChurchDTO;
 
 namespace StainedGlass.Transfer.Mapper;
 
@@ -31,31 +32,16 @@ internal class ChurchMapper : Mapper
             return null;
         }
 
-        var transferChurchDto = (Persistence.Transfer.ChurchDTO)nullableTransferChurchDto;
-
-        return new ChurchDTO
-        {
-            Name = transferChurchDto.Name,
-            Slug = transferChurchDto.Slug,
-            Image = transferChurchDto.Image,
-            Description = transferChurchDto.Description,
-        };
+        return GetDtoFromTransferable(nullableTransferChurchDto);
     }
     
     public override IEnumerable<Transferable> GetAllDTOs()
     {
         var transferChurchDtos = _persistenceService.GetAllDtos();
         List<ChurchDTO> churchDtos = new();
-        foreach (Persistence.Transfer.ChurchDTO transferChurchDto in transferChurchDtos)
+        foreach (IPersistanceTransferStruct transferChurchDto in transferChurchDtos)
         {
-            ChurchDTO dto = new ChurchDTO
-            {
-                Name = transferChurchDto.Name,
-                Slug = transferChurchDto.Slug,
-                Image = transferChurchDto.Image,
-                Description = transferChurchDto.Description
-            };
-            churchDtos.Add(dto);
+            churchDtos.Add((ChurchDTO)GetDtoFromTransferable(transferChurchDto));
         }
 
         return churchDtos;
@@ -64,5 +50,18 @@ internal class ChurchMapper : Mapper
     public override void RemoveEntity(string slug)
     {
         _persistenceService.RemoveEntity(slug);
+    }
+    
+    protected override Transferable GetDtoFromTransferable(IPersistanceTransferStruct transferStruct)
+    {
+        var churchTransferStruct = (Persistence.Transfer.ChurchDTO)transferStruct;
+
+        return new ChurchDTO
+        {
+            Name = churchTransferStruct.Name,
+            Slug = churchTransferStruct.Slug,
+            Image = churchTransferStruct.Image,
+            Description = churchTransferStruct.Description,
+        };
     }
 }

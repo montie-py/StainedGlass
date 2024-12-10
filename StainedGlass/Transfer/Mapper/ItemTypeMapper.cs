@@ -1,5 +1,6 @@
 ﻿using StainedGlass.Persistence.Templates;
-using StainedGlass.Transfer.DTOs;
+using StainedGlass.Persistence.Transfer;
+using ItemTypeDTO = StainedGlass.Transfer.DTOs.ItemTypeDTO;
 
 namespace StainedGlass.Transfer.Mapper;
 
@@ -30,13 +31,7 @@ internal class ItemTypeMapper : Mapper
             return null;
         }
 
-        var transferItemTypeDto = (Persistence.Transfer.ItemTypeDTO)nullableTransferItemTypeDto;
-
-        return new ItemTypeDTO
-        {
-            Name = transferItemTypeDto.Name,
-            Slug = transferItemTypeDto.Slug,
-        };
+        return GetDtoFromTransferable(nullableTransferItemTypeDto);
     }
     
     public override IEnumerable<Transferable?> GetAllDTOs()
@@ -45,13 +40,7 @@ internal class ItemTypeMapper : Mapper
         var itemTypeDtos = new List<Transferable?>();
         foreach (Persistence.Transfer.ItemTypeDTO transferItemTypeDto in transferItemTypeDtos)
         {
-            var itemTypeDto = new ItemTypeDTO
-            {
-                Name = transferItemTypeDto.Name,
-                Slug = transferItemTypeDto.Slug,
-            };
-            
-            itemTypeDtos.Add(itemTypeDto);
+            itemTypeDtos.Add(GetDtoFromTransferable(transferItemTypeDto));
         }
 
         return itemTypeDtos;
@@ -60,5 +49,16 @@ internal class ItemTypeMapper : Mapper
     public override void RemoveEntity(string slug)
     {
         _persistenceService.RemoveEntity(slug);
+    }
+    
+    protected override Transferable GetDtoFromTransferable(IPersistanceTransferStruct transferStruct)
+    {
+        var transferItemTypeDto = (Persistence.Transfer.ItemTypeDTO)transferStruct;
+
+        return new ItemTypeDTO
+        {
+            Name = transferItemTypeDto.Name,
+            Slug = transferItemTypeDto.Slug,
+        };
     }
 }

@@ -1,4 +1,6 @@
 ﻿//the purpose of the class is holding and initializing the _dbContext property
+
+using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
 
 namespace StainedGlass.Persistence.Services;
@@ -16,4 +18,6 @@ internal abstract class DatabasePersistenceService : IPersistenceService
     public abstract IPersistanceTransferStruct? GetDtoBySlug(string slug);
     public abstract void RemoveEntity(string slug);
     public abstract void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct);
+    protected abstract IPersistanceTransferStruct GetDtoFromTransfer(IPersistanceTransferStruct transferStruct);
+    protected abstract IPersistanceTransferStruct GetDtoFromEntity(IEntity entity);
 }
