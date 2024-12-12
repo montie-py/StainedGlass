@@ -28,12 +28,12 @@ namespace StainedGlass.Persistence.Migrations
                 name: "ItemTypes",
                 columns: table => new
                 {
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Slug = table.Column<string>(type: "TEXT", nullable: false)
+                    Slug = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ItemTypes", x => x.Name);
+                    table.PrimaryKey("PK_ItemTypes", x => x.Slug);
                 });
 
             migrationBuilder.CreateTable(
@@ -94,7 +94,7 @@ namespace StainedGlass.Persistence.Migrations
                         name: "FK_Items_ItemTypes_ItemTypeSlug",
                         column: x => x.ItemTypeSlug,
                         principalTable: "ItemTypes",
-                        principalColumn: "Name",
+                        principalColumn: "Slug",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Items_SanctuaryRegions_SanctuaryRegionSlug",

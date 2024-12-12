@@ -1,4 +1,5 @@
-﻿using StainedGlass.Persistence.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
 
 namespace StainedGlass.Persistence.Services.DB;
@@ -24,7 +25,9 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
     {
         List<IPersistanceTransferStruct> sanctuaryRegionDtos = new List<IPersistanceTransferStruct>();
 
-        foreach (var sanctuaryRegion in _dbContext.SanctuaryRegions.ToList())
+        foreach (var sanctuaryRegion in _dbContext.SanctuaryRegions
+                     .Include(s => s.SanctuarySide)
+                     .ToList())
         {
             sanctuaryRegionDtos.Add(GetDtoFromEntity(sanctuaryRegion));
         }
@@ -34,7 +37,9 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
 
     public override IPersistanceTransferStruct? GetDtoBySlug(string slug)
     {
-        var entity = _dbContext.SanctuaryRegions.FirstOrDefault(s => s.Slug == slug);
+        var entity = _dbContext.SanctuaryRegions
+            .Include(s => s.SanctuarySide)
+            .FirstOrDefault(s => s.Slug == slug);
         if (entity is null)
         {
             return null;

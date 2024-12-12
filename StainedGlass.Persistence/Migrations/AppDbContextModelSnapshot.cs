@@ -89,14 +89,14 @@ namespace StainedGlass.Persistence.Migrations
 
             modelBuilder.Entity("StainedGlass.Persistence.Entities.ItemType", b =>
                 {
-                    b.Property<string>("Name")
+                    b.Property<string>("Slug")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Slug")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Name");
+                    b.HasKey("Slug");
 
                     b.ToTable("ItemTypes");
                 });

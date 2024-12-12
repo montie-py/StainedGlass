@@ -1,5 +1,6 @@
 using StainedGlass.Persistence.Templates;
 using StainedGlass.Persistence.Transfer;
+using SanctuarySideDTO = StainedGlass.Transfer.DTOs.SanctuarySideDTO;
 using SanctuaryRegionDTO = StainedGlass.Transfer.DTOs.SanctuaryRegionDTO;
 
 namespace StainedGlass.Transfer.Mapper;
@@ -56,7 +57,19 @@ internal class SanctuaryRegionMapper : Mapper
     
     protected override Transferable GetDtoFromTransferable(IPersistanceTransferStruct transferStruct)
     {
-        var transferSanctuaryRegionDto = (SanctuaryRegionDTO)transferStruct;
+        var transferSanctuaryRegionDto = (Persistence.Transfer.SanctuaryRegionDTO)transferStruct;
+
+        SanctuarySideDTO sanctuarySideDto = new();
+
+        if (transferSanctuaryRegionDto.SanctuarySide != null)
+        {
+            var sanctuarySideTransfer = (Persistence.Transfer.SanctuarySideDTO)transferSanctuaryRegionDto.SanctuarySide;
+            sanctuarySideDto = new SanctuarySideDTO
+            {
+                Name = sanctuarySideTransfer.Name,
+                Slug = sanctuarySideTransfer.Slug,
+            };
+        }
 
         return new SanctuaryRegionDTO
         {
@@ -64,6 +77,8 @@ internal class SanctuaryRegionMapper : Mapper
             Slug = transferSanctuaryRegionDto.Slug,
             Description = transferSanctuaryRegionDto.Description,
             Image = transferSanctuaryRegionDto.Image,
+            SanctuarySideSlug = transferSanctuaryRegionDto.SanctuarySideSlug,
+            SanctuarySide = sanctuarySideDto
         };
     }
 }
