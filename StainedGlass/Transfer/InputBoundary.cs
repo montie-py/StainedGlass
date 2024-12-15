@@ -9,5 +9,5 @@ public interface InputBoundary
      void ReplaceEntity(string slug, Transferable dataDTO);
      public void RemoveEntity<T>(string slug) where T : Transferable, new();
      public T GetDTOBySlug<T>(string slug)  where T : Transferable, new();
-     public IEnumerable<T> GetAllDTOs<T>() where T : Transferable, new();
+     public ICollection<T> GetAllDTOs<T>() where T : Transferable, new();
 }

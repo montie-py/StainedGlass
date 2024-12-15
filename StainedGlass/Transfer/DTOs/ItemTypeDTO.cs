@@ -6,6 +6,8 @@ public class ItemTypeDTO : Transferable
 {
     public string Slug { get; set; }
     public string Name { get; set; }
+    
+    public ICollection<ItemDTO> Items { get; set; }
 
     public static implicit operator Persistence.Transfer.ItemTypeDTO(ItemTypeDTO itemTypeDto)
     {

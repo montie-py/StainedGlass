@@ -37,7 +37,7 @@ internal class SanctuaryRegionMapper : Mapper
         return GetDtoFromTransferable(nullableTransferSanctuaryRegionDto);
     }
     
-    public override IEnumerable<Transferable?> GetAllDTOs()
+    public override ICollection<Transferable?> GetAllDTOs()
     {
         var transferSanctuaryRegionDtos =
             _persistenceService.GetAllDtos();

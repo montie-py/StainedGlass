@@ -8,5 +8,5 @@ internal class ItemType : IEntity
     public required string Slug { get; set; }
     public required string Name { get; set; }
 
-    public ICollection<Item> Items { get; set; }
+    public ICollection<Item>? Items { get; set; }
 }

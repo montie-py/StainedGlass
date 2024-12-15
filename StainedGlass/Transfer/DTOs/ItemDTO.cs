@@ -19,21 +19,14 @@ public class ItemDTO : Transferable
     public static implicit operator Persistence.Transfer.ItemDTO(ItemDTO itemDto)
     {
         Persistence.Transfer.ItemTypeDTO itemTypeDto = new();
-        if (itemDto.ItemType != null)
-        {
-            itemTypeDto = new Persistence.Transfer.ItemTypeDTO
-            {
-                Name = itemDto.ItemType.Name,
-                Slug = itemDto.Slug
-            };
-        }
         
         return new Persistence.Transfer.ItemDTO
         {
             Title = itemDto.Title,
+            Slug = itemDto.Slug,
             Description = itemDto.Description,
             Image = itemDto.Image,
-            ItemType = itemTypeDto,
+            ItemTypeSlug = itemDto.ItemTypeSlug,
             SanctuaryRegionSlug = itemDto.SanctuaryRegionSlug,
             RelatedItemsSlugs = itemDto.RelatedItemsSlugs,
         };

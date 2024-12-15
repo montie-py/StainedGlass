@@ -35,13 +35,13 @@ internal class ChurchMapper : Mapper
         return GetDtoFromTransferable(nullableTransferChurchDto);
     }
     
-    public override IEnumerable<Transferable> GetAllDTOs()
+    public override ICollection<Transferable> GetAllDTOs()
     {
         var transferChurchDtos = _persistenceService.GetAllDtos();
-        List<ChurchDTO> churchDtos = new();
+        List<Transferable> churchDtos = new();
         foreach (IPersistanceTransferStruct transferChurchDto in transferChurchDtos)
         {
-            churchDtos.Add((ChurchDTO)GetDtoFromTransferable(transferChurchDto));
+            churchDtos.Add(GetDtoFromTransferable(transferChurchDto));
         }
 
         return churchDtos;

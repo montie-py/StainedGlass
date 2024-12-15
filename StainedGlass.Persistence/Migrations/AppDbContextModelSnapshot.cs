@@ -171,15 +171,15 @@ namespace StainedGlass.Persistence.Migrations
             modelBuilder.Entity("StainedGlass.Persistence.Entities.ItemRelation", b =>
                 {
                     b.HasOne("StainedGlass.Persistence.Entities.Item", "Item")
-                        .WithMany("RelatedToItems")
+                        .WithMany("RelatedItems")
                         .HasForeignKey("ItemSlug")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StainedGlass.Persistence.Entities.Item", "RelatedItem")
-                        .WithMany("RelatedItems")
+                        .WithMany()
                         .HasForeignKey("RelatedItemSlug")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Item");
@@ -217,8 +217,6 @@ namespace StainedGlass.Persistence.Migrations
             modelBuilder.Entity("StainedGlass.Persistence.Entities.Item", b =>
                 {
                     b.Navigation("RelatedItems");
-
-                    b.Navigation("RelatedToItems");
                 });
 
             modelBuilder.Entity("StainedGlass.Persistence.Entities.ItemType", b =>

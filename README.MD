@@ -51,4 +51,7 @@ This setup allows you to write and run tests for your main project using xUnit i
 
 
 
+run "npm run copy-htmx"
+
+
 

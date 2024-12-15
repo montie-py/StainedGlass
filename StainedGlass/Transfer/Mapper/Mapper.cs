@@ -10,7 +10,7 @@ internal abstract class Mapper : Mappable
     public abstract void SetInstance(IPersistenceTemplate template);
     public abstract Transferable? GetDTOBySlug(string slug);
 
-    public abstract IEnumerable<Transferable?> GetAllDTOs();
+    public abstract ICollection<Transferable?> GetAllDTOs();
 
     public abstract void RemoveEntity(string slug);
     public abstract void SaveEntity(Transferable transferable);

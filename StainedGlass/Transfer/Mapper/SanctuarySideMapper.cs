@@ -37,7 +37,7 @@ internal class SanctuarySideMapper : Mapper
         return GetDtoFromTransferable(nullableTransferSanctuarySideDto);
     }
     
-    public override IEnumerable<Transferable?> GetAllDTOs()
+    public override ICollection<Transferable?> GetAllDTOs()
     {
         var transferSanctuarySideDtos = 
             _persistenceService.GetAllDtos();

@@ -19,7 +19,7 @@ internal class DbChurch : DatabasePersistenceService
         _dbContext.SaveChanges();
     }
 
-    public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    public override ICollection<IPersistanceTransferStruct> GetAllDtos()
     {
         var here = _dbContext.Churches.ToList();
         List<IPersistanceTransferStruct> churchDtos = new();

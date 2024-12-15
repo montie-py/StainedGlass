@@ -40,7 +40,7 @@ public class ItemTypeTest
             Name = "Test2",
             Slug = "test2"
         });
-        IEnumerable<ItemTypeDTO> dtos = useCaseInteractor.GetAllDTOs<ItemTypeDTO>();
+        ICollection<ItemTypeDTO> dtos = useCaseInteractor.GetAllDTOs<ItemTypeDTO>();
         Assert.Equal(2, dtos.Where(e => new[] { "Test1", "Test2" }.Contains(e.Name)).Count());
     }
 

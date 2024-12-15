@@ -21,7 +21,7 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
         _dbContext.SaveChanges();
     }
 
-    public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    public override ICollection<IPersistanceTransferStruct> GetAllDtos()
     {
         List<IPersistanceTransferStruct> sanctuaryRegionDtos = new List<IPersistanceTransferStruct>();
 

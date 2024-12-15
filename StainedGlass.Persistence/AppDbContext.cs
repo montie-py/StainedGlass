@@ -50,17 +50,15 @@ internal class AppDbContext : DbContext
         modelBuilder.Entity<ItemRelation>()
             .HasKey(itemRelation => new { itemRelation.ItemSlug, itemRelation.RelatedItemSlug });
         
-        modelBuilder.Entity<ItemRelation>()
-            .HasOne(itemRelation => itemRelation.Item)
-            .WithMany(item => item.RelatedToItems)
-            .HasForeignKey(itemRelation => itemRelation.ItemSlug)
-            .OnDelete(DeleteBehavior.SetNull);
+        modelBuilder.Entity<Item>() 
+            .HasMany(i => i.RelatedItems) 
+            .WithOne(ir => ir.Item) 
+            .HasForeignKey(ir => ir.ItemSlug);
         
-        modelBuilder.Entity<ItemRelation>()
-            .HasOne(itemRelation => itemRelation.RelatedItem)
-            .WithMany(item => item.RelatedItems)
-            .HasForeignKey(itemRelation => itemRelation.RelatedItemSlug)
-            .OnDelete(DeleteBehavior.SetNull);
+        modelBuilder.Entity<ItemRelation>() 
+            .HasOne(ir => ir.RelatedItem) 
+            .WithMany() 
+            .HasForeignKey(ir => ir.RelatedItemSlug);
         
         // base.OnModelCreating(modelBuilder);
     }

@@ -1,0 +1,29 @@
+{
+  "name": "stainedglass.web",
+  "version": "1.0.0",
+  "description": "church walking guide tour",
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./wwwroot/css/tailwind.css -o ./wwwroot/css/tailwind_output.css --watch",
+    "build:ts": "tsc",
+    "copy-htmx": "cp ./node_modules/htmx.org/dist/htmx.min.js ./wwwroot/js/htmx.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/montie-py/StainedGlass.git"
+  },
+  "keywords": [
+    "church",
+    "stainedglass"
+  ],
+  "author": "Vlad Bodrug (https://montiepy.me)",
+  "bugs": {
+    "url": "https://github.com/montie-py/StainedGlass/issues"
+  },
+  "homepage": "https://github.com/montie-py/StainedGlass#readme",
+  "dependencies": {
+    "htmx.org": "^2.0.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

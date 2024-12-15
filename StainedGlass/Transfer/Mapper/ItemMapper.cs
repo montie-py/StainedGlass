@@ -1,9 +1,9 @@
 
-using StainedGlass.Persistence.Services.Entities;
 using StainedGlass.Persistence.Templates;
 using StainedGlass.Persistence.Transfer;
 using ItemDTO = StainedGlass.Transfer.DTOs.ItemDTO;
 using ItemTypeDTO = StainedGlass.Transfer.DTOs.ItemTypeDTO;
+using SanctuaryRegionDTO = StainedGlass.Transfer.DTOs.SanctuaryRegionDTO;
 
 namespace StainedGlass.Transfer.Mapper;
 
@@ -37,7 +37,7 @@ internal class ItemMapper : Mapper
         return GetDtoFromTransferable(nullableTransferItemDto);
     }
     
-    public override IEnumerable<Transferable?> GetAllDTOs()
+    public override ICollection<Transferable?> GetAllDTOs()
     {
         var transferItemDtos = _persistenceService.GetAllDtos();
         var itemDtos = new List<Transferable>();
@@ -72,7 +72,25 @@ internal class ItemMapper : Mapper
             {
                 Title = relatedItem.Title,
                 Slug = relatedItem.Slug,
+                Description = relatedItem.Description,
+                Image = relatedItem.Image,
             });
+        }
+        
+        //setting sanctuaryRegion
+
+        SanctuaryRegionDTO sanctuaryRegionDto = new();
+
+        if (transferItemDto.SanctuaryRegion != null)
+        {
+            var sanctuaryRegionTransfer = (Persistence.Transfer.SanctuaryRegionDTO)transferItemDto.SanctuaryRegion;
+            sanctuaryRegionDto = new SanctuaryRegionDTO
+            {
+                Name = sanctuaryRegionTransfer.Name,
+                Slug = sanctuaryRegionTransfer.Slug,
+                Image = sanctuaryRegionTransfer.Image,
+                Description = sanctuaryRegionTransfer.Description,
+            };
         }
 
         return new ItemDTO
@@ -82,7 +100,9 @@ internal class ItemMapper : Mapper
             Image = transferItemDto.Image,
             Description = transferItemDto.Description,
             ItemType = itemType,
-            RelatedItems = relatedItems
+            ItemTypeSlug = transferItemDto.ItemTypeSlug,
+            RelatedItems = relatedItems,
+            SanctuaryRegion = sanctuaryRegionDto,
         };
     }
 }

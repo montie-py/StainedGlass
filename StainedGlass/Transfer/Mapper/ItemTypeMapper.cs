@@ -1,6 +1,7 @@
 ﻿using StainedGlass.Persistence.Templates;
 using StainedGlass.Persistence.Transfer;
 using ItemTypeDTO = StainedGlass.Transfer.DTOs.ItemTypeDTO;
+using ItemDTO = StainedGlass.Transfer.DTOs.ItemDTO;
 
 namespace StainedGlass.Transfer.Mapper;
 
@@ -34,7 +35,7 @@ internal class ItemTypeMapper : Mapper
         return GetDtoFromTransferable(nullableTransferItemTypeDto);
     }
     
-    public override IEnumerable<Transferable?> GetAllDTOs()
+    public override ICollection<Transferable?> GetAllDTOs()
     {
         var transferItemTypeDtos = _persistenceService.GetAllDtos();
         var itemTypeDtos = new List<Transferable?>();
@@ -54,11 +55,29 @@ internal class ItemTypeMapper : Mapper
     protected override Transferable GetDtoFromTransferable(IPersistanceTransferStruct transferStruct)
     {
         var transferItemTypeDto = (Persistence.Transfer.ItemTypeDTO)transferStruct;
+        
+        ICollection<ItemDTO> itemDtos = new List<ItemDTO>();
 
+        if (transferItemTypeDto.Items != null)
+        {
+            foreach (var itemDto in transferItemTypeDto.Items)
+            {
+                var item = new ItemDTO
+                {
+                    Title = itemDto.Title,
+                    Description = itemDto.Description,
+                    Image = itemDto.Image,
+                    Slug = itemDto.Slug,
+                };
+                itemDtos.Add(item);
+            }
+        }
+        
         return new ItemTypeDTO
         {
             Name = transferItemTypeDto.Name,
             Slug = transferItemTypeDto.Slug,
+            Items = itemDtos
         };
     }
 }

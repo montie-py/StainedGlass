@@ -19,7 +19,7 @@ internal class DbSanctuarySide : DatabasePersistenceService
         _dbContext.SaveChanges();
     }
 
-    public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    public override ICollection<IPersistanceTransferStruct> GetAllDtos()
     {
         List<IPersistanceTransferStruct> sanctuarySideDtos = new List<IPersistanceTransferStruct>();
 

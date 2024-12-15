@@ -15,7 +15,7 @@ internal class Item : IEntity
     public string SanctuaryRegionSlug {get; set;}
     public SanctuaryRegion SanctuaryRegion{get; set;}
     public ICollection<ItemRelation> RelatedItems {get; set;}
-    public ICollection<ItemRelation> RelatedToItems {get; set;}
+    // public ICollection<ItemRelation> RelatedToItems {get; set;}
 
     public override bool Equals(object? obj)
     {

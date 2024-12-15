@@ -21,9 +21,9 @@ internal class DTOGeneric<T> where T : Transferable
         return (T)mapper.GetDTOBySlug(slug);
     }
 
-    internal IEnumerable<T> GetAllDTOs()
+    internal ICollection<T> GetAllDTOs()
     {
-        IEnumerable<T> result = new List<T>();
+        ICollection<T> result = new List<T>();
         foreach (var dto in mapper.GetAllDTOs())
         {
             ((List<T>)result).Add((T)dto);

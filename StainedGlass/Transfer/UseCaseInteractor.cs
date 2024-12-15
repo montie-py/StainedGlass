@@ -41,7 +41,7 @@ public class UseCaseInteractor : Persistor, InputBoundary
         return dtoGeneric.GetDTOBySlug(slug);
     }
     
-    public IEnumerable<T> GetAllDTOs<T>() where T : Transferable, new()
+    public ICollection<T> GetAllDTOs<T>() where T : Transferable, new()
     {
         T tranferable = new T();
         DTOGeneric<T> dtoGeneric = new(_persistenceTemplate, tranferable);

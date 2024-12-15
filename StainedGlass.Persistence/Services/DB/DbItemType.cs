@@ -1,4 +1,5 @@
-﻿using StainedGlass.Persistence.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
 
 namespace StainedGlass.Persistence.Services.DB;
@@ -17,7 +18,7 @@ internal class DbItemType : DatabasePersistenceService
         _dbContext.SaveChanges();
     }
 
-    public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    public override ICollection<IPersistanceTransferStruct> GetAllDtos()
     {
         List<IPersistanceTransferStruct> itemTypeDtos = new List<IPersistanceTransferStruct>();
         foreach (var itemType in _dbContext.ItemTypes.ToList())
@@ -34,16 +35,37 @@ internal class DbItemType : DatabasePersistenceService
 
     public override IPersistanceTransferStruct? GetDtoBySlug(string slug)
     {
-        var entity = _dbContext.ItemTypes.FirstOrDefault(x => x.Slug == slug);
+        var entity = _dbContext.ItemTypes
+            .Include(it => it.Items)
+            .FirstOrDefault(it => it.Slug == slug);
         if (entity is null)
         {
             return null;
+        }
+        
+        //adding items by itemtype
+        ICollection<ItemDTO> itemTypeItems = new List<ItemDTO>();
+
+        if (entity.Items != null)
+        {
+            foreach (var item in entity.Items)
+            {
+                var itemDto = new ItemDTO
+                {
+                    Title = item.Title,
+                    Slug = item.Slug,
+                    Description = item.Description,
+                    Image = item.Image,
+                };
+                itemTypeItems.Add(itemDto);
+            }
         }
 
         return new ItemTypeDTO
         {
             Name = entity.Name,
             Slug = entity.Slug,
+            Items = itemTypeItems
         };
     }
 

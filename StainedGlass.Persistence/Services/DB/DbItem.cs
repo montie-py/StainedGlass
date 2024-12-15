@@ -16,6 +16,7 @@ internal class DbItem : DatabasePersistenceService
             Description = itemStruct.Description,
             Image = itemStruct.Image,
             SanctuaryRegionSlug = itemStruct.SanctuaryRegionSlug,
+            ItemTypeSlug = itemStruct.ItemTypeSlug
         };
         
         _dbContext.Items.Add(newItem);
@@ -25,23 +26,21 @@ internal class DbItem : DatabasePersistenceService
         {
             foreach (var relatedItemsSlug in itemStruct.RelatedItemsSlugs)
             {
-                var relation = new ItemRelation
-                {
-                    ItemSlug = newItem.Slug,
-                    RelatedItemSlug = relatedItemsSlug,
-                };
-                
-                _dbContext.ItemRelations.Add(relation);
-                _dbContext.SaveChanges();
+                AddRelatedItem(newItem.Slug, relatedItemsSlug);
             }
+            _dbContext.SaveChanges();
         }
     }
 
-    public override IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    public override ICollection<IPersistanceTransferStruct> GetAllDtos()
     {
         List<IPersistanceTransferStruct> itemDtos = new List<IPersistanceTransferStruct>();
         
-        foreach (var dbItem in _dbContext.Items)
+        foreach (var dbItem in _dbContext.Items
+                     .Include(i => i.ItemType)
+                     .Include(i => i.SanctuaryRegion)
+                     .Include(i => i.RelatedItems)
+                     .ThenInclude(ir => ir.RelatedItem))
         {
             itemDtos.Add(GetDtoFromEntity(dbItem));
         }
@@ -50,7 +49,12 @@ internal class DbItem : DatabasePersistenceService
 
     public override IPersistanceTransferStruct? GetDtoBySlug(string slug)
     {
-        var entity = _dbContext.Items.FirstOrDefault(x => x.Slug == slug);
+        var entity = _dbContext.Items
+            .Include(i => i.ItemType)
+            .Include(i => i.SanctuaryRegion)
+            .Include(i => i.RelatedItems)
+            .ThenInclude(ir => ir.RelatedItem)
+            .FirstOrDefault(x => x.Slug == slug);
         if (entity is null)
         {
             return null;
@@ -71,45 +75,36 @@ internal class DbItem : DatabasePersistenceService
             item.Image = transferItemDto.Image;
             item.Description = transferItemDto.Description;
             item.ItemTypeSlug = transferItemDto.ItemTypeSlug;
+            item.SanctuaryRegionSlug = item.SanctuaryRegionSlug;
+            
+            _dbContext.SaveChanges();
 
             if (transferItemDto.RelatedItemsSlugs != null)
             {
+                //if this item has any related items at all
                 if (item.RelatedItems.Count > 0)
                 {
                     foreach (var relatedItemSlug in transferItemDto.RelatedItemsSlugs)
                     {
                         //if there is no relateditem with such a slug - add one
                         var existingRelatedItem = item.RelatedItems.FirstOrDefault(
-                            x => x.Item.Slug == relatedItemSlug
+                            x => x.ItemSlug == relatedItemSlug || x.RelatedItemSlug == relatedItemSlug
                             );
                         if (existingRelatedItem is null)
                         {
-                            var newRelatedItem = _dbContext.Items.FirstOrDefault(x => x.Slug == relatedItemSlug);
-                            var itemRelation = new ItemRelation
-                            {
-                                Item = item,
-                                ItemSlug = item.Slug,
-                                RelatedItemSlug = relatedItemSlug,
-                                RelatedItem = newRelatedItem,
-                            };
-                            item.RelatedItems.Add(itemRelation);
+                            AddRelatedItem(item.Slug, relatedItemSlug);
                         }
                     }
+                    _dbContext.SaveChanges();
                 }
                 else
+                //if not - add new relations
                 {
                     foreach (var relatedItemSlug in transferItemDto.RelatedItemsSlugs)
                     {
-                        var newRelatedItem = _dbContext.Items.FirstOrDefault(x => x.Slug == relatedItemSlug);
-                        var itemRelation = new ItemRelation
-                        {
-                            Item = item,
-                            ItemSlug = item.Slug,
-                            RelatedItemSlug = relatedItemSlug,
-                            RelatedItem = newRelatedItem,
-                        };
-                        item.RelatedItems.Add(itemRelation);
+                        AddRelatedItem(item.Slug, relatedItemSlug);
                     }
+                    _dbContext.SaveChanges();
                 }
                 
             }
@@ -121,6 +116,12 @@ internal class DbItem : DatabasePersistenceService
         var item = _dbContext.Items.FirstOrDefault(x => x.Slug == slug);
         if (item != null)
         {
+            //removing itemRelation first
+            var list = _dbContext.ItemRelations
+                .Where(x => x.ItemSlug == slug || x.RelatedItemSlug == slug)
+                .ToList();
+            _dbContext.RemoveRange(list);
+            
             _dbContext.Items.Remove(item);
             _dbContext.SaveChanges();
         }
@@ -146,20 +147,35 @@ internal class DbItem : DatabasePersistenceService
         var itemEntity = (Item)entity;
         //adding related items
         var relatedItems = new Dictionary<string, ItemDTO>();
+        SanctuaryRegionDTO sanctuaryRegionDto = new();
 
         if (itemEntity.RelatedItems != null)
         {
             foreach (var relatedItem in itemEntity.RelatedItems)
             {
                 relatedItems.Add(
-                    relatedItem.Item.Slug, 
+                    relatedItem.RelatedItem.Slug, 
                     new ItemDTO
                     {
-                        Title = relatedItem.Item.Title,
-                        Slug = relatedItem.Item.Slug,
+                        Title = relatedItem.RelatedItem.Title,
+                        Slug = relatedItem.RelatedItem.Slug,
+                        Description = relatedItem.RelatedItem.Description,
+                        Image = relatedItem.RelatedItem.Image,
                     }
                 );
             }
+        }
+
+        //adding sanctuaryRegion
+        if (itemEntity.SanctuaryRegion != null)
+        {
+            sanctuaryRegionDto = new SanctuaryRegionDTO
+            {
+                Slug = itemEntity.SanctuaryRegion.Slug,
+                Name = itemEntity.SanctuaryRegion.Name,
+                Image = itemEntity.SanctuaryRegion.Image,
+                Description = itemEntity.SanctuaryRegion.Description,
+            };
         }
         
         //adding itemType
@@ -176,7 +192,26 @@ internal class DbItem : DatabasePersistenceService
             Description = itemEntity.Description,
             Image = itemEntity.Image,
             RelatedItems = relatedItems,
-            ItemType = itemTypeDto
+            ItemType = itemTypeDto,
+            ItemTypeSlug = itemEntity.ItemTypeSlug,
+            SanctuaryRegion = sanctuaryRegionDto,
+            SanctuaryRegionSlug = itemEntity.SanctuaryRegionSlug
         };
+    }
+    
+    private void AddRelatedItem(string itemSlug, string relatedItemSlug)
+    {
+        var itemRelation = new ItemRelation
+        {
+            ItemSlug = itemSlug,
+            RelatedItemSlug = relatedItemSlug,
+        };
+        _dbContext.ItemRelations.Add(itemRelation);
+        itemRelation = new ItemRelation
+        {
+            ItemSlug = relatedItemSlug,
+            RelatedItemSlug = itemSlug,
+        };
+        _dbContext.ItemRelations.Add(itemRelation);
     }
 }
