@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/montie-py/StainedGlass#readme",
   "dependencies": {
+    "bootstrap-icons": "^1.11.3",
     "htmx.org": "^2.0.4"
   },
   "devDependencies": {
