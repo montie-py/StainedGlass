@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./wwwroot/js"
+    "outDir": "./wwwroot/js/admin"
   },
-  "include": ["./src/**/*.ts"]
+  "include": ["./src/admin/*.ts"]
 }

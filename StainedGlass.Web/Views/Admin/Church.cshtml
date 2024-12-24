@@ -1,0 +1,29 @@
+﻿@page
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<p class="text-2xl font-bold">Add new Church</p>
+<br>
+<form asp-action="Post" asp-controller="Church" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="title">Name</label>
+        <input type="text" name="Name" required class="form-control" id="name" placeholder="Name">
+    </div>
+    <div class="form-group">
+        <label for="title">Slug</label>
+        <input type="text" name="Slug" required class="form-control" id="slug" placeholder="Slug">
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="text">Description</label>
+        <textarea class="form-control" name="Description" required id="description" rows="6"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="image">Image</label>
+        <input type="file" name="Image" class="form-control-file" id="image">
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

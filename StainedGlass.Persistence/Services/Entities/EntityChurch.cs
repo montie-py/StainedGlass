@@ -56,7 +56,7 @@ public class EntityChurch : INonRelatable, IPersistenceService
             Slug = church.Slug,
             Name = church.Name,
             Description = church.Description,
-            Image = church.Image,
+            // Image = church.Image,
             Sides = sidesDTO
         };
     }
@@ -94,7 +94,7 @@ public class EntityChurch : INonRelatable, IPersistenceService
             Slug = churchDTO.Value.Slug,
             Name = churchDTO.Value.Name,
             Description = churchDTO.Value.Description,
-            Image = churchDTO.Value.Image,
+            // Image = churchDTO.Value.Image,
         };
 
         if (churchDTO.Value.Sides != null)

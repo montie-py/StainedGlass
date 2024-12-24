@@ -1,0 +1,77 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <meta name="color-scheme" content="light dark" />
+
+    <link rel="stylesheet" href="~/css/admin/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin/mvc-grid/mvc-grid.css" />
+    <link rel="stylesheet" href="~/css/admin/mvc-grid/mvc-grid-dark.css" />
+    <link rel="stylesheet" href="~/css/admin/easymde/easymde.css" />
+    <link rel="stylesheet" href="~/css/admin/easymde/easymde-dark.css" />
+    <link rel="stylesheet" href="~/css/admin/style.css" />
+
+    <script src="~/js/admin/color-modes.js"></script>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap justify-content-start p-0 py-3 shadow">
+    <div class="navbar-brand sidebar-width">
+        <button id="sidebarToggle" class="navbar-toggler mx-2 collapsed" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="mr-0 pl-1" asp-page="/Private/Index">StainedGlass AdminZone</a>
+    </div>
+</nav>
+
+<!-- Sidebar -->
+<nav id="sidebar-wrapper" class="sidebar-width d-md-block sidebar sidebar-wrapper border border-right bg-body-tertiary">
+    <div class="sidebar-sticky pt-3">
+        <ul class="nav flex-column mb-auto">
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" title="Blog Entries" href="/Private/Blog">
+                    Blog Entries
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" title="Books Reviews" href="/Private/Books">
+                    Books Reviews
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Content -->
+<div class="d-flex" id="wrapper">
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <main role="main" class="px-md-4">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/admin/bootstrap.bundle.min.js"></script>
+<script src="~/js/admin/aspnet-validation.min.js"></script>
+<script>
+    var v = new aspnetValidation.ValidationService();
+    v.ValidationInputCssClassName = 'is-invalid';
+    //v.ValidationInputValidCssClassName = 'is-valid';
+    v.ValidationMessageCssClassName = 'invalid-feedback';
+    //v.ValidationMessageValidCssClassName = 'valid-feedback';
+    v.bootstrap();
+</script>
+<script src="~/js/admin/mvc-grid/mvc-grid.js"></script>
+<script src="~/js/admin/navbar.js"></script>
+
+@RenderSection("Scripts", required: false)
+</body>
+</html>
+<script src="~/js/admin/app.js"></script>

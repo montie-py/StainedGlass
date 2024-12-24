@@ -1,4 +1,6 @@
-﻿namespace StainedGlass.Persistence.Transfer
+﻿using Microsoft.AspNetCore.Http;
+
+namespace StainedGlass.Persistence.Transfer
 {
     public interface IPersistanceTransferStruct
     {
@@ -9,7 +11,7 @@
         public string Slug {get; set;}
         public string Name {get; set;}
         public string Description {get; set;}
-        public string Image {get; set;}
+        public IFormFile Image {get; set;}
         public  HashSet<SanctuarySideDTO>? Sides { get; set; }
     }
 

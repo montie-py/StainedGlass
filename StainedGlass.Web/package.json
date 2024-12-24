@@ -4,7 +4,8 @@
   "description": "church walking guide tour",
   "scripts": {
     "build:css": "npx tailwindcss -i ./wwwroot/css/tailwind.css -o ./wwwroot/css/tailwind_output.css --watch",
-    "build:ts": "tsc",
+    "build:ts-front": "tsc -p tsconfig.front.json",
+    "build:ts-admin": "tsc -p tsconfig.admin.json",
     "copy-htmx": "cp ./node_modules/htmx.org/dist/htmx.min.js ./wwwroot/js/htmx.min.js"
   },
   "repository": {

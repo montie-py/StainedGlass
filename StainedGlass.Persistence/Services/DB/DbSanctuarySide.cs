@@ -88,7 +88,7 @@ internal class DbSanctuarySide : DatabasePersistenceService
                 Name = sanctuarySideEntity.Church.Name,
                 Slug = sanctuarySideEntity.Church.Slug,
                 Description = sanctuarySideEntity.Church.Description,
-                Image = sanctuarySideEntity.Church.Image,
+                // Image = sanctuarySideEntity.Church.Image,
             };
         }
 

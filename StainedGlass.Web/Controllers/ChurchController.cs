@@ -33,6 +33,12 @@ public class ChurchController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromForm]ChurchDTO churchDto)
     {
+        //file handling
+        using (var memoryStream = new MemoryStream())
+        {
+            // await 
+        }
+        
         _useCaseInteractor.StoreEntity(churchDto);
         return Ok();
     }

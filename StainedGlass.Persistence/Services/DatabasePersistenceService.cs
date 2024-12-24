@@ -1,5 +1,6 @@
 ﻿//the purpose of the class is holding and initializing the _dbContext property
 
+using Microsoft.Extensions.Logging;
 using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
 
@@ -8,6 +9,8 @@ namespace StainedGlass.Persistence.Services;
 internal abstract class DatabasePersistenceService : IPersistenceService
 {
     protected readonly AppDbContext _dbContext;
+    protected readonly string fileType = "image/png";
+    protected string FileName { get; init; }
 
     public DatabasePersistenceService()
     {

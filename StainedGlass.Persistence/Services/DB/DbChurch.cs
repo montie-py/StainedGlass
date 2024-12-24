@@ -1,10 +1,16 @@
-﻿using StainedGlass.Persistence.Entities;
+﻿using Microsoft.AspNetCore.Http;
+using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
 
 namespace StainedGlass.Persistence.Services.DB;
 
 internal class DbChurch : DatabasePersistenceService
 {
+    public DbChurch()
+    {
+        FileName = "church.png";
+    }
+
     public override void AddEntity(IPersistanceTransferStruct transferStruct)
     {
         var churchStruct = (ChurchDTO)GetDtoFromTransfer(transferStruct);
@@ -13,8 +19,11 @@ internal class DbChurch : DatabasePersistenceService
             Name = churchStruct.Name,
             Slug = churchStruct.Slug,
             Description = churchStruct.Description,
-            Image = churchStruct.Image,
         };
+        
+        //transferring file from IFormFile to byte[]
+        FormFileToBytes(churchStruct.Image, ref churchEntity);
+        
         _dbContext.Churches.Add(churchEntity);
         _dbContext.SaveChanges();
     }
@@ -44,13 +53,15 @@ internal class DbChurch : DatabasePersistenceService
 
     public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
-        var church = _dbContext.Churches.FirstOrDefault(e => e.Slug == slug);
-        if (church != null)
+        var churchEntity = _dbContext.Churches.FirstOrDefault(e => e.Slug == slug);
+        if (churchEntity != null)
         {
             var churchStruct = (ChurchDTO)GetDtoFromTransfer(transferStruct);
-            church.Name = churchStruct.Name;
-            church.Description = churchStruct.Description;
-            church.Image = churchStruct.Image;
+            churchEntity.Name = churchStruct.Name;
+            churchEntity.Description = churchStruct.Description;
+            
+            //transferring file from IFormFile to byte[]
+            FormFileToBytes(churchStruct.Image, ref churchEntity);
             // _dbContext.Churches.Update(church);
             _dbContext.SaveChanges();
         }
@@ -74,12 +85,25 @@ internal class DbChurch : DatabasePersistenceService
     protected override IPersistanceTransferStruct GetDtoFromEntity(IEntity entity)
     {
         var churchEntity = (Church)entity;
+        
         return new ChurchDTO
         {
             Name = churchEntity.Name,
             Description = churchEntity.Description,
-            Image = churchEntity.Image,
+            Image = new FormFile(churchEntity.Image, FileName, fileType),
             Slug = churchEntity.Slug,
         };
+    }
+
+    private void FormFileToBytes(IFormFile image, ref Church churchEntity)
+    {
+        //transferring file from IFormFile to byte[]
+        byte[] filebytes;
+        using (var ms = new MemoryStream())
+        {
+            image.CopyToAsync(ms);
+            filebytes = ms.ToArray();
+            churchEntity.Image = filebytes;
+        }
     }
 }
