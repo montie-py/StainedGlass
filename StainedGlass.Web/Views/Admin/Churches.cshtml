@@ -1,0 +1,42 @@
+﻿@page
+@using StainedGlass.Transfer.DTOs
+
+@{
+    Layout = "_AdminLayout";
+    var items = ViewBag.Churches as List<ChurchDTO>;
+    int count = 1;
+}
+<h2>Churches</h2>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Slug</th>
+        <th scope="col">Description</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (items != null)
+    {
+        @foreach (var item in items)
+        {
+            <tr>
+                <th scope="row">@count</th>
+                <td>@item.Name</td>
+                <td><a href="/admin/church/@item.Slug">@item.Slug</a></td>
+                <td>@item.Description</td>
+                <td><a href="#">Edit</a> <a href="">Delete</a></td>
+            </tr>
+            count++;
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="4">No Churches</td>
+        </tr>
+    }
+    </tbody>
+</table>

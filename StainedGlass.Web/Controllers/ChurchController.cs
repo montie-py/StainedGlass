@@ -6,7 +6,7 @@ using StainedGlass.Transfer.DTOs;
 namespace StainedGlass.Web.Controllers;
 
 [Route("[controller]")]
-public class ChurchController : ControllerBase
+public class ChurchController : Controller
 {
     private InputBoundary _useCaseInteractor;
     
@@ -33,12 +33,17 @@ public class ChurchController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromForm]ChurchDTO churchDto)
     {
-        //file handling
-        using (var memoryStream = new MemoryStream())
+        //if image is not too large
+        const long maxFileSize = 7 * 1024 * 1024; // 7MB in bytes
+        if (churchDto.Image != null && churchDto.Image.Length > 0)
         {
-            // await 
+            if (churchDto.Image.Length > maxFileSize)
+            {
+                ModelState.AddModelError("Image", "The file size exceeds the 7MB limit.");
+                return View("Admin/Church");
+            }
         }
-        
+
         _useCaseInteractor.StoreEntity(churchDto);
         return Ok();
     }
@@ -47,13 +52,6 @@ public class ChurchController : ControllerBase
     public async Task<IActionResult> Put(string originalSlug, [FromForm]ChurchDTO church)
     {
         _useCaseInteractor.ReplaceEntity(originalSlug, church);
-        return Ok();
-    }
-
-    [HttpDelete("{slug}")]
-    public async Task<IActionResult> Delete(string slug)
-    {
-        _useCaseInteractor.RemoveEntity<ChurchDTO>(slug);
         return Ok();
     }
 }
