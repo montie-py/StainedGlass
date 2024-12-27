@@ -10,13 +10,17 @@ public class FormFile : IFormFile
     {
         _content = content; 
         FileName = fileName; 
+        Name = fileName; 
         ContentType = contentType;
+        ContentDisposition = "inline; filename" + fileName;
+        Headers = new CustomHeaderDictionary();
+        Headers.Add("Content-Disposition", ContentDisposition);
     } 
     public string ContentType { get; } 
-    public string ContentDisposition => throw new System.NotImplementedException(); 
-    public IHeaderDictionary Headers => throw new System.NotImplementedException(); 
+    public string ContentDisposition { get; } 
+    public IHeaderDictionary Headers { get; } 
     public long Length => _content.Length; 
-    public string Name => throw new System.NotImplementedException(); 
+    public string Name { get; } 
     public string FileName { get; }
 
     public void CopyTo(Stream target)

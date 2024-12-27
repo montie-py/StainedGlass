@@ -6,7 +6,8 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./wwwroot/js/admin"
+    "outDir": "./wwwroot/js/admin",
+    "lib": ["es2015", "dom"],
   },
   "include": ["./src/admin/*.ts"]
 }

@@ -27,7 +27,11 @@
                 <td>@item.Name</td>
                 <td><a href="/admin/church/@item.Slug">@item.Slug</a></td>
                 <td>@item.Description</td>
-                <td><a href="#">Edit</a> <a href="">Delete</a></td>
+                <td><a href="#">Edit</a>
+                    <form>
+                        <button class="deleteChurch" data-slug="@item.Slug">Delete</button>
+                    </form>
+                </td>
             </tr>
             count++;
         }

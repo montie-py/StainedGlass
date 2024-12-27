@@ -16,7 +16,7 @@ public class AdminController : Controller
     }
 
     [HttpGet("church")]
-    public IActionResult Church()
+    public IActionResult NewChurch()
     {
         return View("NewChurch");
     }
@@ -45,7 +45,24 @@ public class AdminController : Controller
         return View("Church");
     }
     
-    [HttpDelete("{slug}")]
+    [HttpGet("church/{slug}")]
+    public async Task<IActionResult> EditChurch(string slug)
+    {
+        ViewBag.Church = _useCaseInteractor.GetDTOBySlug<ChurchDTO>(slug);
+        if (ViewBag.Church.Image != null && ViewBag.Church.Image.Length > 0) 
+        { 
+            using (var memoryStream = new MemoryStream()) 
+            { 
+                await ViewBag.Church.Image.CopyToAsync(memoryStream); 
+                var fileBytes = memoryStream.ToArray(); 
+                var base64String = Convert.ToBase64String(fileBytes);
+                ViewBag.ChurchImage = base64String; 
+            } 
+        }
+        return View("EditChurch");
+    }
+    
+    [HttpDelete("church/{slug}")]
     public async Task<IActionResult> Delete(string slug)
     {
         _useCaseInteractor.RemoveEntity<ChurchDTO>(slug);

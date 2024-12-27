@@ -1,0 +1,21 @@
+﻿@page
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Church @ViewBag.Church.Slug</h2>
+
+<dl>
+    <dt>Name:</dt>
+    <dd>@ViewBag.Church.Name</dd>
+    <dt>Description:</dt>
+    <dd>@ViewBag.Church.Description</dd>
+    <dt>Image:</dt>
+    <dd>
+        @if (ViewBag.ChurchImage != null)
+        {
+            <img width="150px" src="data:image/png;base64,@ViewBag.ChurchImage" alt="Church @ViewBag.Church.Name Image" />
+        }
+    </dd>
+</dl>

@@ -6,7 +6,8 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./wwwroot/js"
+    "outDir": "./wwwroot/js",
+    "lib": ["es2015", "dom"],
   },
   "include": ["./src/front/*.ts"]
 }

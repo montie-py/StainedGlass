@@ -6,7 +6,8 @@
     "build:css": "npx tailwindcss -i ./wwwroot/css/tailwind.css -o ./wwwroot/css/tailwind_output.css --watch",
     "build:ts-front": "tsc -p tsconfig.front.json",
     "build:ts-admin": "tsc -p tsconfig.admin.json",
-    "copy-htmx": "cp ./node_modules/htmx.org/dist/htmx.min.js ./wwwroot/js/htmx.min.js"
+    "copy-htmx": "cp ./node_modules/htmx.org/dist/htmx.min.js ./wwwroot/js/htmx.min.js",
+    "webpack": "npx webpack"
   },
   "repository": {
     "type": "git",
@@ -23,9 +24,14 @@
   "homepage": "https://github.com/montie-py/StainedGlass#readme",
   "dependencies": {
     "bootstrap-icons": "^1.11.3",
+    "es6-promise": "^4.2.8",
     "htmx.org": "^2.0.4"
   },
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.7.2",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.0"
   }
 }

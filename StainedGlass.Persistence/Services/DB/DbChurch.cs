@@ -30,7 +30,6 @@ internal class DbChurch : DatabasePersistenceService
 
     public override ICollection<IPersistanceTransferStruct> GetAllDtos()
     {
-        var here = _dbContext.Churches.ToList();
         List<IPersistanceTransferStruct> churchDtos = new();
         foreach (var churchEntity in _dbContext.Churches.ToList())
         {
