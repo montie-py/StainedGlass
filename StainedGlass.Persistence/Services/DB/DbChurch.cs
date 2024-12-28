@@ -8,7 +8,7 @@ internal class DbChurch : DatabasePersistenceService
 {
     public DbChurch()
     {
-        FileName = "church.png";
+        FileName = "church.jpg";
     }
 
     public override void AddEntity(IPersistanceTransferStruct transferStruct)
@@ -100,7 +100,7 @@ internal class DbChurch : DatabasePersistenceService
         byte[] filebytes;
         using (var ms = new MemoryStream())
         {
-            image.CopyToAsync(ms);
+            image.CopyTo(ms);
             filebytes = ms.ToArray();
             churchEntity.Image = filebytes;
         }

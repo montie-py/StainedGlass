@@ -45,7 +45,7 @@ public class AdminController : Controller
         return View("Church");
     }
     
-    [HttpGet("church/{slug}")]
+    [HttpGet("church/{slug}/edit")]
     public async Task<IActionResult> EditChurch(string slug)
     {
         ViewBag.Church = _useCaseInteractor.GetDTOBySlug<ChurchDTO>(slug);

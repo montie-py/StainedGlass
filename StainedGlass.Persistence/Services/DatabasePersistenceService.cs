@@ -9,7 +9,7 @@ namespace StainedGlass.Persistence.Services;
 internal abstract class DatabasePersistenceService : IPersistenceService
 {
     protected readonly AppDbContext _dbContext;
-    protected readonly string fileType = "image/png";
+    protected readonly string fileType = "image/jpeg";
     protected string FileName { get; init; }
 
     public DatabasePersistenceService()

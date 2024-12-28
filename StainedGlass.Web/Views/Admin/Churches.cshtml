@@ -6,7 +6,10 @@
     var items = ViewBag.Churches as List<ChurchDTO>;
     int count = 1;
 }
-<h2>Churches</h2>
+<h2 style="display: inline-block;">Churches</h2> 
+<a style="position: relative;
+    left: 20px;
+    bottom: 3px;" href="/admin/church">Add a church</a>
 <table class="table table-bordered">
     <thead>
     <tr>
@@ -27,7 +30,8 @@
                 <td>@item.Name</td>
                 <td><a href="/admin/church/@item.Slug">@item.Slug</a></td>
                 <td>@item.Description</td>
-                <td><a href="#">Edit</a>
+                <td>
+                    <a href="/admin/church/@item.Slug/edit">Edit</a>
                     <form>
                         <button class="deleteChurch" data-slug="@item.Slug">Delete</button>
                     </form>

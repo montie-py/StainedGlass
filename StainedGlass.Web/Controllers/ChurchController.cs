@@ -10,6 +10,9 @@ public class ChurchController : Controller
 {
     private InputBoundary _useCaseInteractor;
     
+    private const long maxFileSize = 7 * 1024 * 1024; // 7MB in bytes
+    private static readonly string[] allowedExtensions = new[] { ".jpg", ".jpeg"};
+
     public ChurchController(InputBoundary useCaseInteractor)
     {
         _useCaseInteractor = useCaseInteractor;
@@ -33,25 +36,49 @@ public class ChurchController : Controller
     [HttpPost]
     public async Task<IActionResult> Post([FromForm]ChurchDTO churchDto)
     {
-        //if image is not too large
-        const long maxFileSize = 7 * 1024 * 1024; // 7MB in bytes
-        if (churchDto.Image != null && churchDto.Image.Length > 0)
+        var fileValidationResult = ValidateFile(churchDto.Image);
+        if (fileValidationResult != null)
         {
-            if (churchDto.Image.Length > maxFileSize)
-            {
-                ModelState.AddModelError("Image", "The file size exceeds the 7MB limit.");
-                return View("Admin/Church");
-            }
+            ModelState.AddModelError("Image", fileValidationResult);
+            return View("Admin/NewChurch");
         }
 
         _useCaseInteractor.StoreEntity(churchDto);
-        return Ok();
+        return Redirect("Admin/churches");
     }
 
     [HttpPut("{originalSlug}")]
-    public async Task<IActionResult> Put(string originalSlug, [FromForm]ChurchDTO church)
+    public async Task<IActionResult> Put(string originalSlug, ChurchDTO churchDto)
     {
-        _useCaseInteractor.ReplaceEntity(originalSlug, church);
+        var fileValidationResult = ValidateFile(churchDto.Image);
+        if (fileValidationResult != null)
+        {
+            ModelState.AddModelError("Image", fileValidationResult);
+            return View("Admin/EditChurch");
+        }
+        
+        _useCaseInteractor.ReplaceEntity(originalSlug, churchDto);
         return Ok();
+    }
+
+    private string? ValidateFile(IFormFile image)
+    {
+        if (image != null && image.Length > 0)
+        {
+            //check the image length
+            if (image.Length > maxFileSize)
+            {
+                return "The file size exceeds the 7MB limit.";
+            }
+            
+            //check the image extension
+            var extension = Path.GetExtension(image.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(extension))
+            {
+                return "Invalid file type.";
+            }
+        }
+        
+        return null;
     }
 }

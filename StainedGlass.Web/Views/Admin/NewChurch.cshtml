@@ -3,8 +3,7 @@
 @{
     Layout = "_AdminLayout";
 }
-
-<p class="text-2xl font-bold">Add new Church</p>
+<h2 style="display: inline-block;">Adding a new Church</h2>
 <br>
 <form action="/church" method="post" enctype="multipart/form-data">
     <div class="form-group">
@@ -22,7 +21,7 @@
     </div>
     <div class="form-group">
         <label for="image">Image</label>
-        <input type="file" name="Image" required class="form-control-file" id="image">
+        <input type="file" name="Image" required class="form-control-file" accept=".jpg, .jpeg" id="image">
         <span asp-validation-for="Image" class="text-danger"></span>
     </div>
     <br>
