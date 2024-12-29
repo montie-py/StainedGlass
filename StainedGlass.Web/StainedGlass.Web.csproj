@@ -5,11 +5,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\" />
+    <Folder Include="Pages\Shared\Admin\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Pages\Shared\Admin\Church\Church.cshtml" />
+    <AdditionalFiles Include="Pages\Shared\Admin\Church\Churches.cshtml" />
+    <AdditionalFiles Include="Pages\Shared\Admin\Church\EditChurch.cshtml" />
+    <AdditionalFiles Include="Pages\Shared\Admin\Church\NewChurch.cshtml" />
   </ItemGroup>
 
   <PropertyGroup>

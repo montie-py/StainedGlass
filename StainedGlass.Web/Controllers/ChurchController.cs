@@ -40,11 +40,11 @@ public class ChurchController : Controller
         if (fileValidationResult != null)
         {
             ModelState.AddModelError("Image", fileValidationResult);
-            return View("Admin/NewChurch");
+            return View("Admin/Church/NewChurch");
         }
 
         await _useCaseInteractor.StoreEntity(churchDto);
-        return Redirect("Admin/churches");
+        return Redirect("Admin/Church/churches");
     }
 
     [HttpPut("{originalSlug}")]
@@ -54,7 +54,7 @@ public class ChurchController : Controller
         if (fileValidationResult != null)
         {
             ModelState.AddModelError("Image", fileValidationResult);
-            return View("Admin/EditChurch");
+            return View("Admin/Church/EditChurch");
         }
         
         await _useCaseInteractor.ReplaceEntity(originalSlug, churchDto);

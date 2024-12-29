@@ -1,8 +1,9 @@
 ﻿@page
+@* @model StainedGlass.Transfer.DTOs.ChurchDTO; *@
 
 @{
     Layout = "_AdminLayout";
-    var aboutUrl = Url.Action("Churches", "Admin");
+    var aboutUrl = Url.Action("Churches", "Church");
 }
 
 <h2>Church @ViewBag.Church.Slug</h2>
@@ -24,7 +25,7 @@
             <br><img width="150px" src="data:image/jpeg;base64,@ViewBag.ChurchImage" alt="Church @ViewBag.Church.Name Image" /><br/>
         }
         <input type="file" name="Image" accept=".jpg, .jpeg" class="form-control-file" id="image">
-        <span asp-validation-for="Image" class="text-danger"></span>
+        @* <span asp-validation-for="Image" class="text-danger"></span> *@
     </div>
     <br>
     <button type="submit" class="btn btn-primary">Submit</button>

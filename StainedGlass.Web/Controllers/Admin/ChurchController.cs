@@ -3,33 +3,33 @@ using StainedGlass.Persistence.Templates;
 using StainedGlass.Transfer;
 using StainedGlass.Transfer.DTOs;
 
-namespace StainedGlass.Web.Controllers;
+namespace StainedGlass.Web.Controllers.Admin;
 
-[Route("[controller]")]
-public class AdminController : Controller
+[Route("admin/[controller]")]
+public class ChurchController : AdminController
 {
     private InputBoundary _useCaseInteractor;
-    public AdminController(InputBoundary useCaseInteractor)
+    public ChurchController(InputBoundary useCaseInteractor)
     {
         _useCaseInteractor = useCaseInteractor;
         ((UseCaseInteractor)_useCaseInteractor).SetPersistenceTemplate(new DatabasePersistenceTemplate());
     }
 
     [HttpGet("church")]
-    public IActionResult NewChurch()
+    public override IActionResult New()
     {
-        return View("NewChurch");
+        return View("Admin/Church/NewChurch");
     }
     
     [HttpGet("churches")]
-    public async Task<IActionResult> Churches()
+    public override async Task<IActionResult> All()
     {
         ViewBag.Churches = await _useCaseInteractor.GetAllDTOs<ChurchDTO>();
-        return View();
+        return View("Admin/Church/Churches");
     }
     
-    [HttpGet("church/{slug}")]
-    public async Task<IActionResult> Get(string slug)
+    [HttpGet("{slug}")]
+    public override async Task<IActionResult> One(string slug)
     {
         ViewBag.Church = await _useCaseInteractor.GetDTOBySlug<ChurchDTO>(slug);
         if (ViewBag.Church.Image != null && ViewBag.Church.Image.Length > 0) 
@@ -42,11 +42,11 @@ public class AdminController : Controller
                 ViewBag.ChurchImage = base64String; 
             } 
         }
-        return View("Church");
+        return View("Admin/Church/Church");
     }
     
-    [HttpGet("church/{slug}/edit")]
-    public async Task<IActionResult> EditChurch(string slug)
+    [HttpGet("{slug}/edit")]
+    public override async Task<IActionResult> Edit(string slug)
     {
         ViewBag.Church = await _useCaseInteractor.GetDTOBySlug<ChurchDTO>(slug);
         if (ViewBag.Church.Image != null && ViewBag.Church.Image.Length > 0) 
@@ -59,11 +59,11 @@ public class AdminController : Controller
                 ViewBag.ChurchImage = base64String; 
             } 
         }
-        return View("EditChurch");
+        return View("Admin/Church/EditChurch");
     }
     
-    [HttpDelete("church/{slug}")]
-    public async Task<IActionResult> Delete(string slug)
+    [HttpDelete("{slug}")]
+    public override async Task<IActionResult> Delete(string slug)
     {
         await _useCaseInteractor.RemoveEntity<ChurchDTO>(slug);
         return Ok();
