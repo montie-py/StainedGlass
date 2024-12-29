@@ -4,7 +4,7 @@ public class UseCaseInteractor : Persistor, InputBoundary
 {
     private Transferable _dataDTO;
 
-    public void StoreEntity(Transferable dataDTO)
+    public async Task<bool> StoreEntity(Transferable dataDTO)
     {
         _dataDTO = dataDTO;
         var mapper = dataDTO.GetMapper();
@@ -12,10 +12,11 @@ public class UseCaseInteractor : Persistor, InputBoundary
 
         mapper.SetInstance(_persistenceTemplate);
 
-        mapper.SaveEntity(_dataDTO);
+        await mapper.SaveEntity(_dataDTO);
+        return true;
     }
     
-    public void ReplaceEntity(string slug, Transferable dataDTO)
+    public async Task<bool> ReplaceEntity(string slug, Transferable dataDTO)
     {
         _dataDTO = dataDTO;
         //TODO send it through the usecases using Chain Of Responsabilities
@@ -23,29 +24,29 @@ public class UseCaseInteractor : Persistor, InputBoundary
         //TODO map it to the Entities
         var mapper = dataDTO.GetMapper();
         mapper.SetInstance(_persistenceTemplate);
-        mapper.ReplaceEntity(slug, _dataDTO);
+        return await mapper.ReplaceEntity(slug, _dataDTO);
     }
 
-    public void RemoveEntity<T>(string slug) where T : Transferable, new()
+    public async Task<bool> RemoveEntity<T>(string slug) where T : Transferable, new()
     {
         T entity = new T();
         DTOGeneric<T> dtoGeneric = new(_persistenceTemplate, entity);
-        dtoGeneric.RemoveEntity(slug);
+        return await dtoGeneric.RemoveEntity(slug);
     }
 
-    public T GetDTOBySlug<T>(string slug) where T : Transferable, new()
+    public async Task<T?> GetDTOBySlug<T>(string slug) where T : Transferable, new()
     {
         T tranferable = new T();
-        DTOGeneric<T> dtoGeneric = new(_persistenceTemplate, tranferable);
+        DTOGeneric<T?> dtoGeneric = new(_persistenceTemplate, tranferable);
 
-        return dtoGeneric.GetDTOBySlug(slug);
+        return await dtoGeneric.GetDTOBySlug(slug);
     }
     
-    public ICollection<T> GetAllDTOs<T>() where T : Transferable, new()
+    public async Task<ICollection<T>> GetAllDTOs<T>() where T : Transferable, new()
     {
         T tranferable = new T();
         DTOGeneric<T> dtoGeneric = new(_persistenceTemplate, tranferable);
 
-        return dtoGeneric.GetAllDTOs();
+        return await dtoGeneric.GetAllDTOs();
     }
 }

@@ -6,9 +6,9 @@ namespace StainedGlass.Transfer.Mapper;
 public interface Mappable
 {
     public abstract void SetInstance(IPersistenceTemplate template);
-    public Transferable? GetDTOBySlug(string slug);
-    public ICollection<Transferable?> GetAllDTOs();
-    public void RemoveEntity(string slug);
-    public void SaveEntity(Transferable transferable);
-    public void ReplaceEntity(string slug, Transferable transferable);
+    public Task<Transferable?> GetDTOBySlug(string slug);
+    public Task<ICollection<Transferable?>> GetAllDTOs();
+    public Task<bool> RemoveEntity(string slug);
+    public Task<bool> SaveEntity(Transferable transferable);
+    public Task<bool> ReplaceEntity(string slug, Transferable transferable);
 }

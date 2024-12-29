@@ -5,9 +5,9 @@ namespace StainedGlass.Persistence.Services;
 
 public interface IPersistenceService
 {
-    public void AddEntity(IPersistanceTransferStruct transferStruct);
-    public IEnumerable<IPersistanceTransferStruct> GetAllDtos();
-    public IPersistanceTransferStruct? GetDtoBySlug(string slug);
-    public void RemoveEntity(string slug);
-    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct);
+    public Task<bool> AddEntity(IPersistanceTransferStruct transferStruct);
+    public Task<ICollection<IPersistanceTransferStruct>> GetAllDtos();
+    public Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug);
+    public Task<bool> RemoveEntity(string slug);
+    public Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct);
 }

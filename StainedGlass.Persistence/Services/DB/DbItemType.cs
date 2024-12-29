@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
 
@@ -6,7 +7,7 @@ namespace StainedGlass.Persistence.Services.DB;
 
 internal class DbItemType : DatabasePersistenceService
 {
-    public override void AddEntity(IPersistanceTransferStruct transferStruct)
+    public override async Task<bool> AddEntity(IPersistanceTransferStruct transferStruct)
     {
         var itemStruct = (ItemTypeDTO)GetDtoFromTransfer(transferStruct);
         var itemTypeEntity = new ItemType
@@ -15,13 +16,14 @@ internal class DbItemType : DatabasePersistenceService
             Slug = itemStruct.Slug,
         };
         _dbContext.ItemTypes.Add(itemTypeEntity);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
+        return true;
     }
 
-    public override ICollection<IPersistanceTransferStruct> GetAllDtos()
+    public override async Task<ICollection<IPersistanceTransferStruct>> GetAllDtos()
     {
         List<IPersistanceTransferStruct> itemTypeDtos = new List<IPersistanceTransferStruct>();
-        foreach (var itemType in _dbContext.ItemTypes.ToList())
+        foreach (var itemType in await _dbContext.ItemTypes.ToListAsync())
         {
             var itemTypeDto = new ItemTypeDTO
             {
@@ -33,11 +35,11 @@ internal class DbItemType : DatabasePersistenceService
         return itemTypeDtos;
     }
 
-    public override IPersistanceTransferStruct? GetDtoBySlug(string slug)
+    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
     {
-        var entity = _dbContext.ItemTypes
+        var entity = await _dbContext.ItemTypes
             .Include(it => it.Items)
-            .FirstOrDefault(it => it.Slug == slug);
+            .FirstOrDefaultAsync(it => it.Slug == slug);
         if (entity is null)
         {
             return null;
@@ -69,26 +71,30 @@ internal class DbItemType : DatabasePersistenceService
         };
     }
 
-    public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    public override async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
-        var itemType = _dbContext.ItemTypes.FirstOrDefault(x => x.Slug == slug);
+        var itemType = await _dbContext.ItemTypes.FirstOrDefaultAsync(x => x.Slug == slug);
 
         if (itemType != null)
         {
             var itemStruct = (ItemTypeDTO)GetDtoFromTransfer(transferStruct);
             itemType.Name = itemStruct.Name;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
+
+        return true;
     }
 
-    public override void RemoveEntity(string slug)
+    public override async Task<bool> RemoveEntity(string slug)
     {
-        var itemType = _dbContext.ItemTypes.FirstOrDefault(x => x.Slug == slug);
+        var itemType = await _dbContext.ItemTypes.FirstOrDefaultAsync(x => x.Slug == slug);
         if (itemType != null)
         {
             _dbContext.ItemTypes.Remove(itemType);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
+
+        return true;
     }
     
     protected override IPersistanceTransferStruct GetDtoFromTransfer(IPersistanceTransferStruct transferStruct)
@@ -105,5 +111,18 @@ internal class DbItemType : DatabasePersistenceService
             Name = itemTypeEntity.Name,
             Slug = itemTypeEntity.Slug,
         };
+    }
+    
+    private async Task<byte[]> FormFileToBytes(IFormFile image)
+    {
+        //transferring file from IFormFile to byte[]
+        byte[] filebytes;
+        using (var ms = new MemoryStream())
+        {
+            await image.CopyToAsync(ms);
+            filebytes = ms.ToArray();
+        }
+
+        return filebytes;
     }
 }

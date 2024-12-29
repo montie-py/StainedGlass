@@ -6,19 +6,20 @@ namespace StainedGlass.Persistence.Services.Entities;
 
 public class EntityItemType : INonRelatable, IPersistenceService
 {
-    public void AddEntity(IPersistanceTransferStruct transferStruct)
+    public async Task<bool> AddEntity(IPersistanceTransferStruct transferStruct)
     {
         var itemTypeDto = (ItemTypeDTO)transferStruct;
         var entity = GetEntity(itemTypeDto) as ItemType;
         EntitiesCollection.ItemsTypes.TryAdd(itemTypeDto.Slug, entity);
+        return true;
     }
 
-    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    public async Task<ICollection<IPersistanceTransferStruct>> GetAllDtos()
     {
         return EntitiesCollection.ItemsTypes.Select(e => GetDTOForEntity(e.Value)).ToList();
     }
 
-    public IPersistanceTransferStruct? GetDtoBySlug(string slug)
+    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
     {
         if (!EntitiesCollection.ItemsTypes.ContainsKey(slug))
         {
@@ -27,24 +28,27 @@ public class EntityItemType : INonRelatable, IPersistenceService
         return GetDTOForEntity(EntitiesCollection.ItemsTypes[slug]);
     }
 
-    public void RemoveEntity(string slug)
+    public async Task<bool> RemoveEntity(string slug)
     {
         if (EntitiesCollection.ItemsTypes.ContainsKey(slug))
         {
             EntitiesCollection.ItemsTypes.Remove(slug);
         }
+
+        return true;
     }
 
-    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    public async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
         if (!EntitiesCollection.ItemsTypes.ContainsKey(slug))
         {
-            return;
+            return false;
         }
 
         var entity = GetEntity(transferStruct);
         entity.Slug = slug;
         EntitiesCollection.ItemsTypes[slug] = (ItemType)entity;
+        return true;
     }
 
     public IPersistanceTransferStruct? GetDTOForEntity(

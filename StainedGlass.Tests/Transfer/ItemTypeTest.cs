@@ -15,7 +15,7 @@ public class ItemTypeTest
     }
 
     [Fact]
-    public void SaveOne()
+    public async void SaveOne()
     {
         _itemTypeDto = new ItemTypeDTO
         {
@@ -23,12 +23,12 @@ public class ItemTypeTest
             Slug = "test"
         };
         useCaseInteractor.StoreEntity(_itemTypeDto);
-        var dtos = useCaseInteractor.GetAllDTOs<ItemTypeDTO>() as List<ItemTypeDTO>;
+        var dtos = await useCaseInteractor.GetAllDTOs<ItemTypeDTO>() as List<ItemTypeDTO>;
         Assert.True(dtos.Exists(x => x.Name == "Test"));
     }
 
     [Fact]
-    public void SaveMany()
+    public async void SaveMany()
     {
         useCaseInteractor.StoreEntity(new ItemTypeDTO
         {
@@ -40,12 +40,12 @@ public class ItemTypeTest
             Name = "Test2",
             Slug = "test2"
         });
-        ICollection<ItemTypeDTO> dtos = useCaseInteractor.GetAllDTOs<ItemTypeDTO>();
+        ICollection<ItemTypeDTO> dtos = await useCaseInteractor.GetAllDTOs<ItemTypeDTO>();
         Assert.Equal(2, dtos.Where(e => new[] { "Test1", "Test2" }.Contains(e.Name)).Count());
     }
 
     [Fact]
-    public void Remove()
+    public async void Remove()
     {
         useCaseInteractor.StoreEntity(new ItemTypeDTO
         {
@@ -53,12 +53,12 @@ public class ItemTypeTest
             Slug = "test3"
         });
         useCaseInteractor.RemoveEntity<ItemTypeDTO>("test3");
-        var dtos = useCaseInteractor.GetAllDTOs<ItemTypeDTO>() as List<ItemTypeDTO>;
+        var dtos = await useCaseInteractor.GetAllDTOs<ItemTypeDTO>() as List<ItemTypeDTO>;
         Assert.False(dtos.Exists(x => x.Name == "Test3"));
     }
 
     [Fact]
-    public void Replace()
+    public async void Replace()
     {
         useCaseInteractor.StoreEntity(new ItemTypeDTO
         {
@@ -72,7 +72,7 @@ public class ItemTypeTest
             Slug = "test5"
         };
         useCaseInteractor.ReplaceEntity("test4", newItemTypeDTO);
-        var dto = useCaseInteractor.GetDTOBySlug<ItemTypeDTO>("test4");
+        var dto = await useCaseInteractor.GetDTOBySlug<ItemTypeDTO>("test4");
         Assert.Equal("Test5", dto.Name);
     }
 }

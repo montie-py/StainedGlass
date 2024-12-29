@@ -43,7 +43,7 @@ public class ChurchController : Controller
             return View("Admin/NewChurch");
         }
 
-        _useCaseInteractor.StoreEntity(churchDto);
+        await _useCaseInteractor.StoreEntity(churchDto);
         return Redirect("Admin/churches");
     }
 
@@ -57,7 +57,7 @@ public class ChurchController : Controller
             return View("Admin/EditChurch");
         }
         
-        _useCaseInteractor.ReplaceEntity(originalSlug, churchDto);
+        await _useCaseInteractor.ReplaceEntity(originalSlug, churchDto);
         return Ok();
     }
 

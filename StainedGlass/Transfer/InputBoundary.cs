@@ -5,9 +5,9 @@ namespace StainedGlass.Transfer;
 
 public interface InputBoundary
 {
-     public void StoreEntity(Transferable dataDTO);
-     void ReplaceEntity(string slug, Transferable dataDTO);
-     public void RemoveEntity<T>(string slug) where T : Transferable, new();
-     public T GetDTOBySlug<T>(string slug)  where T : Transferable, new();
-     public ICollection<T> GetAllDTOs<T>() where T : Transferable, new();
+     public Task<bool> StoreEntity(Transferable dataDTO);
+     public Task<bool> ReplaceEntity(string slug, Transferable dataDTO);
+     public Task<bool> RemoveEntity<T>(string slug) where T : Transferable, new();
+     public Task<T?> GetDTOBySlug<T>(string slug)  where T : Transferable, new();
+     public Task<ICollection<T>> GetAllDTOs<T>() where T : Transferable, new();
 }

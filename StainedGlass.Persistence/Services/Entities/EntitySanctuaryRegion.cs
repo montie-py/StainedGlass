@@ -6,19 +6,21 @@ namespace StainedGlass.Persistence.Services.Entities;
 
 public class EntitySanctuaryRegion : INonRelatable, IPersistenceService
 {
-    public void AddEntity(IPersistanceTransferStruct transferStruct)
+    public async Task<bool> AddEntity(IPersistanceTransferStruct transferStruct)
     {
         var sanctuaryRegionDto = (SanctuaryRegionDTO)transferStruct;
         var entity = GetEntity(sanctuaryRegionDto) as SanctuaryRegion;
         
         EntitiesCollection.SanctuaryRegions.TryAdd(sanctuaryRegionDto.Slug, entity);
+        return true;
     }
     
-    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    public async Task<ICollection<IPersistanceTransferStruct>> GetAllDtos()
     {
         return EntitiesCollection.SanctuaryRegions.Select(
             e => GetDTOForEntity(e.Value, skipParentElements: true)
-        );
+        )
+        .ToList();
     }
     
     public IPersistanceTransferStruct? GetDTOForEntity(
@@ -71,7 +73,7 @@ public class EntitySanctuaryRegion : INonRelatable, IPersistenceService
         return sanctuaryRegionDTO;
     }
 
-    public IPersistanceTransferStruct? GetDtoBySlug(string slug)
+    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
     {
         if (!EntitiesCollection.ItemsTypes.ContainsKey(slug))
         {
@@ -80,11 +82,11 @@ public class EntitySanctuaryRegion : INonRelatable, IPersistenceService
         return GetDTOForEntity(EntitiesCollection.ItemsTypes[slug]);
     }
 
-    public void RemoveEntity(string slug)
+    public async Task<bool> RemoveEntity(string slug)
     {
         if (!EntitiesCollection.SanctuaryRegions.ContainsKey(slug))
         {
-            return;
+            return false;
         }
         
         //remove region from its side
@@ -97,13 +99,14 @@ public class EntitySanctuaryRegion : INonRelatable, IPersistenceService
         }
         
         EntitiesCollection.SanctuaryRegions.Remove(slug);
+        return true;
     }
 
-    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    public async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
         if (!EntitiesCollection.SanctuaryRegions.ContainsKey(slug))
         {
-            return;
+            return false;
         }
 
         var entity = GetEntity(transferStruct);
@@ -116,6 +119,7 @@ public class EntitySanctuaryRegion : INonRelatable, IPersistenceService
             EntitiesCollection.SanctuaryRegions[slug].SanctuarySide = oldEntity.SanctuarySide;
         }
         EntitiesCollection.SanctuaryRegions[slug].Items = oldEntity.Items;
+        return true;
     }
 
     public IEntity GetEntity(IPersistanceTransferStruct transferable)

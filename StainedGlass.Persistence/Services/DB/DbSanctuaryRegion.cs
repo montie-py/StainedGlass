@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
 
@@ -6,7 +7,7 @@ namespace StainedGlass.Persistence.Services.DB;
 
 internal class DbSanctuaryRegion : DatabasePersistenceService
 {
-    public override void AddEntity(IPersistanceTransferStruct transferStruct)
+    public override async Task<bool> AddEntity(IPersistanceTransferStruct transferStruct)
     {
         var sanctuaryRegionDto = (SanctuaryRegionDTO)GetDtoFromTransfer(transferStruct);
         var sanctuaryRegion = new SanctuaryRegion
@@ -18,16 +19,17 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
             SanctuarySideSlug = sanctuaryRegionDto.SanctuarySideSlug
         };
         _dbContext.SanctuaryRegions.Add(sanctuaryRegion);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
+        return true;
     }
 
-    public override ICollection<IPersistanceTransferStruct> GetAllDtos()
+    public override async Task<ICollection<IPersistanceTransferStruct>> GetAllDtos()
     {
         List<IPersistanceTransferStruct> sanctuaryRegionDtos = new List<IPersistanceTransferStruct>();
 
-        foreach (var sanctuaryRegion in _dbContext.SanctuaryRegions
+        foreach (var sanctuaryRegion in await _dbContext.SanctuaryRegions
                      .Include(s => s.SanctuarySide)
-                     .ToList())
+                     .ToListAsync())
         {
             sanctuaryRegionDtos.Add(GetDtoFromEntity(sanctuaryRegion));
         }
@@ -35,11 +37,11 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
         return sanctuaryRegionDtos;
     }
 
-    public override IPersistanceTransferStruct? GetDtoBySlug(string slug)
+    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
     {
-        var entity = _dbContext.SanctuaryRegions
+        var entity = await _dbContext.SanctuaryRegions
             .Include(s => s.SanctuarySide)
-            .FirstOrDefault(s => s.Slug == slug);
+            .FirstOrDefaultAsync(s => s.Slug == slug);
         if (entity is null)
         {
             return null;
@@ -48,9 +50,9 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
         return GetDtoFromEntity(entity);
     }
     
-    public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    public override async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
-        var sanctuaryRegion = _dbContext.SanctuaryRegions.FirstOrDefault(s => s.Slug == slug);
+        var sanctuaryRegion = await _dbContext.SanctuaryRegions.FirstOrDefaultAsync(s => s.Slug == slug);
         if (sanctuaryRegion != null)
         {
             var sanctuaryRegionDTO = (SanctuaryRegionDTO)GetDtoFromTransfer(transferStruct);
@@ -59,18 +61,22 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
             sanctuaryRegion.Image = sanctuaryRegionDTO.Image;
             sanctuaryRegion.SanctuarySideSlug = sanctuaryRegionDTO.SanctuarySideSlug;
             // _dbContext.SanctuaryRegions.Update(sanctuaryRegion);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
+
+        return true;
     }
     
-    public override void RemoveEntity(string slug)
+    public override async Task<bool> RemoveEntity(string slug)
     {
-        var sanctuaryRegion = _dbContext.SanctuaryRegions.FirstOrDefault(s => s.Slug == slug);
+        var sanctuaryRegion = await _dbContext.SanctuaryRegions.FirstOrDefaultAsync(s => s.Slug == slug);
         if (sanctuaryRegion != null)
         {
             _dbContext.SanctuaryRegions.Remove(sanctuaryRegion);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
+
+        return true;
     }
     
     protected override IPersistanceTransferStruct GetDtoFromTransfer(IPersistanceTransferStruct transferStruct)
@@ -101,5 +107,18 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
             SanctuarySideSlug = sanctuaryRegionEntity.SanctuarySideSlug,
             SanctuarySide = sanctuarySideDto
         };
+    }
+    
+    private async Task<byte[]> FormFileToBytes(IFormFile image)
+    {
+        //transferring file from IFormFile to byte[]
+        byte[] filebytes;
+        using (var ms = new MemoryStream())
+        {
+            await image.CopyToAsync(ms);
+            filebytes = ms.ToArray();
+        }
+
+        return filebytes;
     }
 }

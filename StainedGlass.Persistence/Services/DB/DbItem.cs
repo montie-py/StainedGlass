@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
 
@@ -6,7 +7,7 @@ namespace StainedGlass.Persistence.Services.DB;
 
 internal class DbItem : DatabasePersistenceService
 {
-    public override void AddEntity(IPersistanceTransferStruct transferStruct)
+    public override async Task<bool> AddEntity(IPersistanceTransferStruct transferStruct)
     {
         var itemStruct = (ItemDTO)GetDtoFromTransfer(transferStruct);
         var newItem = new Item
@@ -20,7 +21,7 @@ internal class DbItem : DatabasePersistenceService
         };
         
         _dbContext.Items.Add(newItem);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
 
         if (itemStruct.RelatedItemsSlugs != null)
         {
@@ -28,33 +29,35 @@ internal class DbItem : DatabasePersistenceService
             {
                 AddRelatedItem(newItem.Slug, relatedItemsSlug);
             }
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
+        return true;
     }
 
-    public override ICollection<IPersistanceTransferStruct> GetAllDtos()
+    public override async Task<ICollection<IPersistanceTransferStruct>> GetAllDtos()
     {
         List<IPersistanceTransferStruct> itemDtos = new List<IPersistanceTransferStruct>();
         
-        foreach (var dbItem in _dbContext.Items
+        foreach (var dbItem in await _dbContext.Items
                      .Include(i => i.ItemType)
                      .Include(i => i.SanctuaryRegion)
                      .Include(i => i.RelatedItems)
-                     .ThenInclude(ir => ir.RelatedItem))
+                     .ThenInclude(ir => ir.RelatedItem)
+                     .ToListAsync())
         {
             itemDtos.Add(GetDtoFromEntity(dbItem));
         }
         return itemDtos;
     }
 
-    public override IPersistanceTransferStruct? GetDtoBySlug(string slug)
+    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
     {
-        var entity = _dbContext.Items
+        var entity = await _dbContext.Items
             .Include(i => i.ItemType)
             .Include(i => i.SanctuaryRegion)
             .Include(i => i.RelatedItems)
             .ThenInclude(ir => ir.RelatedItem)
-            .FirstOrDefault(x => x.Slug == slug);
+            .FirstOrDefaultAsync(x => x.Slug == slug);
         if (entity is null)
         {
             return null;
@@ -63,11 +66,11 @@ internal class DbItem : DatabasePersistenceService
         return GetDtoFromEntity(entity);
     }
     
-    public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    public override async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
-        var item = _dbContext.Items
+        var item = await _dbContext.Items
             .Include(x => x.RelatedItems)
-            .FirstOrDefault(x => x.Slug == slug);
+            .FirstOrDefaultAsync(x => x.Slug == slug);
         if (item != null)
         {
             var transferItemDto = (ItemDTO)GetDtoFromTransfer(transferStruct);
@@ -77,7 +80,7 @@ internal class DbItem : DatabasePersistenceService
             item.ItemTypeSlug = transferItemDto.ItemTypeSlug;
             item.SanctuaryRegionSlug = item.SanctuaryRegionSlug;
             
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             if (transferItemDto.RelatedItemsSlugs != null)
             {
@@ -95,7 +98,7 @@ internal class DbItem : DatabasePersistenceService
                             AddRelatedItem(item.Slug, relatedItemSlug);
                         }
                     }
-                    _dbContext.SaveChanges();
+                    await _dbContext.SaveChangesAsync();
                 }
                 else
                 //if not - add new relations
@@ -104,16 +107,18 @@ internal class DbItem : DatabasePersistenceService
                     {
                         AddRelatedItem(item.Slug, relatedItemSlug);
                     }
-                    _dbContext.SaveChanges();
+                    await _dbContext.SaveChangesAsync();
                 }
                 
             }
         }
+
+        return true;
     }
 
-    public override void RemoveEntity(string slug)
+    public override async Task<bool> RemoveEntity(string slug)
     {
-        var item = _dbContext.Items.FirstOrDefault(x => x.Slug == slug);
+        var item = await _dbContext.Items.FirstOrDefaultAsync(x => x.Slug == slug);
         if (item != null)
         {
             //removing itemRelation first
@@ -123,8 +128,10 @@ internal class DbItem : DatabasePersistenceService
             _dbContext.RemoveRange(list);
             
             _dbContext.Items.Remove(item);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
+
+        return true;
     }
 
     private List<ItemRelation> GetRelatedItemsBySlug(string slug)
@@ -213,5 +220,18 @@ internal class DbItem : DatabasePersistenceService
             RelatedItemSlug = itemSlug,
         };
         _dbContext.ItemRelations.Add(itemRelation);
+    }
+    
+    private async Task<byte[]> FormFileToBytes(IFormFile image)
+    {
+        //transferring file from IFormFile to byte[]
+        byte[] filebytes;
+        using (var ms = new MemoryStream())
+        {
+            await image.CopyToAsync(ms);
+            filebytes = ms.ToArray();
+        }
+
+        return filebytes;
     }
 }

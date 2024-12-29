@@ -12,21 +12,21 @@ internal class ItemTypeMapper : Mapper
         _persistenceService = template.GetItemTypeInstance();
     }
     
-    public override void SaveEntity(Transferable transferable)
+    public override async Task<bool> SaveEntity(Transferable transferable)
     {
         Persistence.Transfer.ItemTypeDTO transferItemTypeDto = transferable as ItemTypeDTO;
-        _persistenceService.AddEntity(transferItemTypeDto);
+        return await _persistenceService.AddEntity(transferItemTypeDto);
     }
 
-    public override void ReplaceEntity(string slug, Transferable transferable)
+    public override async Task<bool> ReplaceEntity(string slug, Transferable transferable)
     {
         Persistence.Transfer.ItemTypeDTO transferItemTypeDto = transferable as ItemTypeDTO;
-        _persistenceService.ReplaceEntity(slug, transferItemTypeDto);
+        return await _persistenceService.ReplaceEntity(slug, transferItemTypeDto);
     }
 
-    public override Transferable? GetDTOBySlug(string slug)
+    public override async Task<Transferable?> GetDTOBySlug(string slug)
     {
-        var nullableTransferItemTypeDto = _persistenceService.GetDtoBySlug(slug);
+        var nullableTransferItemTypeDto = await _persistenceService.GetDtoBySlug(slug);
         if (nullableTransferItemTypeDto is null)
         {
             return null;
@@ -35,9 +35,9 @@ internal class ItemTypeMapper : Mapper
         return GetDtoFromTransferable(nullableTransferItemTypeDto);
     }
     
-    public override ICollection<Transferable?> GetAllDTOs()
+    public override async Task<ICollection<Transferable?>> GetAllDTOs()
     {
-        var transferItemTypeDtos = _persistenceService.GetAllDtos();
+        var transferItemTypeDtos = await _persistenceService.GetAllDtos();
         var itemTypeDtos = new List<Transferable?>();
         foreach (Persistence.Transfer.ItemTypeDTO transferItemTypeDto in transferItemTypeDtos)
         {
@@ -47,9 +47,9 @@ internal class ItemTypeMapper : Mapper
         return itemTypeDtos;
     }
     
-    public override void RemoveEntity(string slug)
+    public override async Task<bool> RemoveEntity(string slug)
     {
-        _persistenceService.RemoveEntity(slug);
+        return await _persistenceService.RemoveEntity(slug);
     }
     
     protected override Transferable GetDtoFromTransferable(IPersistanceTransferStruct transferStruct)

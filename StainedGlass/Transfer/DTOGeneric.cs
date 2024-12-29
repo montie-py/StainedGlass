@@ -16,23 +16,23 @@ internal class DTOGeneric<T> where T : Transferable
         mapper.SetInstance(persistenceTemplate);
     }
 
-    internal T GetDTOBySlug(string slug)
+    internal async Task<T?> GetDTOBySlug(string slug)
     {
-        return (T)mapper.GetDTOBySlug(slug);
+        return (T?)await mapper.GetDTOBySlug(slug);
     }
 
-    internal ICollection<T> GetAllDTOs()
+    internal async Task<ICollection<T>> GetAllDTOs()
     {
         ICollection<T> result = new List<T>();
-        foreach (var dto in mapper.GetAllDTOs())
+        foreach (var dto in await mapper.GetAllDTOs())
         {
             ((List<T>)result).Add((T)dto);
         }
         return result;
     }
 
-    public void RemoveEntity(string slug)
+    public async Task<bool> RemoveEntity(string slug)
     {
-        mapper.RemoveEntity(slug);
+        return await mapper.RemoveEntity(slug);
     }
 }

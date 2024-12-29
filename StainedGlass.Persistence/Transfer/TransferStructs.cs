@@ -2,7 +2,8 @@
 
 namespace StainedGlass.Persistence.Transfer
 {
-    public interface IPersistanceTransferStruct
+    public interface 
+        IPersistanceTransferStruct
     {
         
     }

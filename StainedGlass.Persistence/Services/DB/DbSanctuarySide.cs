@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
 
@@ -6,7 +7,7 @@ namespace StainedGlass.Persistence.Services.DB;
 
 internal class DbSanctuarySide : DatabasePersistenceService
 {
-    public override void AddEntity(IPersistanceTransferStruct transferStruct)
+    public override async Task<bool> AddEntity(IPersistanceTransferStruct transferStruct)
     {
         var itemStruct = (SanctuarySideDTO)GetDtoFromTransfer(transferStruct);
         var sanctuarySide = new SanctuarySide
@@ -16,16 +17,17 @@ internal class DbSanctuarySide : DatabasePersistenceService
             ChurchSlug = itemStruct.ChurchSlug
         };
         _dbContext.SanctuarySides.Add(sanctuarySide);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
+        return true;
     }
 
-    public override ICollection<IPersistanceTransferStruct> GetAllDtos()
+    public override async Task<ICollection<IPersistanceTransferStruct>> GetAllDtos()
     {
         List<IPersistanceTransferStruct> sanctuarySideDtos = new List<IPersistanceTransferStruct>();
 
-        foreach (var sanctuarySideEntity in _dbContext.SanctuarySides
+        foreach (var sanctuarySideEntity in await _dbContext.SanctuarySides
                      .Include(s => s.Church)
-                     .ToList())
+                     .ToListAsync())
         {
             sanctuarySideDtos.Add(GetDtoFromEntity(sanctuarySideEntity));
         }
@@ -33,11 +35,11 @@ internal class DbSanctuarySide : DatabasePersistenceService
         return sanctuarySideDtos;
     }
 
-    public override IPersistanceTransferStruct? GetDtoBySlug(string slug)
+    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
     {
-        var entity = _dbContext.SanctuarySides
+        var entity = await _dbContext.SanctuarySides
             .Include(s => s.Church)
-            .FirstOrDefault(s => s.Slug == slug);
+            .FirstOrDefaultAsync(s => s.Slug == slug);
         if (entity is null)
         {
             return null;
@@ -46,9 +48,9 @@ internal class DbSanctuarySide : DatabasePersistenceService
         return GetDtoFromEntity(entity);
     }
     
-    public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    public override async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
-        var sanctuarySide = _dbContext.SanctuarySides.FirstOrDefault(s => s.Slug == slug);
+        var sanctuarySide = await _dbContext.SanctuarySides.FirstOrDefaultAsync(s => s.Slug == slug);
         if (sanctuarySide != null)
         {
             var transferSanctuarySideDto = (SanctuarySideDTO)GetDtoFromTransfer(transferStruct);
@@ -56,18 +58,22 @@ internal class DbSanctuarySide : DatabasePersistenceService
             sanctuarySide.ChurchSlug = transferSanctuarySideDto.ChurchSlug;
             // _dbContext.SanctuarySides.Update(sanctuarySide);
             // _dbContext.Entry(sanctuarySide).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
+
+        return true;
     }
 
-    public override void RemoveEntity(string slug)
+    public override async Task<bool> RemoveEntity(string slug)
     {
-        var sanctuarySide = _dbContext.SanctuarySides.FirstOrDefault(x => x.Slug == slug);
+        var sanctuarySide = await _dbContext.SanctuarySides.FirstOrDefaultAsync(x => x.Slug == slug);
         if (sanctuarySide != null)
         {
             _dbContext.SanctuarySides.Remove(sanctuarySide);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
+
+        return true;
     }
 
     protected override IPersistanceTransferStruct GetDtoFromTransfer(IPersistanceTransferStruct transferStruct)
@@ -99,5 +105,18 @@ internal class DbSanctuarySide : DatabasePersistenceService
             ChurchSlug = sanctuarySideEntity.ChurchSlug,
             Church = churchDto
         };
+    }
+    
+    private async Task<byte[]> FormFileToBytes(IFormFile image)
+    {
+        //transferring file from IFormFile to byte[]
+        byte[] filebytes;
+        using (var ms = new MemoryStream())
+        {
+            await image.CopyToAsync(ms);
+            filebytes = ms.ToArray();
+        }
+
+        return filebytes;
     }
 }

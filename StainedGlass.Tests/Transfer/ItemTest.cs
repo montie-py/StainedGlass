@@ -13,7 +13,7 @@ public class ItemTest
     }
     
     [Fact]
-    public void SanctuaryRegionNullRelatedItemsNull()
+    public async void SanctuaryRegionNullRelatedItemsNull()
     {
         var stainedGlassDTO = new ItemDTO
         {
@@ -24,13 +24,13 @@ public class ItemTest
         };
 
         useCaseInteractor.StoreEntity(stainedGlassDTO);
-        ItemDTO savedItemDto = useCaseInteractor.GetDTOBySlug<ItemDTO>(stainedGlassDTO.Slug);
+        ItemDTO savedItemDto = await useCaseInteractor.GetDTOBySlug<ItemDTO>(stainedGlassDTO.Slug);
         
         Assert.Equal(stainedGlassDTO, savedItemDto);
     }
     
     [Fact]
-    public void RelatedItemsSanctuaryRegionNull()
+    public async void RelatedItemsSanctuaryRegionNull()
     {
         var relatedStainedGlassDTO = new ItemDTO
         {
@@ -59,13 +59,13 @@ public class ItemTest
         };
 
         useCaseInteractor.StoreEntity(stainedGlassDTO);
-        ItemDTO savedItemDto = useCaseInteractor.GetDTOBySlug<ItemDTO>(stainedGlassDTO.Slug);
+        ItemDTO savedItemDto = await useCaseInteractor.GetDTOBySlug<ItemDTO>(stainedGlassDTO.Slug);
         
         Assert.Equal(relatedStainedGlassDTO, savedItemDto.RelatedItems.First().Value);
     }
 
     [Fact]
-    public void ItemsShouldBeLikewiseRelated()
+    public async void ItemsShouldBeLikewiseRelated()
     {
         var item1 = new ItemDTO
         {
@@ -86,15 +86,15 @@ public class ItemTest
         };
         useCaseInteractor.StoreEntity(item2);
         
-        var item1FromDB = useCaseInteractor.GetDTOBySlug<ItemDTO>(item1.Slug);
-        var item2FromDB = useCaseInteractor.GetDTOBySlug<ItemDTO>(item2.Slug);
+        var item1FromDB = await useCaseInteractor.GetDTOBySlug<ItemDTO>(item1.Slug);
+        var item2FromDB = await useCaseInteractor.GetDTOBySlug<ItemDTO>(item2.Slug);
         
         Assert.Equal(item1, item2FromDB.RelatedItems.First().Value);
         Assert.Equal(item2, item1FromDB.RelatedItems.First().Value);
     }
 
     [Fact]
-    public void ItemRegionNotNull()
+    public async void ItemRegionNotNull()
     {
         var sanctuaryRegion = new SanctuaryRegionDTO
         {
@@ -116,12 +116,12 @@ public class ItemTest
         };
         
         useCaseInteractor.StoreEntity(item);
-        var savedItem = useCaseInteractor.GetDTOBySlug<ItemDTO>(item.Slug);
+        var savedItem = await useCaseInteractor.GetDTOBySlug<ItemDTO>(item.Slug);
         Assert.Equal(sanctuaryRegion, savedItem.SanctuaryRegion);
     }
     
     [Fact]
-    public void ItemReplace()
+    public async void ItemReplace()
     {
         var item = new ItemDTO
         {
@@ -142,14 +142,14 @@ public class ItemTest
         };
         
         useCaseInteractor.ReplaceEntity("stainedGlassSlug2", newItem);
-        var dto = useCaseInteractor.GetDTOBySlug<ItemDTO>(item.Slug);
+        var dto = await useCaseInteractor.GetDTOBySlug<ItemDTO>(item.Slug);
         Assert.Equal("StainedGlass3", dto.Title);
         
         //todo: check replacing with null and not null region and itemtype
     }
 
     [Fact]
-    public void ItemDelete()
+    public async void ItemDelete()
     {
         var region = new SanctuaryRegionDTO
         {
@@ -170,19 +170,19 @@ public class ItemTest
             SanctuaryRegionSlug = "RegionSlug",
         };
         useCaseInteractor.StoreEntity(item);
-        var storedRegion = useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(region.Slug);
+        var storedRegion = await useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(region.Slug);
         Assert.True(storedRegion.Items.Any(e => e.Slug == "stainedGlassSlug4"));
         
         useCaseInteractor.RemoveEntity<ItemDTO>(item.Slug);
-        var dtos = useCaseInteractor.GetAllDTOs<ItemDTO>() as List<ItemDTO>;
+        var dtos = await useCaseInteractor.GetAllDTOs<ItemDTO>() as List<ItemDTO>;
         
         Assert.False(dtos.Exists(e => e.Title == "StainedGlass4"));
-        storedRegion = useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(region.Slug);
+        storedRegion = await useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(region.Slug);
         Assert.False(storedRegion.Items.Any(e => e.Slug == "stainedGlassSlug4"));
     }
 
     [Fact]
-    public void ItemWithItemTypeShouldBeStored()
+    public async void ItemWithItemTypeShouldBeStored()
     {
         var itemType = new ItemTypeDTO
         {
@@ -199,7 +199,7 @@ public class ItemTest
             ItemTypeSlug = itemType.Slug,
         };
         useCaseInteractor.StoreEntity(item);
-        var storedItem = useCaseInteractor.GetDTOBySlug<ItemDTO>(item.Slug);
+        var storedItem = await useCaseInteractor.GetDTOBySlug<ItemDTO>(item.Slug);
         
         Assert.Equal(itemType.Slug, storedItem.ItemType.Slug);
     }

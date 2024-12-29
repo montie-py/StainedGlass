@@ -8,12 +8,12 @@ internal abstract class Mapper : Mappable
 {
     protected IPersistenceService _persistenceService;
     public abstract void SetInstance(IPersistenceTemplate template);
-    public abstract Transferable? GetDTOBySlug(string slug);
+    public abstract Task<Transferable?> GetDTOBySlug(string slug);
 
-    public abstract ICollection<Transferable?> GetAllDTOs();
+    public abstract Task<ICollection<Transferable?>> GetAllDTOs();
 
-    public abstract void RemoveEntity(string slug);
-    public abstract void SaveEntity(Transferable transferable);
-    public abstract void ReplaceEntity(string slug, Transferable transferable);
+    public abstract Task<bool> RemoveEntity(string slug);
+    public abstract Task<bool> SaveEntity(Transferable transferable);
+    public abstract Task<bool> ReplaceEntity(string slug, Transferable transferable);
     protected abstract Transferable GetDtoFromTransferable(IPersistanceTransferStruct transferStruct);
 }

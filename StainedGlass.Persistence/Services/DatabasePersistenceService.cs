@@ -16,11 +16,11 @@ internal abstract class DatabasePersistenceService : IPersistenceService
     {
         _dbContext = new AppDbContext();
     }
-    public abstract void AddEntity(IPersistanceTransferStruct transferStruct);
-    public abstract IEnumerable<IPersistanceTransferStruct> GetAllDtos();
-    public abstract IPersistanceTransferStruct? GetDtoBySlug(string slug);
-    public abstract void RemoveEntity(string slug);
-    public abstract void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct);
+    public abstract Task<bool> AddEntity(IPersistanceTransferStruct transferStruct);
+    public abstract Task<ICollection<IPersistanceTransferStruct>> GetAllDtos();
+    public abstract Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug);
+    public abstract Task<bool> RemoveEntity(string slug);
+    public abstract Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct);
     protected abstract IPersistanceTransferStruct GetDtoFromTransfer(IPersistanceTransferStruct transferStruct);
     protected abstract IPersistanceTransferStruct GetDtoFromEntity(IEntity entity);
 }

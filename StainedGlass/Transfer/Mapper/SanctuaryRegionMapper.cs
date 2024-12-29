@@ -12,23 +12,23 @@ internal class SanctuaryRegionMapper : Mapper
         _persistenceService = template.GetSanctuaryRegionInstance();
     }
     
-    public override void SaveEntity(Transferable transferable)
+    public override async Task<bool> SaveEntity(Transferable transferable)
     {
         Persistence.Transfer.SanctuaryRegionDTO transferSanctuaryRegionDto =
             transferable as SanctuaryRegionDTO;
-        _persistenceService.AddEntity(transferSanctuaryRegionDto);
+        return await _persistenceService.AddEntity(transferSanctuaryRegionDto);
     }
 
-    public override void ReplaceEntity(string slug, Transferable transferable)
+    public override async Task<bool> ReplaceEntity(string slug, Transferable transferable)
     {
         Persistence.Transfer.SanctuaryRegionDTO transferSanctuaryRegionDto =
             transferable as SanctuaryRegionDTO;
-        _persistenceService.ReplaceEntity(slug, transferSanctuaryRegionDto);
+        return await _persistenceService.ReplaceEntity(slug, transferSanctuaryRegionDto);
     }
 
-    public override Transferable? GetDTOBySlug(string slug)
+    public override async Task<Transferable?> GetDTOBySlug(string slug)
     {
-        var nullableTransferSanctuaryRegionDto = _persistenceService.GetDtoBySlug(slug);
+        var nullableTransferSanctuaryRegionDto = await _persistenceService.GetDtoBySlug(slug);
         if (nullableTransferSanctuaryRegionDto == null)
         {
             return null;
@@ -37,9 +37,9 @@ internal class SanctuaryRegionMapper : Mapper
         return GetDtoFromTransferable(nullableTransferSanctuaryRegionDto);
     }
     
-    public override ICollection<Transferable?> GetAllDTOs()
+    public override async Task<ICollection<Transferable?>> GetAllDTOs()
     {
-        var transferSanctuaryRegionDtos =
+        var transferSanctuaryRegionDtos = await
             _persistenceService.GetAllDtos();
         var sanctuaryRegionDtos = new List<Transferable>();
         foreach (IPersistanceTransferStruct transferSanctuaryRegionDto in transferSanctuaryRegionDtos)
@@ -50,9 +50,9 @@ internal class SanctuaryRegionMapper : Mapper
         return sanctuaryRegionDtos;
     }
     
-    public override void RemoveEntity(string slug)
+    public override async Task<bool> RemoveEntity(string slug)
     {
-        _persistenceService.RemoveEntity(slug);
+        return await _persistenceService.RemoveEntity(slug);
     }
     
     protected override Transferable GetDtoFromTransferable(IPersistanceTransferStruct transferStruct)

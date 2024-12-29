@@ -13,7 +13,7 @@ public class SanctuaryRegionTest
     }
 
     [Fact]
-    public void AddSanctuaryRegionWithNoSide()
+    public async void AddSanctuaryRegionWithNoSide()
     {
         var sanctuaryRegion = new SanctuaryRegionDTO
         {
@@ -23,12 +23,12 @@ public class SanctuaryRegionTest
             Description = "SanctuaryRegion Description",
         };
         useCaseInteractor.StoreEntity(sanctuaryRegion);
-        var savedSanctuaryRegion = useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(sanctuaryRegion.Slug);
+        var savedSanctuaryRegion = await useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(sanctuaryRegion.Slug);
         Assert.Equal(sanctuaryRegion, savedSanctuaryRegion);
     }
     
     [Fact]
-    public void AddSanctuaryRegionWithASide()
+    public async void AddSanctuaryRegionWithASide()
     {
         var sanctuarySide = new SanctuarySideDTO
         {
@@ -44,13 +44,13 @@ public class SanctuaryRegionTest
             SanctuarySideSlug = "SanctuarySideSlug"
         };
         useCaseInteractor.StoreEntity(sanctuaryRegion);
-        var savedSanctuaryRegion = useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>("SanctuaryRegionSlug1");
-        var savedSanctuarySide = useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>("SanctuarySideSlug");
+        var savedSanctuaryRegion = await useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>("SanctuaryRegionSlug1");
+        var savedSanctuarySide = await useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>("SanctuarySideSlug");
         Assert.Equal(savedSanctuaryRegion, savedSanctuarySide.Regions.First());
     }
 
     [Fact]
-    public void GetItemsByRegion()
+    public async void GetItemsByRegion()
     {
         var region = new SanctuaryRegionDTO
         {
@@ -83,13 +83,13 @@ public class SanctuaryRegionTest
         useCaseInteractor.StoreEntity(item1);
         useCaseInteractor.StoreEntity(item2);
 
-        var savedRegion = useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(region.Slug);
+        var savedRegion = await useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(region.Slug);
         Assert.Equal(2, savedRegion.Items.Count());
         Assert.All(savedRegion.Items, item => Assert.Equal("Item Description", item.Description));
     }
 
     [Fact]
-    public void ReplaceRegion()
+    public async void ReplaceRegion()
     {
         var sanctuaryRegion = new SanctuaryRegionDTO
         {
@@ -110,14 +110,14 @@ public class SanctuaryRegionTest
         };
         
         useCaseInteractor.ReplaceEntity(sanctuaryRegion.Slug, anotherSanctuaryRegion);
-        var replacedRegion = useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(sanctuaryRegion.Slug);
+        var replacedRegion = await useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(sanctuaryRegion.Slug);
         Assert.Equal(anotherSanctuaryRegion.Name, replacedRegion.Name);
         
         //todo: check replacing with null and not null side
     }
 
     [Fact]
-    public void RemoveRegion()
+    public async void RemoveRegion()
     {
         var sanctuarySide = new SanctuarySideDTO
         {
@@ -135,14 +135,14 @@ public class SanctuaryRegionTest
             SanctuarySideSlug = sanctuarySide.Slug
         };
         useCaseInteractor.StoreEntity(sanctuaryRegion);
-        var storedSide = useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(sanctuarySide.Slug);
+        var storedSide = await useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(sanctuarySide.Slug);
         Assert.True(storedSide.Regions.Any(e => e.Slug == "SanctuaryRegionSlug7"));
         
         useCaseInteractor.RemoveEntity<SanctuaryRegionDTO>(sanctuaryRegion.Slug);
-        var allRegions = useCaseInteractor.GetAllDTOs<SanctuaryRegionDTO>() as List<SanctuaryRegionDTO>;
+        var allRegions = await useCaseInteractor.GetAllDTOs<SanctuaryRegionDTO>() as List<SanctuaryRegionDTO>;
         
         Assert.False(allRegions.Exists(x => x.Slug == sanctuaryRegion.Slug));
-        storedSide = useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(sanctuarySide.Slug);
+        storedSide = await useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(sanctuarySide.Slug);
         Assert.False(storedSide.Regions.Any(e => e.Slug == "SanctuaryRegionSlug7"));
     }
 }

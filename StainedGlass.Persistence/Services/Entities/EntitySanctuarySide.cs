@@ -1,23 +1,24 @@
 ﻿using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
-using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Persistence.Services.Entities;
 
 public class EntitySanctuarySide : INonRelatable, IPersistenceService
 {
-    public void AddEntity(IPersistanceTransferStruct transferStruct)
+    public async Task<bool> AddEntity(IPersistanceTransferStruct transferStruct)
     {
         var sanctuarySideDto = (SanctuarySideDTO)transferStruct;
         var entity = GetEntity(sanctuarySideDto) as SanctuarySide;
         EntitiesCollection.SanctuarySides.TryAdd(sanctuarySideDto.Slug, entity);
+        return true;
     } 
     
-    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    public async Task<ICollection<IPersistanceTransferStruct>> GetAllDtos()
     {
         return EntitiesCollection.SanctuarySides.Select(
             e => GetDTOForEntity(e.Value, skipParentElements: true)
-        );
+        )
+        .ToList();
     }
     
     public IPersistanceTransferStruct? GetDTOForEntity(
@@ -70,7 +71,7 @@ public class EntitySanctuarySide : INonRelatable, IPersistenceService
         return sanctuarySideDTO;
     }
 
-    public IPersistanceTransferStruct? GetDtoBySlug(string slug)
+    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
     {
         if (!EntitiesCollection.SanctuarySides.ContainsKey(slug))
         {
@@ -79,11 +80,11 @@ public class EntitySanctuarySide : INonRelatable, IPersistenceService
         return GetDTOForEntity(EntitiesCollection.SanctuarySides[slug], skipParentElements: true);
     }
 
-    public void RemoveEntity(string slug)
+    public async Task<bool> RemoveEntity(string slug)
     {
         if (!EntitiesCollection.SanctuarySides.ContainsKey(slug))
         {
-           return;  
+           return false;  
         }
         
         //remove the side from its church
@@ -95,13 +96,14 @@ public class EntitySanctuarySide : INonRelatable, IPersistenceService
             ((HashSet<SanctuarySide>)church.SanctuarySides).RemoveWhere(e => e.Slug == slug);
         }
         EntitiesCollection.SanctuarySides.Remove(slug);
+        return true;
     }
 
-    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    public async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
         if (!EntitiesCollection.SanctuarySides.ContainsKey(slug))
         {
-            return;
+            return false;
         }
 
         var entity = GetEntity(transferStruct);
@@ -116,6 +118,7 @@ public class EntitySanctuarySide : INonRelatable, IPersistenceService
         }
         
         EntitiesCollection.SanctuarySides[slug].Regions = oldEntity.Regions;
+        return true;
     }
 
     public IEntity GetEntity(IPersistanceTransferStruct transferable)

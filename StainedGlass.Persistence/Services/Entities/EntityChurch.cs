@@ -1,24 +1,24 @@
 ﻿using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
-using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Persistence.Services.Entities;
 
 public class EntityChurch : INonRelatable, IPersistenceService
 {
-    public void AddEntity(IPersistanceTransferStruct transferStruct)
+    public async Task<bool> AddEntity(IPersistanceTransferStruct transferStruct)
     {
         var churchDto = (ChurchDTO)transferStruct;
         var entity = GetEntity(churchDto) as Church;
-        EntitiesCollection.Churches.TryAdd(churchDto.Slug, entity);    
+        EntitiesCollection.Churches.TryAdd(churchDto.Slug, entity);
+        return true;
     }
 
-    public IEnumerable<IPersistanceTransferStruct> GetAllDtos()
+    public async Task<ICollection<IPersistanceTransferStruct>> GetAllDtos()
     {
         return EntitiesCollection.Churches.Select(e => GetDTOForEntity(e.Value)).ToList();
     }
 
-    public IPersistanceTransferStruct? GetDtoBySlug(string slug)
+    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
     {
         if (!EntitiesCollection.Churches.ContainsKey(slug))
         {
@@ -61,11 +61,11 @@ public class EntityChurch : INonRelatable, IPersistenceService
         };
     }
     
-    public void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    public async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
         if (!EntitiesCollection.Churches.ContainsKey(slug))
         {
-            return;
+            return false;
         }
 
         var entity = GetEntity(transferStruct);
@@ -73,11 +73,13 @@ public class EntityChurch : INonRelatable, IPersistenceService
         var oldEntity = EntitiesCollection.Churches[slug];
         EntitiesCollection.Churches[slug] = (Church)entity;
         EntitiesCollection.Churches[slug].SanctuarySides = oldEntity.SanctuarySides;
+        return true;
     }
 
-    public void RemoveEntity(string slug)
+    public async Task<bool> RemoveEntity(string slug)
     {
         EntitiesCollection.Churches.Remove(slug);
+        return true;
     }
 
     public IEntity GetEntity(IPersistanceTransferStruct transferable)

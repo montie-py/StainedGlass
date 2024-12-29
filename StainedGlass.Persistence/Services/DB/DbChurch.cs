@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using StainedGlass.Persistence.Entities;
 using StainedGlass.Persistence.Transfer;
 
@@ -11,7 +12,7 @@ internal class DbChurch : DatabasePersistenceService
         FileName = "church.jpg";
     }
 
-    public override void AddEntity(IPersistanceTransferStruct transferStruct)
+    public override async Task<bool> AddEntity(IPersistanceTransferStruct transferStruct)
     {
         var churchStruct = (ChurchDTO)GetDtoFromTransfer(transferStruct);
         var churchEntity = new Church
@@ -22,16 +23,17 @@ internal class DbChurch : DatabasePersistenceService
         };
         
         //transferring file from IFormFile to byte[]
-        FormFileToBytes(churchStruct.Image, ref churchEntity);
+        churchEntity.Image = await FormFileToBytes(churchStruct.Image);
         
         _dbContext.Churches.Add(churchEntity);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
+        return true;
     }
 
-    public override ICollection<IPersistanceTransferStruct> GetAllDtos()
+    public override async Task<ICollection<IPersistanceTransferStruct>> GetAllDtos()
     {
         List<IPersistanceTransferStruct> churchDtos = new();
-        foreach (var churchEntity in _dbContext.Churches.ToList())
+        foreach (var churchEntity in await _dbContext.Churches.ToListAsync())
         {
             churchDtos.Add(GetDtoFromEntity(churchEntity));
         }
@@ -39,9 +41,9 @@ internal class DbChurch : DatabasePersistenceService
         return churchDtos;
     }
 
-    public override IPersistanceTransferStruct? GetDtoBySlug(string slug)
+    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
     {
-        var entity = _dbContext.Churches.FirstOrDefault(e => e.Slug == slug);
+        var entity = await _dbContext.Churches.FirstOrDefaultAsync(e => e.Slug == slug);
         if (entity is null)
         {
             return null;
@@ -50,9 +52,9 @@ internal class DbChurch : DatabasePersistenceService
         return GetDtoFromEntity(entity);
     }
 
-    public override void ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    public override async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
-        var churchEntity = _dbContext.Churches.FirstOrDefault(e => e.Slug == slug);
+        var churchEntity = await _dbContext.Churches.FirstOrDefaultAsync(e => e.Slug == slug);
         if (churchEntity != null)
         {
             var churchStruct = (ChurchDTO)GetDtoFromTransfer(transferStruct);
@@ -60,20 +62,24 @@ internal class DbChurch : DatabasePersistenceService
             churchEntity.Description = churchStruct.Description;
             
             //transferring file from IFormFile to byte[]
-            FormFileToBytes(churchStruct.Image, ref churchEntity);
+            churchEntity.Image = await FormFileToBytes(churchStruct.Image);
             // _dbContext.Churches.Update(church);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
+
+        return true;
     }
 
-    public override void RemoveEntity(string slug)
+    public override async Task<bool> RemoveEntity(string slug)
     {
-        var church = _dbContext.Churches.FirstOrDefault(e => e.Slug == slug);
+        var church = await _dbContext.Churches.FirstOrDefaultAsync(e => e.Slug == slug);
         if (church != null)
         {
             _dbContext.Churches.Remove(church);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
+
+        return true;
     }
     
     protected override IPersistanceTransferStruct GetDtoFromTransfer(IPersistanceTransferStruct transferStruct)
@@ -94,15 +100,16 @@ internal class DbChurch : DatabasePersistenceService
         };
     }
 
-    private void FormFileToBytes(IFormFile image, ref Church churchEntity)
+    private async Task<byte[]> FormFileToBytes(IFormFile image)
     {
         //transferring file from IFormFile to byte[]
         byte[] filebytes;
         using (var ms = new MemoryStream())
         {
-            image.CopyTo(ms);
+            await image.CopyToAsync(ms);
             filebytes = ms.ToArray();
-            churchEntity.Image = filebytes;
         }
+
+        return filebytes;
     }
 }

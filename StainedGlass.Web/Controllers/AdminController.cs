@@ -22,16 +22,16 @@ public class AdminController : Controller
     }
     
     [HttpGet("churches")]
-    public IActionResult Churches()
+    public async Task<IActionResult> Churches()
     {
-        ViewBag.Churches = _useCaseInteractor.GetAllDTOs<ChurchDTO>();
+        ViewBag.Churches = await _useCaseInteractor.GetAllDTOs<ChurchDTO>();
         return View();
     }
     
     [HttpGet("church/{slug}")]
     public async Task<IActionResult> Get(string slug)
     {
-        ViewBag.Church = _useCaseInteractor.GetDTOBySlug<ChurchDTO>(slug);
+        ViewBag.Church = await _useCaseInteractor.GetDTOBySlug<ChurchDTO>(slug);
         if (ViewBag.Church.Image != null && ViewBag.Church.Image.Length > 0) 
         { 
             using (var memoryStream = new MemoryStream()) 
@@ -48,7 +48,7 @@ public class AdminController : Controller
     [HttpGet("church/{slug}/edit")]
     public async Task<IActionResult> EditChurch(string slug)
     {
-        ViewBag.Church = _useCaseInteractor.GetDTOBySlug<ChurchDTO>(slug);
+        ViewBag.Church = await _useCaseInteractor.GetDTOBySlug<ChurchDTO>(slug);
         if (ViewBag.Church.Image != null && ViewBag.Church.Image.Length > 0) 
         { 
             using (var memoryStream = new MemoryStream()) 
@@ -65,7 +65,7 @@ public class AdminController : Controller
     [HttpDelete("church/{slug}")]
     public async Task<IActionResult> Delete(string slug)
     {
-        _useCaseInteractor.RemoveEntity<ChurchDTO>(slug);
+        await _useCaseInteractor.RemoveEntity<ChurchDTO>(slug);
         return Ok();
     }
 }
