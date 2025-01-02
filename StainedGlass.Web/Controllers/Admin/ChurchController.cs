@@ -16,7 +16,7 @@ public class ChurchController : AdminController
     }
 
     [HttpGet("church")]
-    public override IActionResult New()
+    public async override Task<IActionResult> New()
     {
         return View("Admin/Church/NewChurch");
     }

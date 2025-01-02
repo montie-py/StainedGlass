@@ -23,11 +23,13 @@
   },
   "homepage": "https://github.com/montie-py/StainedGlass#readme",
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "es6-promise": "^4.2.8",
     "htmx.org": "^2.0.4"
   },
   "devDependencies": {
+    "sass": "^1.83.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.7.2",
     "webpack": "^5.97.1",

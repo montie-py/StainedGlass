@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("es6-promise/auto");
+//handle church deleting
 document.querySelectorAll('.deleteChurch').forEach(function (button) {
     var slug = button.getAttribute('data-slug');
     // @ts-ignore
@@ -61,3 +62,54 @@ document.querySelectorAll('.deleteChurch').forEach(function (button) {
         });
     }); });
 });
+document.addEventListener('DOMContentLoaded', function () {
+    //handle church editing
+    var editForm = document.getElementById('editForm');
+    var churchSlug = editForm.getAttribute('data-slug');
+    var redirectUrl = editForm.getAttribute('data-redirect-url');
+    editForm.addEventListener('submit', function (event) { return __awaiter(void 0, void 0, void 0, function () {
+        var formData, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    event.preventDefault();
+                    formData = new FormData(editForm);
+                    return [4 /*yield*/, fetch('/church/' + churchSlug, {
+                            method: 'PUT',
+                            body: formData
+                        })];
+                case 1:
+                    response = _a.sent();
+                    if (response.ok) {
+                        location.href = redirectUrl;
+                    }
+                    else {
+                        console.error('Error submitting edit form');
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    //select an item in the church select (sanctuarySide page)
+    var addForm = document.getElementById('addForm');
+    addForm.addEventListener('submit', function (event) {
+        alert('here');
+        var churchSlug = document.getElementById('churchSlug');
+        if (churchSlug.value == "0") {
+            event.preventDefault();
+            alert("You must select an item in the Church select");
+        }
+    });
+});
+function convertFileToBase64(file) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, new Promise(function (resolve, reject) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function () { return resolve(reader.result); };
+                    reader.onerror = function (error) { return reject(error); };
+                })];
+        });
+    });
+}

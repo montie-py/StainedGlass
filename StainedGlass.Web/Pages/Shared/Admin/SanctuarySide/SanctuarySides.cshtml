@@ -3,20 +3,19 @@
 
 @{
     Layout = "_AdminLayout";
-    var items = ViewBag.Churches as List<ChurchDTO>;
+    var items = ViewBag.SanctuarySides as List<SanctuarySideDTO>;
     int count = 1;
 }
-<h2 style="display: inline-block;">Churches</h2> 
+<h2 style="display: inline-block;">SanctuarySides</h2> 
 <a style="position: relative;
     left: 20px;
-    bottom: 3px;" href="/admin/church">Add a church</a>
+    bottom: 3px;" href="/admin/sanctuaryside/sanctuaryside">Add a sanctuary side</a>
 <table class="table table-bordered">
     <thead>
     <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
         <th scope="col">Slug</th>
-        <th scope="col">Description</th>
         <th scope="col">Actions</th>
     </tr>
     </thead>
@@ -28,12 +27,11 @@
             <tr>
                 <th scope="row">@count</th>
                 <td>@item.Name</td>
-                <td><a href="/admin/church/@item.Slug">@item.Slug</a></td>
-                <td>@item.Description</td>
+                <td><a href="/admin/sanctuaryside/@item.Slug">@item.Slug</a></td>
                 <td>
-                    <a href="/admin/church/@item.Slug/edit">Edit</a>
+                    <a href="/admin/sanctuaryside/@item.Slug/edit">Edit</a>
                     <form>
-                        <button class="delete" data-type="church" data-slug="@item.Slug">Delete</button>
+                        <button class="delete" data-type="SanctuarySide" data-slug="@item.Slug">Delete</button>
                     </form>
                 </td>
             </tr>
@@ -43,7 +41,7 @@
     else
     {
         <tr>
-            <td style="text-align: center;" colspan="4">No Churches</td>
+            <td colspan="4" style="text-align: center;">No Sanctuary sides</td>
         </tr>
     }
     </tbody>

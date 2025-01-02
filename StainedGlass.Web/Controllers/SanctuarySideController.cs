@@ -34,7 +34,7 @@ public class SanctuarySideController : ControllerBase
     public async Task<IActionResult> Post([FromForm] SanctuarySideDTO side)
     {
         _useCaseInteractor.StoreEntity(side);
-        return Ok();
+        return Redirect("Admin/SanctuarySide/SanctuarySides");
     }
 
     [HttpPut("{originalSlug}")]

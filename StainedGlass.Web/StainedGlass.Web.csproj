@@ -5,10 +5,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Shared\Admin\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
   </ItemGroup>
 
@@ -17,6 +13,103 @@
     <AdditionalFiles Include="Pages\Shared\Admin\Church\Churches.cshtml" />
     <AdditionalFiles Include="Pages\Shared\Admin\Church\EditChurch.cshtml" />
     <AdditionalFiles Include="Pages\Shared\Admin\Church\NewChurch.cshtml" />
+    <AdditionalFiles Include="Pages\Shared\Admin\SanctuarySide\SanctuarySides.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Shared\Admin\Church\SanctuarySide\SanctuarySides.cshtml" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\bootstrap-grid.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\bootstrap-reboot.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\bootstrap-utilities.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\bootstrap.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\forms\_floating-labels.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\forms\_form-check.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\forms\_form-control.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\forms\_form-range.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\forms\_form-select.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\forms\_form-text.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\forms\_input-group.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\forms\_labels.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\forms\_validation.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\helpers\_clearfix.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\helpers\_color-bg.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\helpers\_colored-links.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\helpers\_focus-ring.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\helpers\_icon-link.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\helpers\_position.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\helpers\_ratio.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\helpers\_stacks.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\helpers\_stretched-link.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\helpers\_text-truncation.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\helpers\_visually-hidden.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\helpers\_vr.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_alert.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_backdrop.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_banner.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_border-radius.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_box-shadow.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_breakpoints.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_buttons.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_caret.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_clearfix.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_color-mode.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_color-scheme.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_container.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_deprecate.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_forms.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_gradients.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_grid.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_image.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_list-group.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_lists.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_pagination.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_reset-text.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_resize.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_table-variants.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_text-truncate.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_transition.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_utilities.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\mixins\_visually-hidden.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\utilities\_api.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\vendor\_rfs.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_accordion.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_alert.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_badge.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_breadcrumb.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_button-group.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_buttons.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_card.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_carousel.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_close.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_containers.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_dropdown.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_forms.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_functions.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_grid.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_helpers.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_images.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_list-group.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_maps.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_mixins.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_modal.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_nav.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_navbar.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_offcanvas.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_pagination.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_placeholders.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_popover.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_progress.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_reboot.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_root.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_spinners.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_tables.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_toasts.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_tooltip.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_transitions.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_type.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_utilities.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_variables-dark.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_variables.scss" />
   </ItemGroup>
 
   <PropertyGroup>

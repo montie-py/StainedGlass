@@ -1,31 +1,53 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StainedGlass.Persistence.Templates;
+using StainedGlass.Transfer;
+using StainedGlass.Transfer.DTOs;
 
 namespace StainedGlass.Web.Controllers.Admin;
 
+[Route("admin/[controller]")]
 public class SanctuarySideController : AdminController
 {
-    public override IActionResult New()
+    private InputBoundary _useCaseInteractor;
+    public SanctuarySideController(InputBoundary useCaseInteractor)
     {
-        throw new NotImplementedException();
+        _useCaseInteractor = useCaseInteractor;
+        ((UseCaseInteractor)_useCaseInteractor).SetPersistenceTemplate(new DatabasePersistenceTemplate());
+    }
+    
+    [HttpGet("sanctuaryside")]
+    public override async Task<IActionResult> New()
+    {
+        ViewBag.Churches = await _useCaseInteractor.GetAllDTOs<ChurchDTO>(); 
+        return View("Admin/SanctuarySide/NewSanctuarySide");
     }
 
-    public override Task<IActionResult> All()
+    [HttpGet("sanctuarysides")]
+    public override async Task<IActionResult> All()
     {
-        throw new NotImplementedException();
+        ViewBag.SanctuarySides = await _useCaseInteractor.GetAllDTOs<SanctuarySideDTO>();
+        return View("Admin/SanctuarySide/SanctuarySides");
     }
 
-    public override Task<IActionResult> One(string slug)
+    [HttpGet("{slug}")]
+    public override async Task<IActionResult> One(string slug)
     {
-        throw new NotImplementedException();
+        ViewBag.SanctuarySide = await _useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(slug);
+        return View("Admin/SanctuarySide/SanctuarySide");
     }
 
-    public override Task<IActionResult> Edit(string slug)
+    [HttpGet("{slug}/edit")]
+    public override async Task<IActionResult> Edit(string slug)
     {
-        throw new NotImplementedException();
+        ViewBag.Churches = await _useCaseInteractor.GetAllDTOs<ChurchDTO>(); 
+        ViewBag.SanctuarySide = await _useCaseInteractor.GetDTOBySlug<ChurchDTO>(slug);
+        return View("Admin/SanctuarySide/EditSanctuarySide"); 
     }
 
-    public override Task<IActionResult> Delete(string slug)
+    [HttpDelete("{slug}")]
+    public override async Task<IActionResult> Delete(string slug)
     {
-        throw new NotImplementedException();
+        await _useCaseInteractor.RemoveEntity<SanctuarySideDTO>(slug);
+        return Ok();
     }
 }

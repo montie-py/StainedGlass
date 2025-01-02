@@ -1,0 +1,52 @@
+﻿@page
+@using StainedGlass.Transfer.DTOs
+
+@{
+    Layout = "_AdminLayout";
+    var churches = ViewBag.Churches as List<ChurchDTO>;
+}
+<h2 style="display: inline-block;">Adding a new Sanctuary Side</h2>
+<br>
+<form action="/sanctuarySide" method="post" id="addForm" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="title">Name</label>
+        <input type="text" name="Name" required class="form-control" id="name" placeholder="Name">
+    </div>
+    <div class="form-group">
+        <label for="title">Slug</label>
+        <input type="text" name="Slug" required class="form-control" id="slug" placeholder="Slug">
+    </div>
+    <div class="form-group">
+        <label for="title">Church</label>
+        <br/>
+        <select class="custom-select" id="churchSlug" required name="ChurchSlug">
+            @if (churches.Count > 0)
+            {
+                <option selected value="0">Choose...</option>
+                @foreach (var church in churches)
+                {
+                    <option value="@church.Slug">@church.Name</option>
+                }
+            }
+            else
+            {
+                <div class="alert alert-danger" role="alert">
+                    There are no churches available. You need to create one first!
+                </div>
+            }
+        </select>
+    </div>
+    <br/>
+    @if (churches.Count == 0)
+    {
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" disabled>Submit</button>
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    }
+</form>
