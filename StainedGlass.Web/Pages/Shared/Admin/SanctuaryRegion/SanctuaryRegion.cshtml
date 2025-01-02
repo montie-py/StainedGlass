@@ -1,0 +1,21 @@
+﻿@page
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Sanctuary Region @ViewBag.SanctuaryRegion.Slug</h2>
+
+<dl>
+    <dt>Name:</dt>
+    <dd>@ViewBag.SanctuaryRegion.Name</dd>
+    <dt>Description:</dt>
+    <dd>@ViewBag.SanctuaryRegion.Description</dd>
+    <dt>Image:</dt>
+    <dd>
+        @if (ViewBag.SanctuaryRegionImage != null)
+        {
+            <img width="150px" src="data:image/jpeg;base64,@ViewBag.ChurchImage" alt="Church @ViewBag.SanctuaryRegion.Name Image" />
+        }
+    </dd>
+</dl>

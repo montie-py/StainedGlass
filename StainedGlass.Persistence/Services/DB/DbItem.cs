@@ -180,7 +180,7 @@ internal class DbItem : DatabasePersistenceService
             {
                 Slug = itemEntity.SanctuaryRegion.Slug,
                 Name = itemEntity.SanctuaryRegion.Name,
-                Image = itemEntity.SanctuaryRegion.Image,
+                // Image = itemEntity.SanctuaryRegion.Image,
                 Description = itemEntity.SanctuaryRegion.Description,
             };
         }

@@ -40,7 +40,8 @@ public class SanctuarySideController : AdminController
     public override async Task<IActionResult> Edit(string slug)
     {
         ViewBag.Churches = await _useCaseInteractor.GetAllDTOs<ChurchDTO>(); 
-        ViewBag.SanctuarySide = await _useCaseInteractor.GetDTOBySlug<ChurchDTO>(slug);
+        ViewBag.SanctuarySide = await _useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(slug);
+
         return View("Admin/SanctuarySide/EditSanctuarySide"); 
     }
 

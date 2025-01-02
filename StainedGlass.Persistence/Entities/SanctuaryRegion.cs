@@ -7,7 +7,7 @@ internal class SanctuaryRegion : IEntity
     public string Slug {get; set;}
     public string Name {get; set;}
     public string Description {get; set;}
-    public string Image {get; set;}
+    public byte[] Image {get; set;}
     public string SanctuarySideSlug {get; set;}
     public SanctuarySide? SanctuarySide {get; set;}
     public ICollection<Item>? Items { get; set; }

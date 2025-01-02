@@ -60,7 +60,7 @@ public class EntitySanctuaryRegion : INonRelatable, IPersistenceService
             Name = region.Name,
             Description = region.Description,
             Slug = region.Slug,
-            Image = region.Image,
+            // Image = region.Image,
             Items = WindowsDTOs,
             SanctuarySide = sanctuarySideDTO,
         };
@@ -141,7 +141,7 @@ public class EntitySanctuaryRegion : INonRelatable, IPersistenceService
             Name = sanctuaryRegionDTO.Value.Name,
             Description = sanctuaryRegionDTO.Value.Description,
             Slug = sanctuaryRegionDTO.Value.Slug,
-            Image = sanctuaryRegionDTO.Value.Image,
+            // Image = sanctuaryRegionDTO.Value.Image,
             Items = null,
             SanctuarySide = sanctuarySide,
         };

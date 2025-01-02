@@ -30,7 +30,7 @@ namespace StainedGlass.Persistence.Transfer
         public string Slug {get; set;}
         public string Name {get; set;}
         public string Description {get; set;}
-        public string Image {get; set;}
+        public IFormFile Image {get; set;}
         public HashSet<ItemDTO>? Items { get; set; }
         public string SanctuarySideSlug {get; set;}
         public SanctuarySideDTO? SanctuarySide {get; set;}

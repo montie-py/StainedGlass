@@ -9,16 +9,19 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
 {
     public override async Task<bool> AddEntity(IPersistanceTransferStruct transferStruct)
     {
-        var sanctuaryRegionDto = (SanctuaryRegionDTO)GetDtoFromTransfer(transferStruct);
-        var sanctuaryRegion = new SanctuaryRegion
+        var sanctuaryRegionStruct = (SanctuaryRegionDTO)GetDtoFromTransfer(transferStruct);
+        var sanctuaryRegionEntity = new SanctuaryRegion
         {
-            Name = sanctuaryRegionDto.Name,
-            Slug = sanctuaryRegionDto.Slug,
-            Description = sanctuaryRegionDto.Description,
-            Image = sanctuaryRegionDto.Image,
-            SanctuarySideSlug = sanctuaryRegionDto.SanctuarySideSlug
+            Name = sanctuaryRegionStruct.Name,
+            Slug = sanctuaryRegionStruct.Slug,
+            Description = sanctuaryRegionStruct.Description,
+            SanctuarySideSlug = sanctuaryRegionStruct.SanctuarySideSlug
         };
-        _dbContext.SanctuaryRegions.Add(sanctuaryRegion);
+        
+        //transferring file from IFormFile to byte[]
+        sanctuaryRegionEntity.Image = await FormFileToBytes(sanctuaryRegionStruct.Image);
+        
+        _dbContext.SanctuaryRegions.Add(sanctuaryRegionEntity);
         await _dbContext.SaveChangesAsync();
         return true;
     }
@@ -52,14 +55,17 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
     
     public override async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
-        var sanctuaryRegion = await _dbContext.SanctuaryRegions.FirstOrDefaultAsync(s => s.Slug == slug);
-        if (sanctuaryRegion != null)
+        var sanctuaryRegionEntity = await _dbContext.SanctuaryRegions.FirstOrDefaultAsync(s => s.Slug == slug);
+        if (sanctuaryRegionEntity != null)
         {
-            var sanctuaryRegionDTO = (SanctuaryRegionDTO)GetDtoFromTransfer(transferStruct);
-            sanctuaryRegion.Name = sanctuaryRegionDTO.Name;
-            sanctuaryRegion.Description = sanctuaryRegionDTO.Description;
-            sanctuaryRegion.Image = sanctuaryRegionDTO.Image;
-            sanctuaryRegion.SanctuarySideSlug = sanctuaryRegionDTO.SanctuarySideSlug;
+            var sanctuaryRegionStruct = (SanctuaryRegionDTO)GetDtoFromTransfer(transferStruct);
+            sanctuaryRegionEntity.Name = sanctuaryRegionStruct.Name;
+            sanctuaryRegionEntity.Description = sanctuaryRegionStruct.Description;
+            sanctuaryRegionEntity.SanctuarySideSlug = sanctuaryRegionStruct.SanctuarySideSlug;
+            
+            //transferring file from IFormFile to byte[]
+            sanctuaryRegionEntity.Image = await FormFileToBytes(sanctuaryRegionStruct.Image);
+            
             // _dbContext.SanctuaryRegions.Update(sanctuaryRegion);
             await _dbContext.SaveChangesAsync();
         }
@@ -102,7 +108,7 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
         {
             Name = sanctuaryRegionEntity.Name,
             Slug = sanctuaryRegionEntity.Slug,
-            Image = sanctuaryRegionEntity.Image,
+            Image = new FormFile(sanctuaryRegionEntity.Image, FileName, fileType),
             Description = sanctuaryRegionEntity.Description,
             SanctuarySideSlug = sanctuaryRegionEntity.SanctuarySideSlug,
             SanctuarySide = sanctuarySideDto

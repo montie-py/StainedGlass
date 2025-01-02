@@ -1,8 +1,7 @@
 import 'es6-promise/auto'; 
 
-//handle church deleting
+//handle deleting
 document.querySelectorAll('.delete').forEach( button => {
-    
     var slug = button.getAttribute('data-slug');
     var type = button.getAttribute('data-type');
     // @ts-ignore
@@ -26,17 +25,18 @@ document.querySelectorAll('.delete').forEach( button => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    //handle church editing
+    //handle editing
     const editForm = document.getElementById('editForm') as HTMLFormElement;
     if (editForm != null)
     {
-        const churchSlug = editForm.getAttribute('data-slug');
+        const slug = editForm.getAttribute('data-slug');
+        const type = editForm.getAttribute('data-type');
         const redirectUrl = editForm.getAttribute('data-redirect-url') as string;
         editForm.addEventListener('submit', async (event): Promise<void> => {
             event.preventDefault();
             const formData = new FormData(editForm);
-
-            const response = await fetch('/church/' + churchSlug, {
+            console.log(type);
+            const response = await fetch('/' + type + '/' + slug, {
                 method: 'PUT',
                 body: formData
             });
@@ -51,16 +51,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    //select an item in the church select (sanctuarySide page)
+    //select a parent item in a select
     const addForm = document.getElementById('addForm') as HTMLFormElement;
     if (addForm != null)
     {
         addForm.addEventListener('submit', (event)  => {
-            const churchSlug = document.getElementById('churchSlug') as HTMLSelectElement;
-            if (churchSlug.value == "0")
+            const parentSlug = document.getElementById('parentSlug') as HTMLSelectElement;
+            var type = parentSlug.getAttribute('data-type');
+            if (parentSlug.value == "0")
             {
                 event.preventDefault();
-                alert("You must select an item in the Church select");
+                alert("You must select an item in the " + type + " select");
             }
         });
     }

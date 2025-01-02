@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using StainedGlass.Transfer.Mapper;
 
 namespace StainedGlass.Transfer.DTOs;
@@ -7,7 +8,7 @@ public class SanctuaryRegionDTO : Transferable
     public string Slug {get; set;}
     public string Name {get; set;}
     public string Description {get; set;}
-    public string Image {get; set;}
+    public IFormFile Image {get; set;}
     public HashSet<ItemDTO>? Items { get; set; } = new();
     public string SanctuarySideSlug {get; set;}
     public SanctuarySideDTO SanctuarySide {get; set;}

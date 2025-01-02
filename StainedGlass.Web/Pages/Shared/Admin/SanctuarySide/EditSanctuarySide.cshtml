@@ -1,0 +1,37 @@
+﻿@page
+@using StainedGlass.Transfer.DTOs
+
+@{
+    Layout = "_AdminLayout";
+    var churches = ViewBag.Churches as List<ChurchDTO>;    
+    var aboutUrl = Url.Action("All", "SanctuarySide");
+}
+
+<h2>Sanctuary Side @ViewBag.SanctuarySide.Slug</h2>
+
+<form action="" method="post" id="editForm" data-type="sanctuarySide" data-slug="@ViewBag.SanctuarySide.Slug" data-redirect-url="@aboutUrl" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="title">Name</label>
+        <input type="text" name="Name" required value="@ViewBag.SanctuarySide.Name" class="form-control" id="name" placeholder="Name">
+    </div>
+    <div class="form-group">
+        <label for="title">Church</label>
+        <br/>
+        <select class="custom-select" id="parentSlug" data-type="sanctuary side" required name="ChurchSlug">
+            
+            @foreach (var church in churches)
+            {
+                @if (church.Slug.Equals(ViewBag.SanctuarySide.ChurchSlug))
+                {
+                    <option selected value="@church.Slug">@church.Name</option>
+                }
+                else
+                {
+                     <option value="@church.Slug">@church.Name</option>   
+                }
+            }
+        </select>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
