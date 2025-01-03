@@ -67,7 +67,7 @@ public class SanctuaryRegionController : AdminController
     [HttpDelete("{slug}")]
     public override async Task<IActionResult> Delete(string slug)
     {
-        await _useCaseInteractor.RemoveEntity<SanctuarySideDTO>(slug);
+        await _useCaseInteractor.RemoveEntity<SanctuaryRegionDTO>(slug);
         return Ok();
     }
 }

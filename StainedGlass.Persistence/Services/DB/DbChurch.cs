@@ -60,9 +60,13 @@ internal class DbChurch : DatabasePersistenceService
             var churchStruct = (ChurchDTO)GetDtoFromTransfer(transferStruct);
             churchEntity.Name = churchStruct.Name;
             churchEntity.Description = churchStruct.Description;
+
+            if (churchStruct.Image != null)
+            {
+                //transferring file from IFormFile to byte[]
+                churchEntity.Image = await FormFileToBytes(churchStruct.Image);
+            }
             
-            //transferring file from IFormFile to byte[]
-            churchEntity.Image = await FormFileToBytes(churchStruct.Image);
             // _dbContext.Churches.Update(church);
             await _dbContext.SaveChangesAsync();
         }

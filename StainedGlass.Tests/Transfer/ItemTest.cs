@@ -101,7 +101,7 @@ public class ItemTest
             Name = "Region",
             Slug = "RegionSlug",
             Description = "Region Description",
-            Image = "Region Image",
+            // Image = "Region Image",
         };
         
         useCaseInteractor.StoreEntity(sanctuaryRegion);
@@ -156,7 +156,7 @@ public class ItemTest
             Name = "Region",
             Slug = "RegionSlug",
             Description = "Region Description",
-            Image = "Region Image",
+            // Image = "Region Image",
         };
         
         useCaseInteractor.StoreEntity(region);

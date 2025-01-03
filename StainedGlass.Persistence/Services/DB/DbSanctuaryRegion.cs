@@ -62,9 +62,12 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
             sanctuaryRegionEntity.Name = sanctuaryRegionStruct.Name;
             sanctuaryRegionEntity.Description = sanctuaryRegionStruct.Description;
             sanctuaryRegionEntity.SanctuarySideSlug = sanctuaryRegionStruct.SanctuarySideSlug;
-            
-            //transferring file from IFormFile to byte[]
-            sanctuaryRegionEntity.Image = await FormFileToBytes(sanctuaryRegionStruct.Image);
+
+            if (sanctuaryRegionStruct.Image != null)
+            {
+                //transferring file from IFormFile to byte[]
+                sanctuaryRegionEntity.Image = await FormFileToBytes(sanctuaryRegionStruct.Image);
+            }
             
             // _dbContext.SanctuaryRegions.Update(sanctuaryRegion);
             await _dbContext.SaveChangesAsync();

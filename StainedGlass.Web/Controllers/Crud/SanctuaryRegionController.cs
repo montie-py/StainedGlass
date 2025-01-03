@@ -39,7 +39,7 @@ public class SanctuaryRegionController : CrudController
         }
 
         await _useCaseInteractor.StoreEntity(sanctuaryRegionDto);
-        return Ok();
+        return Redirect("Admin/SanctuaryRegion/SanctuaryRegions");
     }
 
     [HttpPut("{originalSlug}")]

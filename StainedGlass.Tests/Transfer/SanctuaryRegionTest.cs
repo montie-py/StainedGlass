@@ -19,7 +19,7 @@ public class SanctuaryRegionTest
         {
             Name = "SanctuaryRegion6",
             Slug = "SanctuaryRegionSlug6",
-            Image = "SanctuaryRegion Image",
+            // Image = "SanctuaryRegion Image",
             Description = "SanctuaryRegion Description",
         };
         useCaseInteractor.StoreEntity(sanctuaryRegion);
@@ -40,7 +40,7 @@ public class SanctuaryRegionTest
         {
             Name = "SanctuaryRegion1",
             Slug = "SanctuaryRegionSlug1",
-            Image = "SanctuaryRegion Image1",
+            // Image = "SanctuaryRegion Image1",
             SanctuarySideSlug = "SanctuarySideSlug"
         };
         useCaseInteractor.StoreEntity(sanctuaryRegion);
@@ -57,7 +57,7 @@ public class SanctuaryRegionTest
             Name = "SanctuaryRegion3",
             Slug = "SanctuaryRegionSlug3",
             Description = "SanctuaryRegion Description",
-            Image = "SanctuaryRegion Image",
+            // Image = "SanctuaryRegion Image",
         };
         
         useCaseInteractor.StoreEntity(region);
@@ -96,7 +96,7 @@ public class SanctuaryRegionTest
             Name = "SanctuaryRegion4",
             Slug = "SanctuaryRegionSlug4",
             Description = "SanctuaryRegion Description4",
-            Image = "SanctuaryRegion Image",
+            // Image = "SanctuaryRegion Image",
         };
         
         useCaseInteractor.StoreEntity(sanctuaryRegion);
@@ -106,7 +106,7 @@ public class SanctuaryRegionTest
             Name = "SanctuaryRegion5",
             Slug = "SanctuaryRegionSlug5",
             Description = "SanctuaryRegion Description5",
-            Image = "SanctuaryRegion Image",
+            // Image = "SanctuaryRegion Image",
         };
         
         useCaseInteractor.ReplaceEntity(sanctuaryRegion.Slug, anotherSanctuaryRegion);
@@ -131,7 +131,7 @@ public class SanctuaryRegionTest
             Name = "SanctuaryRegion7",
             Slug = "SanctuaryRegionSlug7",
             Description = "SanctuaryRegion Description7",
-            Image = "SanctuaryRegion Image",
+            // Image = "SanctuaryRegion Image",
             SanctuarySideSlug = sanctuarySide.Slug
         };
         useCaseInteractor.StoreEntity(sanctuaryRegion);

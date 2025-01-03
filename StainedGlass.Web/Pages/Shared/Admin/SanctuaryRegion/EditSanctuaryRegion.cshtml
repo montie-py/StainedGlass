@@ -5,12 +5,12 @@
 @{
     Layout = "_AdminLayout";
     var aboutUrl = Url.Action("All", "SanctuaryRegion");
-    var sanctuarySides = ViewBag.Churches as List<SanctuarySideDTO>;
+    var sanctuarySides = ViewBag.SanctuarySides as List<SanctuarySideDTO>;
 }
 
 <h2>SanctuaryRegion @ViewBag.SanctuaryRegion.Slug</h2>
 
-<form action="" method="post" id="editForm" data-slug="@ViewBag.SanctuaryRegion.Slug" data-redirect-url="@aboutUrl" enctype="multipart/form-data">
+<form action="" method="post" id="editForm" data-type="sanctuaryregion" data-slug="@ViewBag.SanctuaryRegion.Slug" data-redirect-url="@aboutUrl" enctype="multipart/form-data">
     <div class="form-group">
         <label for="title">Name</label>
         <input type="text" name="Name" required value="@ViewBag.SanctuaryRegion.Name" class="form-control" id="name" placeholder="Name">
@@ -23,7 +23,7 @@
     <div class="form-group">
         <label for="title">Sanctuary side</label>
         <br/>
-        <select class="custom-select" id="parentSlug" data-type="sanctuary side" required name="ChurchSlug">
+        <select class="custom-select" id="parentSlug" data-type="sanctuary region" required name="SanctuarySideSlug">
 
             @foreach (var sanctuarySide in sanctuarySides)
             {
@@ -42,7 +42,7 @@
         <label for="image">Image</label>
         @if (ViewBag.SanctuaryRegionImage != null)
         {
-        <br><img width="150px" src="data:image/jpeg;base64,@ViewBag.ChurchImage" alt="Church @ViewBag.SanctuaryRegion.Name Image" /><br/>
+        <br><img width="150px" src="data:image/jpeg;base64,@ViewBag.SanctuaryRegionImage" alt="Church @ViewBag.SanctuaryRegion.Name Image" /><br/>
         }
         <input type="file" name="Image" accept=".jpg, .jpeg" class="form-control-file" id="image">
         @* <span asp-validation-for="Image" class="text-danger"></span> *@

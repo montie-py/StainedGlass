@@ -70,7 +70,7 @@ public class SanctuarySideTest
             {
                 Name = "Region 1",
                 Slug = "sanctuary-region-1",
-                Image = "sanctuary-region-1",
+                // Image = "sanctuary-region-1",
                 Description = "Region description",
                 SanctuarySideSlug = side.Slug
             };
@@ -79,7 +79,7 @@ public class SanctuarySideTest
             {
                 Name = "Region 2",
                 Slug = "sanctuary-region-2",
-                Image = "sanctuary-region-2",
+                // Image = "sanctuary-region-2",
                 Description = "Region description",
                 SanctuarySideSlug = side.Slug
             };

@@ -20,11 +20,14 @@
         <label for="text">Description</label>
         <textarea class="form-control" name="Description" required id="description" rows="6"></textarea>
     </div>
+    <br/>
     <div class="form-group">
         <label for="image">Image</label>
+        <br/>
         <input type="file" name="Image" required class="form-control-file" accept=".jpg, .jpeg" id="image">
         @* <span asp-validation-for="Image" class="text-danger"></span> *@
     </div>
+    <br/>
     <br>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
