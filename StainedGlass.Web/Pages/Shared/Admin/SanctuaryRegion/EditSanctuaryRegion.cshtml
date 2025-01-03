@@ -4,13 +4,13 @@
 
 @{
     Layout = "_AdminLayout";
-    var aboutUrl = Url.Action("All", "SanctuaryRegion");
+    var redirectUrl = Url.Action("All", "SanctuaryRegion");
     var sanctuarySides = ViewBag.SanctuarySides as List<SanctuarySideDTO>;
 }
 
 <h2>SanctuaryRegion @ViewBag.SanctuaryRegion.Slug</h2>
 
-<form action="" method="post" id="editForm" data-type="sanctuaryregion" data-slug="@ViewBag.SanctuaryRegion.Slug" data-redirect-url="@aboutUrl" enctype="multipart/form-data">
+<form action="" method="post" id="editForm" data-type="sanctuaryregion" data-slug="@ViewBag.SanctuaryRegion.Slug" data-redirect-url="@redirectUrl" enctype="multipart/form-data">
     <div class="form-group">
         <label for="title">Name</label>
         <input type="text" name="Name" required value="@ViewBag.SanctuaryRegion.Name" class="form-control" id="name" placeholder="Name">

@@ -34,7 +34,7 @@ public class ItemTypeController : CrudController
     public async Task<IActionResult> Post([FromForm] ItemTypeDTO dto)
     {
         await _useCaseInteractor.StoreEntity(dto);
-        return Ok();
+        return Redirect("Admin/ItemType/ItemTypes");
     }
 
     [HttpPut("{originalSlug}")]

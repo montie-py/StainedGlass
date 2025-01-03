@@ -1,0 +1,18 @@
+﻿@page
+@using StainedGlass.Transfer.DTOs
+
+@{
+    Layout = "_AdminLayout";   
+    var redirectUrl = Url.Action("All", "ItemType");
+}
+
+<h2>Item Type @ViewBag.ItemType.Slug</h2>
+
+<form action="" method="post" id="editForm" data-type="itemType" data-slug="@ViewBag.ItemType.Slug" data-redirect-url="@redirectUrl" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="title">Name</label>
+        <input type="text" name="Name" required value="@ViewBag.ItemType.Name" class="form-control" id="name" placeholder="Name">
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
