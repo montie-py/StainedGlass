@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="~/css/admin/easymde/easymde.css" />
     <link rel="stylesheet" href="~/css/admin/easymde/easymde-dark.css" />
     <link rel="stylesheet" href="~/css/admin/style.css" />
-
+    <link rel="stylesheet" href="~/css/bootstrap-icons.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/slim-select@latest/dist/slimselect.css" />
     <script src="~/js/admin/color-modes.js"></script>
 </head>
 <body>
@@ -53,6 +54,11 @@
                     Item Types
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" title="Item Types" href="/Admin/Item/Items">
+                    Items
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
@@ -84,4 +90,5 @@
 @RenderSection("Scripts", required: false)
 </body>
 </html>
+<script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
 <script src="~/js/adminbundle.js"></script>

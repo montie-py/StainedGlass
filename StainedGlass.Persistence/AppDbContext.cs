@@ -46,7 +46,7 @@ internal class AppDbContext : DbContext
             .HasForeignKey(item => item.ItemTypeSlug)
             .OnDelete(DeleteBehavior.SetNull);
 
-        //item-relateditem relationship
+        //item-relateditems relationship
         modelBuilder.Entity<ItemRelation>()
             .HasKey(itemRelation => new { itemRelation.ItemSlug, itemRelation.RelatedItemSlug });
         
@@ -59,6 +59,12 @@ internal class AppDbContext : DbContext
             .HasOne(ir => ir.RelatedItem) 
             .WithMany() 
             .HasForeignKey(ir => ir.RelatedItemSlug);
+        
+        //item-itemimages relationship
+        modelBuilder.Entity<Item>()
+            .HasMany(item => item.ItemImages)
+            .WithOne(itemImage => itemImage.Item)
+            .HasForeignKey(itemImage => itemImage.ItemSlug);
         
         // base.OnModelCreating(modelBuilder);
     }

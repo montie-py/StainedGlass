@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using StainedGlass.Persistence.Entities;
 
 namespace StainedGlass.Persistence.Transfer
 {
@@ -41,8 +42,8 @@ namespace StainedGlass.Persistence.Transfer
         public string Slug {get; set;}
         public string Title{get; set;}
         public string Description{get; set;}
-        public string Image{get; set;}
         public string ItemTypeSlug {get; set;}
+        public List<ItemImageDTO> ItemImages { get; set; }
         public ItemTypeDTO ItemType{get; set;}
 
         public string? SanctuaryRegionSlug { get; set; }
@@ -57,5 +58,12 @@ namespace StainedGlass.Persistence.Transfer
         public string Name { get; set; }
         public string Slug { get; set; }
         public ICollection<ItemDTO> Items { get; set; }
+    }
+
+    public struct ItemImageDTO
+    {
+        public string Slug { get; set; }
+        public string ItemSlug { get; set; }
+        public IFormFile Image { get; set; }
     }
 }

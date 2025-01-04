@@ -128,7 +128,6 @@ public class EntityItem : IRelatable, IPersistenceService
             Slug = item.Slug,
             Title = item.Title,
             Description = item.Description,
-            Image = item.Image,
         };
 
         if (!skipParentElements)
@@ -194,7 +193,6 @@ public class EntityItem : IRelatable, IPersistenceService
             Slug = itemDto.Value.Slug,
             Title = itemDto.Value.Title,
             Description = itemDto.Value.Description,
-            Image = itemDto.Value.Image,
             ItemType = itemType,
             SanctuaryRegion = sanctuaryRegion
         };

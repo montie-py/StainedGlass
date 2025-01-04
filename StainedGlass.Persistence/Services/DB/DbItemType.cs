@@ -57,7 +57,6 @@ internal class DbItemType : DatabasePersistenceService
                     Title = item.Title,
                     Slug = item.Slug,
                     Description = item.Description,
-                    Image = item.Image,
                 };
                 itemTypeItems.Add(itemDto);
             }

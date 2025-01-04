@@ -15,10 +15,20 @@ internal class DbItem : DatabasePersistenceService
             Title = itemStruct.Title,
             Slug = itemStruct.Slug,
             Description = itemStruct.Description,
-            Image = itemStruct.Image,
             SanctuaryRegionSlug = itemStruct.SanctuaryRegionSlug,
             ItemTypeSlug = itemStruct.ItemTypeSlug
         };
+
+        foreach (var itemImageDto in itemStruct.ItemImages)
+        {
+            var itemImage = new ItemImage
+            {
+                Image = await FormFileToBytes(itemImageDto.Image),
+                Item = newItem,
+                Slug = itemImageDto.Slug
+            };
+            newItem.ItemImages.Add(itemImage);
+        }
         
         _dbContext.Items.Add(newItem);
         await _dbContext.SaveChangesAsync();
@@ -68,34 +78,48 @@ internal class DbItem : DatabasePersistenceService
     
     public override async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
     {
-        var item = await _dbContext.Items
+        var itemEntity = await _dbContext.Items
             .Include(x => x.RelatedItems)
             .FirstOrDefaultAsync(x => x.Slug == slug);
-        if (item != null)
+        if (itemEntity != null)
         {
             var transferItemDto = (ItemDTO)GetDtoFromTransfer(transferStruct);
-            item.Title = transferItemDto.Title;
-            item.Image = transferItemDto.Image;
-            item.Description = transferItemDto.Description;
-            item.ItemTypeSlug = transferItemDto.ItemTypeSlug;
-            item.SanctuaryRegionSlug = item.SanctuaryRegionSlug;
+            itemEntity.Title = transferItemDto.Title;
+            itemEntity.Description = transferItemDto.Description;
+            itemEntity.ItemTypeSlug = transferItemDto.ItemTypeSlug;
+            itemEntity.SanctuaryRegionSlug = itemEntity.SanctuaryRegionSlug;
+            
+            //handle itemimages
+            if (transferItemDto.ItemImages.Count > 0)
+            {
+                foreach (var itemImageDto in transferItemDto.ItemImages)
+                {
+                    var itemImage = new ItemImage
+                    {
+                        Image = await FormFileToBytes(itemImageDto.Image),
+                        Item = itemEntity,
+                        Slug = itemImageDto.Slug
+                    };
+                    itemEntity.ItemImages.Add(itemImage);
+                }
+            }
             
             await _dbContext.SaveChangesAsync();
 
             if (transferItemDto.RelatedItemsSlugs != null)
             {
                 //if this item has any related items at all
-                if (item.RelatedItems.Count > 0)
+                if (itemEntity.RelatedItems.Count > 0)
                 {
                     foreach (var relatedItemSlug in transferItemDto.RelatedItemsSlugs)
                     {
                         //if there is no relateditem with such a slug - add one
-                        var existingRelatedItem = item.RelatedItems.FirstOrDefault(
+                        var existingRelatedItem = itemEntity.RelatedItems.FirstOrDefault(
                             x => x.ItemSlug == relatedItemSlug || x.RelatedItemSlug == relatedItemSlug
                             );
                         if (existingRelatedItem is null)
                         {
-                            AddRelatedItem(item.Slug, relatedItemSlug);
+                            AddRelatedItem(itemEntity.Slug, relatedItemSlug);
                         }
                     }
                     await _dbContext.SaveChangesAsync();
@@ -105,7 +129,7 @@ internal class DbItem : DatabasePersistenceService
                 {
                     foreach (var relatedItemSlug in transferItemDto.RelatedItemsSlugs)
                     {
-                        AddRelatedItem(item.Slug, relatedItemSlug);
+                        AddRelatedItem(itemEntity.Slug, relatedItemSlug);
                     }
                     await _dbContext.SaveChangesAsync();
                 }
@@ -167,7 +191,6 @@ internal class DbItem : DatabasePersistenceService
                         Title = relatedItem.RelatedItem.Title,
                         Slug = relatedItem.RelatedItem.Slug,
                         Description = relatedItem.RelatedItem.Description,
-                        Image = relatedItem.RelatedItem.Image,
                     }
                 );
             }
@@ -192,18 +215,30 @@ internal class DbItem : DatabasePersistenceService
             Slug = itemEntity.ItemType.Slug,
         };
 
-        return new ItemDTO
+        var newItemDto = new ItemDTO
         {
             Title = itemEntity.Title,
             Slug = itemEntity.Slug,
             Description = itemEntity.Description,
-            Image = itemEntity.Image,
             RelatedItems = relatedItems,
             ItemType = itemTypeDto,
             ItemTypeSlug = itemEntity.ItemTypeSlug,
             SanctuaryRegion = sanctuaryRegionDto,
             SanctuaryRegionSlug = itemEntity.SanctuaryRegionSlug
         };
+
+        foreach (var itemImage in itemEntity.ItemImages)
+        {
+            var itemImageDto = new ItemImageDTO
+            {
+                Image = new FormFile(itemImage.Image, FileName, fileType),
+                Slug = itemImage.Slug,
+                ItemSlug = newItemDto.Slug
+            };
+            newItemDto.ItemImages.Add(itemImageDto);
+        }
+  
+        return newItemDto;
     }
     
     private void AddRelatedItem(string itemSlug, string relatedItemSlug)

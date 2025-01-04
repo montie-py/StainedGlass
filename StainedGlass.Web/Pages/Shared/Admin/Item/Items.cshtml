@@ -1,0 +1,50 @@
+﻿@page
+@using StainedGlass.Transfer.DTOs
+
+@{
+    Layout = "_AdminLayout";
+    var items = ViewBag.Items as List<ItemDTO>;
+    int count = 1;
+}
+<h2 style="display: inline-block;">Items</h2> 
+<a style="position: relative;
+    left: 20px;
+    bottom: 3px;" href="/admin/item/item">Add an item</a>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Slug</th>
+        <th scope="col">Description</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (items.Count > 0)
+    {
+        @foreach (var item in items)
+        {
+            <tr>
+                <th scope="row">@count</th>
+                <td>@item.Title</td>
+                <td><a href="/admin/item/@item.Slug">@item.Slug</a></td>
+                <td>@item.Description</td>
+                <td>
+                    <a href="/admin/item/@item.Slug/edit">Edit</a>
+                    <form>
+                        <button class="delete" data-type="item" data-slug="@item.Slug">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            count++;
+        }
+    }
+    else
+    {
+        <tr>
+            <td style="text-align: center;" colspan="4">No Items</td>
+        </tr>
+    }
+    </tbody>
+</table>

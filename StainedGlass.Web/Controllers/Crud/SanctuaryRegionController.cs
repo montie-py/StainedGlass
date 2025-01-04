@@ -31,7 +31,7 @@ public class SanctuaryRegionController : CrudController
     [HttpPost]
     public async Task<IActionResult> Post([FromForm] SanctuaryRegionDTO sanctuaryRegionDto)
     {
-        var fileValidationResult = ValidateFile((sanctuaryRegionDto as SanctuaryRegionDTO).Image);
+        var fileValidationResult = ValidateFile(sanctuaryRegionDto.Image);
         if (fileValidationResult != null)
         {
             ModelState.AddModelError("Image", fileValidationResult);

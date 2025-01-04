@@ -1,0 +1,24 @@
+﻿@page
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h2>Item @ViewBag.Item.Slug</h2>
+
+<dl>
+    <dt>Name:</dt>
+    <dd>@ViewBag.Item.Title</dd>
+    <dt>Description:</dt>
+    <dd>@ViewBag.Item.Description</dd>
+    <dt>Images:</dt>
+    <dd>
+        @if (ViewBag.ItemImages.Count > 0)
+        {
+            foreach (var itemImage in ViewBag.ItemImages)
+            {
+                <img width="150px" src="data:image/jpeg;base64,@itemImage" alt="Item @ViewBag.Item.Name Image" />   
+            }
+        }
+    </dd>
+</dl>

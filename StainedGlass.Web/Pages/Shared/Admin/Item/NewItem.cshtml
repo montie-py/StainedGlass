@@ -1,0 +1,57 @@
+﻿@page
+@using StainedGlass.Transfer.DTOs
+@* @model StainedGlass.Transfer.DTOs.ChurchDTO *@
+
+@{
+    Layout = "_AdminLayout";
+    var relatedItems = ViewBag.RelatedItems as List<ItemDTO>;
+    var itemTypes = ViewBag.ItemTypes as List<ItemTypeDTO>;
+}
+<h2 style="display: inline-block;">Adding a new Item</h2>
+<br>
+<form action="/church" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" name="Title" required class="form-control" id="name" placeholder="Title">
+    </div>
+    <div class="form-group">
+        <label for="title">Slug</label>
+        <input type="text" name="Slug" required class="form-control" id="slug" placeholder="Slug">
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="text">Description</label>
+        <textarea class="form-control" name="Description" required id="description" rows="6"></textarea>
+    </div>
+    <br/>
+    <div class="form-group">
+        <label for="image">Images</label>
+        <br/>
+        <input type="file" name="ItemImages[][Image]" required class="form-control-file" accept=".jpg, .jpeg" id="image">
+        @* <span asp-validation-for="Image" class="text-danger"></span> *@
+        <i class="bi bi-plus-square"></i>
+    </div>
+    <br/>
+    <div class="form-group">
+        <label for="title">ItemType</label>
+        <br/>
+        <select class="custom-select" id="parentSlug" data-type="item type" required name="ItemTypeSlug">
+            @if (itemTypes.Count > 0)
+            {
+                <option selected value="0">Choose...</option>
+                @foreach (var itemType in itemTypes)
+                {
+                    <option value="@itemType.Slug">@itemType.Name</option>
+                }
+            }
+            else
+            {
+                <div class="alert alert-danger" role="alert">
+                    There are no item types available. You need to create one first!
+                </div>
+            }
+        </select>
+    </div>
+    <br/>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

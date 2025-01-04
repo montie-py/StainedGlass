@@ -3,11 +3,12 @@ using StainedGlass.Persistence.Templates;
 using StainedGlass.Persistence.Transfer;
 using ItemDTO = StainedGlass.Transfer.DTOs.ItemDTO;
 using ItemTypeDTO = StainedGlass.Transfer.DTOs.ItemTypeDTO;
+using ItemImageDTO = StainedGlass.Transfer.DTOs.ItemImageDTO;
 using SanctuaryRegionDTO = StainedGlass.Transfer.DTOs.SanctuaryRegionDTO;
 
 namespace StainedGlass.Transfer.Mapper;
 
-internal class ItemMapper : Mapper
+internal class  ItemMapper : Mapper
 {
     public override void SetInstance(IPersistenceTemplate template)
     {
@@ -73,7 +74,6 @@ internal class ItemMapper : Mapper
                 Title = relatedItem.Title,
                 Slug = relatedItem.Slug,
                 Description = relatedItem.Description,
-                Image = relatedItem.Image,
             });
         }
         
@@ -93,16 +93,28 @@ internal class ItemMapper : Mapper
             };
         }
 
-        return new ItemDTO
+        var newItem = new ItemDTO
         {
             Title = transferItemDto.Title,
             Slug = transferItemDto.Slug,
-            Image = transferItemDto.Image,
             Description = transferItemDto.Description,
             ItemType = itemType,
             ItemTypeSlug = transferItemDto.ItemTypeSlug,
             RelatedItems = relatedItems,
             SanctuaryRegion = sanctuaryRegionDto,
         };
+
+        foreach (var itemImage in transferItemDto.ItemImages)
+        {
+            var itemImageDto = new ItemImageDTO
+            {
+                Image = itemImage.Image,
+                Slug = itemImage.Slug,
+            };
+            
+            newItem.ItemImages.Add(itemImageDto);
+        }
+
+        return newItem;
     }
 }

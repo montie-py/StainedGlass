@@ -10,6 +10,7 @@ public class ItemDTO : Transferable
     public string Image{get; set;}
     public string ItemTypeSlug {get; set;}
     public ItemTypeDTO ItemType{get; set;}
+    public List<ItemImageDTO> ItemImages{get; set;}
 
     public string? SanctuaryRegionSlug { get; set; }
     public SanctuaryRegionDTO? SanctuaryRegion { set; get; } = new();
@@ -18,18 +19,22 @@ public class ItemDTO : Transferable
 
     public static implicit operator Persistence.Transfer.ItemDTO(ItemDTO itemDto)
     {
-        Persistence.Transfer.ItemTypeDTO itemTypeDto = new();
-        
-        return new Persistence.Transfer.ItemDTO
+        var returnItemDto = new Persistence.Transfer.ItemDTO
         {
             Title = itemDto.Title,
             Slug = itemDto.Slug,
             Description = itemDto.Description,
-            Image = itemDto.Image,
             ItemTypeSlug = itemDto.ItemTypeSlug,
             SanctuaryRegionSlug = itemDto.SanctuaryRegionSlug,
             RelatedItemsSlugs = itemDto.RelatedItemsSlugs,
         };
+
+        foreach (var itemImage in itemDto.ItemImages)
+        {
+            returnItemDto.ItemImages.Add(itemImage);
+        }
+        
+        return returnItemDto;
     }
 
     public Mappable GetMapper()

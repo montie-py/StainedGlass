@@ -1,4 +1,9 @@
-import 'es6-promise/auto'; 
+import 'es6-promise/auto';
+import SlimSelect from 'slim-select';
+
+new SlimSelect({
+    select: '#parentSlug',
+})
 
 //handle deleting
 document.querySelectorAll('.delete').forEach( button => {

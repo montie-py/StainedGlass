@@ -47,10 +47,6 @@ namespace StainedGlass.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("ItemTypeSlug")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -70,6 +66,26 @@ namespace StainedGlass.Persistence.Migrations
                     b.HasIndex("SanctuaryRegionSlug");
 
                     b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("StainedGlass.Persistence.Entities.ItemImage", b =>
+                {
+                    b.Property<string>("Slug")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("ItemSlug")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Slug");
+
+                    b.HasIndex("ItemSlug");
+
+                    b.ToTable("ItemImage");
                 });
 
             modelBuilder.Entity("StainedGlass.Persistence.Entities.ItemRelation", b =>
@@ -168,6 +184,17 @@ namespace StainedGlass.Persistence.Migrations
                     b.Navigation("SanctuaryRegion");
                 });
 
+            modelBuilder.Entity("StainedGlass.Persistence.Entities.ItemImage", b =>
+                {
+                    b.HasOne("StainedGlass.Persistence.Entities.Item", "Item")
+                        .WithMany("ItemImages")
+                        .HasForeignKey("ItemSlug")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+                });
+
             modelBuilder.Entity("StainedGlass.Persistence.Entities.ItemRelation", b =>
                 {
                     b.HasOne("StainedGlass.Persistence.Entities.Item", "Item")
@@ -216,6 +243,8 @@ namespace StainedGlass.Persistence.Migrations
 
             modelBuilder.Entity("StainedGlass.Persistence.Entities.Item", b =>
                 {
+                    b.Navigation("ItemImages");
+
                     b.Navigation("RelatedItems");
                 });
 

@@ -66,7 +66,6 @@ internal class ItemTypeMapper : Mapper
                 {
                     Title = itemDto.Title,
                     Description = itemDto.Description,
-                    Image = itemDto.Image,
                     Slug = itemDto.Slug,
                 };
                 itemDtos.Add(item);

@@ -31,8 +31,17 @@ public class ItemController : CrudController
     [HttpPost]
     public async Task<IActionResult> Post([FromForm] ItemDTO itemDto)
     {
+        foreach (var itemImage in itemDto.ItemImages)
+        {
+            var fileValidationResult = ValidateFile(itemImage.Image);
+            if (fileValidationResult != null)
+            {
+                ModelState.AddModelError("Image", fileValidationResult);
+                return View("Admin/SanctuaryRegion/NewSanctuaryRegion");
+            }
+        }
         await _useCaseInteractor.StoreEntity(itemDto);
-        return Ok();
+        return Redirect("Admin/Item/Items");
     }
 
     [HttpPut("{originalSlug}")]
