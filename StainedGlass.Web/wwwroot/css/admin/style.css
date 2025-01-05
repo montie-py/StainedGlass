@@ -1,4 +1,5 @@
-﻿﻿body {
+
+body {
     font-size: 0.875rem;
 }
 
@@ -168,4 +169,10 @@ h1.display-4 {
     margin-top: 0.25rem;
     font-size: .875em;
     color: var(--bs-form-invalid-color);
+}
+
+.position-image-container {
+    position: relative; 
+    display: inline-block; 
+    cursor: crosshair;
 }

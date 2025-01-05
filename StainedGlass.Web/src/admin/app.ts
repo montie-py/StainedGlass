@@ -70,6 +70,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    
+    const churchImage = document.getElementById("churchImage") as HTMLImageElement;
+    if (churchImage != null)
+    {
+        churchImage.addEventListener('click', (element) => {
+            //removing last inserted position
+            const elementPosition = document.getElementById("elementPosition") as HTMLElement;
+            if (elementPosition != null)
+            {
+                elementPosition.remove();
+            }
+            
+            //creating new position
+            const iElement = document.createElement('i') as HTMLElement;
+            console.log(element.offsetY + "");
+            iElement.classList.add('bi', 'bi-asterisk');
+            iElement.id = "elementPosition";
+            iElement.style.position = 'absolute';
+            iElement.style.top = (element.offsetY-10) + "px";
+            iElement.style.left = (element.offsetX-8) + "px";
+            churchImage.insertAdjacentElement('afterend', iElement);
+        });
+    }
 });
 
 async function convertFileToBase64(file: File): Promise<string> 

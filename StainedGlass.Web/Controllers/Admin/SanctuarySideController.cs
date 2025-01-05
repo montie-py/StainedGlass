@@ -33,6 +33,16 @@ public class SanctuarySideController : AdminController
     public override async Task<IActionResult> One(string slug)
     {
         ViewBag.SanctuarySide = await _useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(slug);
+        if (ViewBag.SanctuarySide.Church.Image != null && ViewBag.SanctuarySide.Church.Image.Length > 0) 
+        { 
+            using (var memoryStream = new MemoryStream()) 
+            { 
+                await ViewBag.SanctuarySide.Church.Image.CopyToAsync(memoryStream); 
+                var fileBytes = memoryStream.ToArray(); 
+                var base64String = Convert.ToBase64String(fileBytes);
+                ViewBag.ChurchImage = base64String; 
+            } 
+        }
         return View("Admin/SanctuarySide/SanctuarySide");
     }
 
