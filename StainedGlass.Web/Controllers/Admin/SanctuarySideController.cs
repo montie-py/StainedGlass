@@ -18,7 +18,15 @@ public class SanctuarySideController : AdminController
     [HttpGet("sanctuaryside")]
     public override async Task<IActionResult> New()
     {
-        ViewBag.Churches = await _useCaseInteractor.GetAllDTOs<ChurchDTO>(); 
+        ViewBag.Churches = await _useCaseInteractor.GetAllDTOs<ChurchDTO>();
+        if (ViewBag.Churches != null)
+        {
+            ViewBag.ChurchesImages = new Dictionary<string, string>();
+            foreach (var church in ViewBag.Churches)
+            {
+                ViewBag.ChurchesImages[church.Slug] = await IFormFileToBase64(church.Image);
+            }
+        }
         return View("Admin/SanctuarySide/NewSanctuarySide");
     }
 
@@ -33,15 +41,9 @@ public class SanctuarySideController : AdminController
     public override async Task<IActionResult> One(string slug)
     {
         ViewBag.SanctuarySide = await _useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(slug);
-        if (ViewBag.SanctuarySide.Church.Image != null && ViewBag.SanctuarySide.Church.Image.Length > 0) 
-        { 
-            using (var memoryStream = new MemoryStream()) 
-            { 
-                await ViewBag.SanctuarySide.Church.Image.CopyToAsync(memoryStream); 
-                var fileBytes = memoryStream.ToArray(); 
-                var base64String = Convert.ToBase64String(fileBytes);
-                ViewBag.ChurchImage = base64String; 
-            } 
+        if (ViewBag.SanctuarySide.Church.Image != null && ViewBag.SanctuarySide.Church.Image.Length > 0)
+        {
+            ViewBag.ChurchImage = IFormFileToBase64(ViewBag.SanctuarySide.Church.Image);
         }
         return View("Admin/SanctuarySide/SanctuarySide");
     }

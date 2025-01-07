@@ -35,13 +35,7 @@ public class SanctuaryRegionController : AdminController
         ViewBag.SanctuaryRegion = await _useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(slug);
         if (ViewBag.SanctuaryRegion.Image != null && ViewBag.SanctuaryRegion.Image.Length > 0) 
         { 
-            using (var memoryStream = new MemoryStream()) 
-            { 
-                await ViewBag.SanctuaryRegion.Image.CopyToAsync(memoryStream); 
-                var fileBytes = memoryStream.ToArray(); 
-                var base64String = Convert.ToBase64String(fileBytes);
-                ViewBag.SanctuaryRegionImage = base64String; 
-            } 
+            ViewBag.SanctuaryRegionImage = IFormFileToBase64(ViewBag.SanctuaryRegion.Image);
         }
         return View("Admin/SanctuaryRegion/SanctuaryRegion");
     }
@@ -53,13 +47,7 @@ public class SanctuaryRegionController : AdminController
         ViewBag.SanctuaryRegion = await _useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(slug);
         if (ViewBag.SanctuaryRegion.Image != null && ViewBag.SanctuaryRegion.Image.Length > 0) 
         { 
-            using (var memoryStream = new MemoryStream()) 
-            { 
-                await ViewBag.SanctuaryRegion.Image.CopyToAsync(memoryStream); 
-                var fileBytes = memoryStream.ToArray(); 
-                var base64String = Convert.ToBase64String(fileBytes);
-                ViewBag.SanctuaryRegionImage = base64String; 
-            } 
+            ViewBag.SanctuaryRegionImage = IFormFileToBase64(ViewBag.SanctuaryRegion.Image);
         }
         return View("Admin/SanctuaryRegion/EditSanctuaryRegion");
     }

@@ -55,13 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    const parentSlug = document.getElementById('parentSlug') as HTMLSelectElement;
     
     //select a parent item in a select
     const addForm = document.getElementById('addForm') as HTMLFormElement;
     if (addForm != null)
     {
         addForm.addEventListener('submit', (event)  => {
-            const parentSlug = document.getElementById('parentSlug') as HTMLSelectElement;
             var type = parentSlug.getAttribute('data-type');
             if (parentSlug.value == "0")
             {
@@ -71,7 +72,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    //loading new image for positioning when new parent is selected
+    parentSlug.addEventListener('change', (event) => {
+        const parentBase64Container = document.getElementById('parentImages') as HTMLDivElement;
+        const positionContainer = document.getElementById('positionContainer') as HTMLDivElement;
+        const churchImage = document.getElementById("churchImage") as HTMLImageElement;
+        if (churchImage != null)
+        {
+            positionContainer.innerHTML = '';
+
+        }
+        if (parentSlug.value !== "0")
+        {
+            var base64Element = parentBase64Container.querySelector('.' + parentSlug.value) as HTMLParagraphElement;
+            const selectedChurchImg = document.createElement("img") as HTMLImageElement;
+            selectedChurchImg.id = "churchImage";
+            selectedChurchImg.src = "data:image/jpeg;base64," + base64Element.textContent;
+
+            selectedChurchImg.style.width = "150px";
+            positionContainer.insertAdjacentElement("afterbegin", selectedChurchImg);
+            filePositioning();
+        }
+    });
+});
+
+function filePositioning()
+{
     const churchImage = document.getElementById("churchImage") as HTMLImageElement;
+
     if (churchImage != null)
     {
         churchImage.addEventListener('click', (element) => {
@@ -81,19 +109,25 @@ document.addEventListener('DOMContentLoaded', () => {
             {
                 elementPosition.remove();
             }
-            
+
             //creating new position
             const iElement = document.createElement('i') as HTMLElement;
-            console.log(element.offsetY + "");
+            const offsetY = element.offsetY-10;
+            const offsetX = element.offsetX-8;
+            
             iElement.classList.add('bi', 'bi-asterisk');
             iElement.id = "elementPosition";
             iElement.style.position = 'absolute';
-            iElement.style.top = (element.offsetY-10) + "px";
-            iElement.style.left = (element.offsetX-8) + "px";
+            iElement.style.top = offsetY + "px";
+            iElement.style.left = offsetX + "px";
             churchImage.insertAdjacentElement('afterend', iElement);
+            
+            //insert position into the input
+            var positionInput = document.getElementById("positionInput") as HTMLInputElement;
+            positionInput.value = "X:" + offsetX + " Y:" + offsetY;
         });
     }
-});
+}
 
 async function convertFileToBase64(file: File): Promise<string> 
 { 
