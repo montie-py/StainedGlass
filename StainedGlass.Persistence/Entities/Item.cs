@@ -9,6 +9,7 @@ internal class Item : IEntity
     public string Slug {get; set;}
     public string Title{get; set;}
     public string Description{get; set;}
+    public string Position {get; set;}
     public string ItemTypeSlug {get; set;}
     public ItemType ItemType{get; set;}
     public string SanctuaryRegionSlug {get; set;}

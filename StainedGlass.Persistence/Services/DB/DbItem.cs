@@ -219,6 +219,7 @@ internal class DbItem : DatabasePersistenceService
         {
             Title = itemEntity.Title,
             Slug = itemEntity.Slug,
+            Position = itemEntity.Position,
             Description = itemEntity.Description,
             RelatedItems = relatedItems,
             ItemType = itemTypeDto,

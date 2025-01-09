@@ -13,8 +13,9 @@
     <dd>
         @if (ViewBag.ChurchImage != null)
         {
-            <div>
+            <div class="position-image-container">
                 <img width="150px" src="data:image/jpeg;base64,@ViewBag.ChurchImage" alt="Church @ViewBag.SanctuarySide.Church.Name Image" />
+                <i class="bi bi-asterisk" style="position: absolute; @ViewBag.SanctuarySide.Position"></i>
             </div>
         }
     </dd>

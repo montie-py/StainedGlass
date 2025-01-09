@@ -51,6 +51,10 @@ namespace StainedGlass.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("SanctuaryRegionSlug")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -155,6 +159,10 @@ namespace StainedGlass.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Position")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

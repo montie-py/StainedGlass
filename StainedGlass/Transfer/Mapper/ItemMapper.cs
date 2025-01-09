@@ -98,6 +98,7 @@ internal class  ItemMapper : Mapper
             Title = transferItemDto.Title,
             Slug = transferItemDto.Slug,
             Description = transferItemDto.Description,
+            Position = transferItemDto.Position,
             ItemType = itemType,
             ItemTypeSlug = transferItemDto.ItemTypeSlug,
             RelatedItems = relatedItems,

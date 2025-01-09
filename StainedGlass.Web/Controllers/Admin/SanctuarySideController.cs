@@ -43,7 +43,7 @@ public class SanctuarySideController : AdminController
         ViewBag.SanctuarySide = await _useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(slug);
         if (ViewBag.SanctuarySide.Church.Image != null && ViewBag.SanctuarySide.Church.Image.Length > 0)
         {
-            ViewBag.ChurchImage = IFormFileToBase64(ViewBag.SanctuarySide.Church.Image);
+            ViewBag.ChurchImage = await IFormFileToBase64(ViewBag.SanctuarySide.Church.Image);
         }
         return View("Admin/SanctuarySide/SanctuarySide");
     }
@@ -51,8 +51,16 @@ public class SanctuarySideController : AdminController
     [HttpGet("{slug}/edit")]
     public override async Task<IActionResult> Edit(string slug)
     {
-        ViewBag.Churches = await _useCaseInteractor.GetAllDTOs<ChurchDTO>(); 
         ViewBag.SanctuarySide = await _useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(slug);
+        ViewBag.Churches = await _useCaseInteractor.GetAllDTOs<ChurchDTO>();
+        if (ViewBag.Churches != null)
+        {
+            ViewBag.ChurchesImages = new Dictionary<string, string>();
+            foreach (var church in ViewBag.Churches)
+            {
+                ViewBag.ChurchesImages[church.Slug] = await IFormFileToBase64(church.Image);
+            }
+        }
 
         return View("Admin/SanctuarySide/EditSanctuarySide"); 
     }

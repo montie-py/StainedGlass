@@ -5,12 +5,13 @@ namespace StainedGlass.Transfer.DTOs;
 public class ItemDTO : Transferable
 {
     public string Slug {get; set;}
-    public string Title{get; set;}
-    public string Description{get; set;}
-    public string Image{get; set;}
+    public string Title {get; set;}
+    public string Description {get; set;}
+    public string Position {get; set;}
+    public string Image {get; set;}
     public string ItemTypeSlug {get; set;}
-    public ItemTypeDTO ItemType{get; set;}
-    public List<ItemImageDTO> ItemImages{get; set;}
+    public ItemTypeDTO ItemType {get; set;}
+    public List<ItemImageDTO> ItemImages {get; set;}
 
     public string? SanctuaryRegionSlug { get; set; }
     public SanctuaryRegionDTO? SanctuaryRegion { set; get; } = new();
@@ -24,6 +25,7 @@ public class ItemDTO : Transferable
             Title = itemDto.Title,
             Slug = itemDto.Slug,
             Description = itemDto.Description,
+            Position = itemDto.Position,
             ItemTypeSlug = itemDto.ItemTypeSlug,
             SanctuaryRegionSlug = itemDto.SanctuaryRegionSlug,
             RelatedItemsSlugs = itemDto.RelatedItemsSlugs,

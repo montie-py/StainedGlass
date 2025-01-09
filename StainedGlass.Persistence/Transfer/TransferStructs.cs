@@ -21,6 +21,7 @@ namespace StainedGlass.Persistence.Transfer
     {
         public string Slug { get; set; }
         public string Name { get; set; }
+        public string Position { get; set; }
         public List<SanctuaryRegionDTO> Regions { get; set; }
         public string ChurchSlug { get; set; }
         public ChurchDTO? Church { get; set; }
@@ -42,6 +43,7 @@ namespace StainedGlass.Persistence.Transfer
         public string Slug {get; set;}
         public string Title{get; set;}
         public string Description{get; set;}
+        public string Position{get; set;}
         public string ItemTypeSlug {get; set;}
         public List<ItemImageDTO> ItemImages { get; set; }
         public ItemTypeDTO ItemType{get; set;}

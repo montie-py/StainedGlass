@@ -173,6 +173,9 @@ h1.display-4 {
 
 .position-image-container {
     position: relative; 
-    display: inline-block; 
+    display: inline-block;
+}
+
+.crosshair {
     cursor: crosshair;
 }

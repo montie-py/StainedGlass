@@ -14,6 +14,7 @@ internal class DbSanctuarySide : DatabasePersistenceService
         {
             Name = itemStruct.Name,
             Slug = itemStruct.Slug,
+            Position = itemStruct.Position,
             ChurchSlug = itemStruct.ChurchSlug
         };
         _dbContext.SanctuarySides.Add(sanctuarySide);
@@ -56,6 +57,7 @@ internal class DbSanctuarySide : DatabasePersistenceService
             var transferSanctuarySideDto = (SanctuarySideDTO)GetDtoFromTransfer(transferStruct);
             sanctuarySide.Name = transferSanctuarySideDto.Name;
             sanctuarySide.ChurchSlug = transferSanctuarySideDto.ChurchSlug;
+            sanctuarySide.Position = transferSanctuarySideDto.Position;
             // _dbContext.SanctuarySides.Update(sanctuarySide);
             // _dbContext.Entry(sanctuarySide).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
@@ -102,6 +104,7 @@ internal class DbSanctuarySide : DatabasePersistenceService
         {
             Name = sanctuarySideEntity.Name,
             Slug = sanctuarySideEntity.Slug,
+            Position = sanctuarySideEntity.Position,
             ChurchSlug = sanctuarySideEntity.ChurchSlug,
             Church = churchDto
         };

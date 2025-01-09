@@ -75,6 +75,7 @@ internal class SanctuarySideMapper : Mapper
         {
             Name = transferSanctuarySideDto.Name,
             Slug = transferSanctuarySideDto.Slug,
+            Position = transferSanctuarySideDto.Position,
             ChurchSlug = transferSanctuarySideDto.ChurchSlug,
             Church = churchDto
         };

@@ -141,6 +141,7 @@ public class EntitySanctuarySide : INonRelatable, IPersistenceService
         {
             Name = sanctuarySideDTO.Name,
             Slug = sanctuarySideDTO.Slug,
+            Position = sanctuarySideDTO.Position,
             Regions = null,
             Church = sanctuarySideChurch,
             ChurchSlug = sanctuarySideDTO.ChurchSlug

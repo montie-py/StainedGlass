@@ -94,6 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
             filePositioning();
         }
     });
+    
+    //for the 'edit' page
+    filePositioning();
 });
 
 function filePositioning()
@@ -124,7 +127,7 @@ function filePositioning()
             
             //insert position into the input
             var positionInput = document.getElementById("positionInput") as HTMLInputElement;
-            positionInput.value = "X:" + offsetX + " Y:" + offsetY;
+            positionInput.value = "left:" + offsetX + "px; top:" + offsetY + "px;";
         });
     }
 }
