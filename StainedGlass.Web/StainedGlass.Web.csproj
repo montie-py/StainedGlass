@@ -112,6 +112,10 @@
     <_ContentIncludedByDefault Remove="wwwroot\css\admin\scss\_variables.scss" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Admin\Church\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>

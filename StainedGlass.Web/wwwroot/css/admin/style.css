@@ -179,3 +179,7 @@ h1.display-4 {
 .crosshair {
     cursor: crosshair;
 }
+
+.hidden {
+    display: none;
+}

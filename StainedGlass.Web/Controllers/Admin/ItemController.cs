@@ -18,6 +18,7 @@ public class ItemController : AdminController
     [HttpGet("item")]
     public override async Task<IActionResult> New()
     {
+        ViewBag.SanctuaryRegions = await _useCaseInteractor.GetAllDTOs<SanctuaryRegionDTO>();
         ViewBag.RelatedItems = await _useCaseInteractor.GetAllDTOs<ItemDTO>();
         ViewBag.ItemTypes = await _useCaseInteractor.GetAllDTOs<ItemTypeDTO>();
         return View("Admin/Item/NewItem");

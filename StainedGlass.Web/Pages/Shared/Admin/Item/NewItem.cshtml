@@ -4,8 +4,10 @@
 
 @{
     Layout = "_AdminLayout";
+    var sanctuaryRegions = ViewBag.SanctuaryRegions as List<SanctuaryRegionDTO>;
     var relatedItems = ViewBag.RelatedItems as List<ItemDTO>;
     var itemTypes = ViewBag.ItemTypes as List<ItemTypeDTO>;
+    bool submitDisabled = false;
 }
 <h2 style="display: inline-block;">Adding a new Item</h2>
 <br>
@@ -24,34 +26,69 @@
         <textarea class="form-control" name="Description" required id="description" rows="6"></textarea>
     </div>
     <br/>
-    <div class="form-group">
-        <label for="image">Images</label>
+    <div class="form-group" id="imagesbundles">
+        <label>Images</label>
         <br/>
-        <input type="file" name="ItemImages[][Image]" required class="form-control-file" accept=".jpg, .jpeg" id="image">
-        @* <span asp-validation-for="Image" class="text-danger"></span> *@
-        <i class="bi bi-plus-square"></i>
+        <div class="imagebundle">
+            <input type="file" name="ItemImages[][Image]" required class="form-control-file" accept=".jpg, .jpeg">
+            @* <span asp-validation-for="Image" class="text-danger"></span> *@
+            <div class="signs">
+                <i class="bi bi-plus-square" id="addone" style="cursor: pointer"></i>
+                <i class="bi bi-dash-square hidden" id="removeone" style="cursor: pointer"></i>
+            </div>
+        </div>
     </div>
     <br/>
     <div class="form-group">
-        <label for="title">ItemType</label>
+        <label for="title">Sanctuary Region</label>
         <br/>
-        <select class="custom-select" id="parentSlug" data-type="item type" required name="ItemTypeSlug">
-            @if (itemTypes.Count > 0)
+        <select class="custom-select" id="parentSlug" data-type="sanctuary side" required name="SanctuarySideSlug">
+            @if (sanctuaryRegions.Count > 0)
             {
                 <option selected value="0">Choose...</option>
-                @foreach (var itemType in itemTypes)
+                @foreach (var sanctuaryRegion in sanctuaryRegions)
                 {
-                    <option value="@itemType.Slug">@itemType.Name</option>
+                    <option value="@sanctuaryRegion.Slug">@sanctuaryRegion.Name</option>
                 }
             }
             else
             {
                 <div class="alert alert-danger" role="alert">
-                    There are no item types available. You need to create one first!
+                    There are no sanctuary regions available. You need to create one first!
                 </div>
             }
         </select>
     </div>
     <br/>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="form-group">
+        <label for="title">ItemType</label>
+        <br/>
+        @if (itemTypes.Count > 0)
+        {
+            <select class="custom-select" id="parentSlug" data-type="item type" required name="ItemTypeSlug">
+                <option selected value="0">Choose...</option>
+                @foreach (var itemType in itemTypes)
+                {
+                    <option value="@itemType.Slug">@itemType.Name</option>
+                }
+            </select>
+        }
+        else
+        {
+            submitDisabled = true;
+            <div class="alert alert-danger" role="alert">
+                There are no item types available. You need to create one first!
+            </div>
+        }
+    </div>
+    <br/>
+    @if (submitDisabled)
+    {
+        <button type="submit" disabled class="btn btn-primary">Submit</button>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-primary">Submit</button>
+    }
+    
 </form>
