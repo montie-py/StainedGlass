@@ -14,8 +14,8 @@ internal class Item : IEntity
     public ItemType ItemType{get; set;}
     public string SanctuaryRegionSlug {get; set;}
     public SanctuaryRegion SanctuaryRegion{get; set;}
-    public ICollection<ItemRelation> RelatedItems {get; set;}
-    public ICollection<ItemImage> ItemImages {get; set;}
+    public ICollection<ItemRelation> RelatedItems {get; set; } = new List<ItemRelation>();
+    public ICollection<ItemImage> ItemImages {get;} = new List<ItemImage>();
 
     public override bool Equals(object? obj)
     {

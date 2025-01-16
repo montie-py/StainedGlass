@@ -11,10 +11,10 @@
 }
 <h2 style="display: inline-block;">Adding a new Item</h2>
 <br>
-<form action="/church" method="post" enctype="multipart/form-data">
+<form action="/item" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label for="title">Title</label>
-        <input type="text" name="Title" required class="form-control" id="name" placeholder="Title">
+        <input type="text" name="Title" required class="form-control" id="title" placeholder="Title">
     </div>
     <div class="form-group">
         <label for="title">Slug</label>
@@ -29,20 +29,13 @@
     <div class="form-group" id="imagesbundles">
         <label>Images</label>
         <br/>
-        <div class="imagebundle">
-            <input type="file" name="ItemImages[][Image]" required class="form-control-file" accept=".jpg, .jpeg">
-            @* <span asp-validation-for="Image" class="text-danger"></span> *@
-            <div class="signs">
-                <i class="bi bi-plus-square" id="addone" style="cursor: pointer"></i>
-                <i class="bi bi-dash-square hidden" id="removeone" style="cursor: pointer"></i>
-            </div>
-        </div>
+        <input type="file" name="ItemImages" multiple required class="form-control-file" accept=".jpg, .jpeg">
     </div>
     <br/>
     <div class="form-group">
         <label for="title">Sanctuary Region</label>
         <br/>
-        <select class="custom-select" id="parentSlug" data-type="sanctuary side" required name="SanctuarySideSlug">
+        <select class="custom-select" id="parentSlug" data-type="sanctuary region" required name="SanctuaryRegionSlug">
             @if (sanctuaryRegions.Count > 0)
             {
                 <option selected value="0">Choose...</option>
@@ -61,11 +54,18 @@
     </div>
     <br/>
     <div class="form-group">
-        <label for="title">ItemType</label>
+        <label for="title">Position</label>
+        <br/>
+        <div id="positionContainer" class="position-image-container crosshair"></div>
+        <input type="hidden" name="Position" id="positionInput">
+    </div>
+    <br/>
+    <div class="form-group">
+        <label>ItemType</label>
         <br/>
         @if (itemTypes.Count > 0)
         {
-            <select class="custom-select" id="parentSlug" data-type="item type" required name="ItemTypeSlug">
+            <select class="custom-select" id="itemTypeSelect" data-type="item type" required name="ItemTypeSlug">
                 <option selected value="0">Choose...</option>
                 @foreach (var itemType in itemTypes)
                 {
@@ -92,3 +92,12 @@
     }
     
 </form>
+<div style="display:none;" id="parentImages">
+    @if(ViewBag.SanctuaryRegionsImages != null)
+    {
+        @foreach (var kvp in ViewBag.SanctuaryRegionsImages)
+        {
+            <p class="@kvp.Key">@kvp.Value</p>
+        }
+    }
+</div>

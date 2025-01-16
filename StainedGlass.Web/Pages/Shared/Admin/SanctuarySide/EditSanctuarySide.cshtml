@@ -36,7 +36,7 @@
         <label for="title">Position</label>
         <br/>
         <div id="positionContainer" class="position-image-container crosshair">
-            <img width="150px" id="churchImage" src="data:image/jpeg;base64,@ViewBag.ChurchesImages[@ViewBag.SanctuarySide.Church.Slug]" alt="Church @ViewBag.SanctuarySide.Church.Name Image" />
+            <img width="150px" id="parentImage" src="data:image/jpeg;base64,@ViewBag.ChurchesImages[@ViewBag.SanctuarySide.Church.Slug]" alt="Church @ViewBag.SanctuarySide.Church.Name Image" />
             <i class="bi bi-asterisk" id="elementPosition" style="position: absolute; @ViewBag.SanctuarySide.Position"></i>
         </div>
         <input type="hidden" name="Position" id="positionInput">

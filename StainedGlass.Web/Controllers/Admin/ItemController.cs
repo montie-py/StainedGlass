@@ -21,6 +21,15 @@ public class ItemController : AdminController
         ViewBag.SanctuaryRegions = await _useCaseInteractor.GetAllDTOs<SanctuaryRegionDTO>();
         ViewBag.RelatedItems = await _useCaseInteractor.GetAllDTOs<ItemDTO>();
         ViewBag.ItemTypes = await _useCaseInteractor.GetAllDTOs<ItemTypeDTO>();
+        
+        if (ViewBag.SanctuaryRegions != null)
+        {
+            ViewBag.SanctuaryRegionsImages = new Dictionary<string, string>();
+            foreach (var region in ViewBag.SanctuaryRegions)
+            {
+                ViewBag.SanctuaryRegionsImages[region.Slug] = await IFormFileToBase64(region.Image);
+            }
+        }
         return View("Admin/Item/NewItem");
     }
 

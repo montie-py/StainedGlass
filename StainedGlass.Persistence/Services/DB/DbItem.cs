@@ -15,17 +15,18 @@ internal class DbItem : DatabasePersistenceService
             Title = itemStruct.Title,
             Slug = itemStruct.Slug,
             Description = itemStruct.Description,
+            Position = itemStruct.Position,
             SanctuaryRegionSlug = itemStruct.SanctuaryRegionSlug,
             ItemTypeSlug = itemStruct.ItemTypeSlug
         };
 
-        foreach (var itemImageDto in itemStruct.ItemImages)
+        foreach (var itemImageFormFile in itemStruct.ItemImages)
         {
             var itemImage = new ItemImage
             {
-                Image = await FormFileToBytes(itemImageDto.Image),
+                Image = await FormFileToBytes(itemImageFormFile),
                 Item = newItem,
-                Slug = itemImageDto.Slug
+                Slug = itemImageFormFile.FileName
             };
             newItem.ItemImages.Add(itemImage);
         }
@@ -86,19 +87,20 @@ internal class DbItem : DatabasePersistenceService
             var transferItemDto = (ItemDTO)GetDtoFromTransfer(transferStruct);
             itemEntity.Title = transferItemDto.Title;
             itemEntity.Description = transferItemDto.Description;
+            itemEntity.Position = transferItemDto.Position;
             itemEntity.ItemTypeSlug = transferItemDto.ItemTypeSlug;
             itemEntity.SanctuaryRegionSlug = itemEntity.SanctuaryRegionSlug;
             
             //handle itemimages
             if (transferItemDto.ItemImages.Count > 0)
             {
-                foreach (var itemImageDto in transferItemDto.ItemImages)
+                foreach (IFormFile itemImageDto in transferItemDto.ItemImages)
                 {
                     var itemImage = new ItemImage
                     {
-                        Image = await FormFileToBytes(itemImageDto.Image),
+                        Image = await FormFileToBytes(itemImageDto),
                         Item = itemEntity,
-                        Slug = itemImageDto.Slug
+                        Slug = itemImageDto.FileName.ToLower()
                     };
                     itemEntity.ItemImages.Add(itemImage);
                 }
@@ -230,13 +232,7 @@ internal class DbItem : DatabasePersistenceService
 
         foreach (var itemImage in itemEntity.ItemImages)
         {
-            var itemImageDto = new ItemImageDTO
-            {
-                Image = new FormFile(itemImage.Image, FileName, fileType),
-                Slug = itemImage.Slug,
-                ItemSlug = newItemDto.Slug
-            };
-            newItemDto.ItemImages.Add(itemImageDto);
+            newItemDto.ItemImages.Add(new FormFile(itemImage.Image, FileName, fileType));
         }
   
         return newItemDto;

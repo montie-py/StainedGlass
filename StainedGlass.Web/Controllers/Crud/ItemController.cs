@@ -33,7 +33,7 @@ public class ItemController : CrudController
     {
         foreach (var itemImage in itemDto.ItemImages)
         {
-            var fileValidationResult = ValidateFile(itemImage.Image);
+            var fileValidationResult = ValidateFile(itemImage);
             if (fileValidationResult != null)
             {
                 ModelState.AddModelError("Image", fileValidationResult);

@@ -3,7 +3,11 @@ import SlimSelect from 'slim-select';
 
 new SlimSelect({
     select: '#parentSlug',
-})
+});
+
+new SlimSelect({
+    select: '#itemTypeSelect'
+});
 
 //handle deleting
 document.querySelectorAll('.delete').forEach( button => {
@@ -87,11 +91,11 @@ function addRemoveItemImage() {
 
 function filePositioning()
 {
-    const churchImage = document.getElementById("churchImage") as HTMLImageElement;
+    const parentImage = document.getElementById("parentImage") as HTMLImageElement;
 
-    if (churchImage != null)
+    if (parentImage != null)
     {
-        churchImage.addEventListener('click', (element) => {
+        parentImage.addEventListener('click', (element) => {
             //removing last inserted position
             const elementPosition = document.getElementById("elementPosition") as HTMLElement;
             if (elementPosition != null)
@@ -109,7 +113,7 @@ function filePositioning()
             iElement.style.position = 'absolute';
             iElement.style.top = offsetY + "px";
             iElement.style.left = offsetX + "px";
-            churchImage.insertAdjacentElement('afterend', iElement);
+            parentImage.insertAdjacentElement('afterend', iElement);
 
             //insert position into the input
             var positionInput = document.getElementById("positionInput") as HTMLInputElement;
@@ -131,7 +135,7 @@ async function convertFileToBase64(file: File): Promise<string>
 
 document.addEventListener('DOMContentLoaded', () => {
     //add/remove item image
-    addRemoveItemImage();
+    // addRemoveItemImage();
     
     //handle editing
     const editForm = document.getElementById('editForm') as HTMLFormElement;
@@ -181,8 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
         parentSlug.addEventListener('change', (event) => {
             const parentBase64Container = document.getElementById('parentImages') as HTMLDivElement;
             const positionContainer = document.getElementById('positionContainer') as HTMLDivElement;
-            const churchImage = document.getElementById("churchImage") as HTMLImageElement;
-            if (churchImage != null)
+            const parentImage = document.getElementById("parentImage") as HTMLImageElement;
+            if (parentImage != null)
             {
                 positionContainer.innerHTML = '';
 
@@ -191,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
             {
                 var base64Element = parentBase64Container.querySelector('.' + parentSlug.value) as HTMLParagraphElement;
                 const selectedChurchImg = document.createElement("img") as HTMLImageElement;
-                selectedChurchImg.id = "churchImage";
+                selectedChurchImg.id = "parentImage";
                 selectedChurchImg.src = "data:image/jpeg;base64," + base64Element.textContent;
 
                 selectedChurchImg.style.width = "150px";

@@ -107,13 +107,7 @@ internal class  ItemMapper : Mapper
 
         foreach (var itemImage in transferItemDto.ItemImages)
         {
-            var itemImageDto = new ItemImageDTO
-            {
-                Image = itemImage.Image,
-                Slug = itemImage.Slug,
-            };
-            
-            newItem.ItemImages.Add(itemImageDto);
+            newItem.ItemImages.Add(itemImage);
         }
 
         return newItem;

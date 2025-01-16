@@ -45,7 +45,7 @@ namespace StainedGlass.Persistence.Transfer
         public string Description{get; set;}
         public string Position{get; set;}
         public string ItemTypeSlug {get; set;}
-        public List<ItemImageDTO> ItemImages { get; set; }
+        public List<IFormFile> ItemImages { get; set; }
         public ItemTypeDTO ItemType{get; set;}
 
         public string? SanctuaryRegionSlug { get; set; }
