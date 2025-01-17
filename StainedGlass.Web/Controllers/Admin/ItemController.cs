@@ -51,12 +51,16 @@ public class ItemController : AdminController
             {
                 using (var memoryStream = new MemoryStream()) 
                 { 
-                    await itemImage.Image.CopyToAsync(memoryStream); 
+                    await itemImage.CopyToAsync(memoryStream); 
                     var fileBytes = memoryStream.ToArray();
                     ViewBag.ItemImages.Add(Convert.ToBase64String(fileBytes));
                 } 
             }
             
+        }
+        if (ViewBag.Item.SanctuaryRegion.Image != null && ViewBag.Item.SanctuaryRegion.Image.Length > 0)
+        {
+            ViewBag.SanctuaryRegionImage = await IFormFileToBase64(ViewBag.Item.SanctuaryRegion.Image);
         }
         return View("Admin/Item/Item");
     }

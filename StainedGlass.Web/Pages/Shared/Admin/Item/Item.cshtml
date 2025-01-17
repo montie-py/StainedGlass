@@ -17,8 +17,20 @@
         {
             foreach (var itemImage in ViewBag.ItemImages)
             {
-                <img width="150px" src="data:image/jpeg;base64,@itemImage" alt="Item @ViewBag.Item.Name Image" />   
+                <img width="150px" src="data:image/jpeg;base64,@itemImage" alt="Item @ViewBag.Item.Title Image" />   
             }
+        }
+    </dd>
+    <dt>Sanctuary Region:</dt>
+    <dd>@ViewBag.Item.SanctuaryRegion.Name</dd>
+    <dt>Position:</dt>
+    <dd>
+        @if (ViewBag.SanctuaryRegionImage != null)
+        { 
+            <div class="position-image-container">
+                <img width="150px" src="data:image/jpeg;base64,@ViewBag.SanctuaryRegionImage" alt="Sanctuary Region @ViewBag.Item.SanctuaryRegion.Name Image" />
+                <i class="bi bi-asterisk" style="position: absolute; @ViewBag.Item.Position"></i>
+            </div>
         }
     </dd>
 </dl>

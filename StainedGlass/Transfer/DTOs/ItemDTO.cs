@@ -12,7 +12,7 @@ public class ItemDTO : Transferable
     public string Image {get; set;}
     public string ItemTypeSlug {get; set;}
     public ItemTypeDTO ItemType {get; set;}
-    public List<IFormFile> ItemImages {get; set;}
+    public List<IFormFile> ItemImages { get; } = new();
 
     public string? SanctuaryRegionSlug { get; set; }
     public SanctuaryRegionDTO? SanctuaryRegion { set; get; } = new();

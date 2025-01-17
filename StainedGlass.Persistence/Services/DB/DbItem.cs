@@ -20,13 +20,14 @@ internal class DbItem : DatabasePersistenceService
             ItemTypeSlug = itemStruct.ItemTypeSlug
         };
 
+        Guid guid = Guid.NewGuid();
         foreach (var itemImageFormFile in itemStruct.ItemImages)
         {
             var itemImage = new ItemImage
             {
                 Image = await FormFileToBytes(itemImageFormFile),
                 Item = newItem,
-                Slug = itemImageFormFile.FileName
+                Slug = itemImageFormFile.FileName + guid
             };
             newItem.ItemImages.Add(itemImage);
         }
@@ -52,6 +53,7 @@ internal class DbItem : DatabasePersistenceService
         foreach (var dbItem in await _dbContext.Items
                      .Include(i => i.ItemType)
                      .Include(i => i.SanctuaryRegion)
+                     .Include(i => i.ItemImages)
                      .Include(i => i.RelatedItems)
                      .ThenInclude(ir => ir.RelatedItem)
                      .ToListAsync())
@@ -66,6 +68,7 @@ internal class DbItem : DatabasePersistenceService
         var entity = await _dbContext.Items
             .Include(i => i.ItemType)
             .Include(i => i.SanctuaryRegion)
+            .Include(i => i.ItemImages)
             .Include(i => i.RelatedItems)
             .ThenInclude(ir => ir.RelatedItem)
             .FirstOrDefaultAsync(x => x.Slug == slug);
@@ -205,7 +208,7 @@ internal class DbItem : DatabasePersistenceService
             {
                 Slug = itemEntity.SanctuaryRegion.Slug,
                 Name = itemEntity.SanctuaryRegion.Name,
-                // Image = itemEntity.SanctuaryRegion.Image,
+                Image = new FormFile(itemEntity.SanctuaryRegion.Image, FileName, fileType),
                 Description = itemEntity.SanctuaryRegion.Description,
             };
         }
@@ -229,6 +232,8 @@ internal class DbItem : DatabasePersistenceService
             SanctuaryRegion = sanctuaryRegionDto,
             SanctuaryRegionSlug = itemEntity.SanctuaryRegionSlug
         };
+
+        newItemDto.ItemImages = new();
 
         foreach (var itemImage in itemEntity.ItemImages)
         {

@@ -11,11 +11,13 @@
     <dd>@ViewBag.SanctuaryRegion.Name</dd>
     <dt>Description:</dt>
     <dd>@ViewBag.SanctuaryRegion.Description</dd>
+    <dt>Sanctuary Side:</dt>
+    <dd>@ViewBag.SanctuaryRegion.SanctuarySide.Name</dd>
     <dt>Image:</dt>
     <dd>
         @if (ViewBag.SanctuaryRegionImage != null)
         {
-            <img width="150px" src="data:image/jpeg;base64,@ViewBag.ChurchImage" alt="Church @ViewBag.SanctuaryRegion.Name Image" />
+            <img width="150px" src="data:image/jpeg;base64,@ViewBag.SanctuaryRegionImage" alt="SanctuaryRegion @ViewBag.SanctuaryRegion.Name Image" />
         }
     </dd>
 </dl>

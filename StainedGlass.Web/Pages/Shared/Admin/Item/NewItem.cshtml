@@ -82,6 +82,26 @@
         }
     </div>
     <br/>
+    <div class="form-group">
+        <label for="title">Related Items</label>
+        <br/>
+        <select class="custom-select" id="relatedItemsSelect" data-type="related items" multiple name="RelatedItemsSlugs">
+            @if (sanctuaryRegions.Count > 0)
+            {
+                @foreach (var relatedItem in relatedItems)
+                {
+                    <option value="@relatedItem.Slug">@relatedItem.Title</option>
+                }
+            }
+            else
+            {
+                <div class="alert alert-danger" role="alert">
+                    There are no sanctuary regions available. You need to create one first!
+                </div>
+            }
+        </select>
+    </div>
+    <br/>
     @if (submitDisabled)
     {
         <button type="submit" disabled class="btn btn-primary">Submit</button>
@@ -90,7 +110,6 @@
     {
         <button type="submit" class="btn btn-primary">Submit</button>
     }
-    
 </form>
 <div style="display:none;" id="parentImages">
     @if(ViewBag.SanctuaryRegionsImages != null)

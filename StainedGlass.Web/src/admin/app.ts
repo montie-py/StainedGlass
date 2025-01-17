@@ -9,6 +9,11 @@ new SlimSelect({
     select: '#itemTypeSelect'
 });
 
+new SlimSelect({
+    select: '#relatedItemsSelect'
+});
+
+
 //handle deleting
 document.querySelectorAll('.delete').forEach( button => {
     var slug = button.getAttribute('data-slug');
