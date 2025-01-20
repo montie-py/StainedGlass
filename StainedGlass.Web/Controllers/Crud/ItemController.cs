@@ -57,4 +57,11 @@ public class ItemController : CrudController
         await _useCaseInteractor.RemoveEntity<ItemDTO>(slug);
         return Ok();
     }
+    
+    [HttpDelete("itemimage/{slug}")]
+    public async Task<IActionResult> DeleteItemImage(string slug)
+    {
+        await _useCaseInteractor.RemoveEntity<ItemImageDTO>(slug);
+        return Ok();
+    }
 }

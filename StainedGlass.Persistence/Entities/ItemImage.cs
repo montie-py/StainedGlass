@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StainedGlass.Persistence.Entities;
 
+[Table("ItemImages")]
 internal class ItemImage : IEntity
 {
     [Key]

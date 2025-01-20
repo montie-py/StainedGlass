@@ -11,7 +11,7 @@ namespace StainedGlass.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ItemImage",
+                name: "ItemImages",
                 columns: table => new
                 {
                     Slug = table.Column<string>(type: "TEXT", nullable: false),
@@ -20,9 +20,9 @@ namespace StainedGlass.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ItemImage", x => x.Slug);
+                    table.PrimaryKey("PK_ItemImages", x => x.Slug);
                     table.ForeignKey(
-                        name: "FK_ItemImage_Items_ItemSlug",
+                        name: "FK_ItemImages_Items_ItemSlug",
                         column: x => x.ItemSlug,
                         principalTable: "Items",
                         principalColumn: "Slug",
@@ -30,8 +30,8 @@ namespace StainedGlass.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ItemImage_ItemSlug",
-                table: "ItemImage",
+                name: "IX_ItemImages_ItemSlug",
+                table: "ItemImages",
                 column: "ItemSlug");
         }
 
@@ -39,7 +39,7 @@ namespace StainedGlass.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ItemImage");
+                name: "ItemImages");
         }
     }
 }

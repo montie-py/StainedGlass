@@ -103,6 +103,7 @@ internal class  ItemMapper : Mapper
             ItemTypeSlug = transferItemDto.ItemTypeSlug,
             RelatedItems = relatedItems,
             SanctuaryRegion = sanctuaryRegionDto,
+            SanctuaryRegionSlug = transferItemDto.SanctuaryRegionSlug,
         };
 
         foreach (var itemImage in transferItemDto.ItemImages)

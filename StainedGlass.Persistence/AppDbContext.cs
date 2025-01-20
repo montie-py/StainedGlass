@@ -11,6 +11,7 @@ internal class AppDbContext : DbContext
     internal DbSet<Item> Items { get; set; }
     internal DbSet<ItemType> ItemTypes { get; set; }
     internal DbSet<ItemRelation> ItemRelations { get; set; }
+    internal DbSet<ItemImage> ItemImages { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -21,6 +22,9 @@ internal class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //indicating the right table name for this entity
+        modelBuilder.Entity<ItemImage>().ToTable("ItemImages");
+        
         // church-sanctuaryside relationship
         modelBuilder.Entity<Church>()
             .HasMany(church => church.SanctuarySides)

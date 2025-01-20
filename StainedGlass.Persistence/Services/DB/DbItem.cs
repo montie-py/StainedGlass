@@ -237,7 +237,7 @@ internal class DbItem : DatabasePersistenceService
 
         foreach (var itemImage in itemEntity.ItemImages)
         {
-            newItemDto.ItemImages.Add(new FormFile(itemImage.Image, FileName, fileType));
+            newItemDto.ItemImages.Add(new FormFile(itemImage.Image, itemImage.Slug, fileType));
         }
   
         return newItemDto;

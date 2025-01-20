@@ -88,7 +88,7 @@ namespace StainedGlass.Persistence.Migrations
 
                     b.HasIndex("ItemSlug");
 
-                    b.ToTable("ItemImage");
+                    b.ToTable("ItemImages");
                 });
 
             modelBuilder.Entity("StainedGlass.Persistence.Entities.ItemRelation", b =>

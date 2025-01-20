@@ -41,57 +41,6 @@ document.querySelectorAll('.delete').forEach( button => {
 function addRemoveItemImage() {
     const plusElement = document.getElementById('addone') as HTMLElement;
     let minusElement = document.getElementById('removeone') as HTMLElement;
-    
-    //add image
-    plusElement.addEventListener('click', () => {
-        const imagesBundles = document.getElementById('imagesbundles');
-        const imageBundleToClone = plusElement.closest('.imagebundle');
-        if (imageBundleToClone)
-        {
-            const clonedImageBundle = imageBundleToClone.cloneNode(true);
-            if (imagesBundles)
-            {
-                imagesBundles.appendChild(clonedImageBundle);
-            }
-        }
-
-
-        //removing 'signs' div for the current element
-        const parent = plusElement.closest('.signs')
-        if (parent)
-        {
-            parent.remove();
-        }
-        minusElement = document.getElementById('removeone') as HTMLElement;
-        //removing .hidden from the minuselement
-        minusElement.classList.remove('hidden');
-
-        addRemoveItemImage();
-    });
-    
-    //remove image
-    minusElement.addEventListener('click', () => {
-        const imagesBundles = document.getElementById('imagesbundles') as HTMLDivElement;
-        const parent = minusElement.closest('.signs');
-        let children = imagesBundles.querySelectorAll('.imagebundle');
-        if (parent && children && children.length >= 2)
-        {
-            let lastChild = children[children.length - 1];
-            lastChild.remove();
-            lastChild = children[children.length - 2];
-            if (lastChild)
-            {
-                lastChild.appendChild(parent);
-            }
-        }
-
-        children = imagesBundles.querySelectorAll('.imagebundle');
-        if (children.length < 2)
-        {
-            //if there remains just one image element - hide the minus sign from it
-            minusElement.classList.add('hidden');
-        }
-    });
 }
 
 function filePositioning()

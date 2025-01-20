@@ -29,4 +29,9 @@ public class EntitiesPersistenceTemplate : IPersistenceTemplate
     {
         return new EntityChurch();
     }
+
+    public IPersistenceService GetItemImageInstance()
+    {
+        return new EntityItemImage();
+    }
 }

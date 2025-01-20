@@ -29,4 +29,9 @@ public class DatabasePersistenceTemplate : IPersistenceTemplate
     {
         return new DbChurch();
     }
+
+    public IPersistenceService GetItemImageInstance()
+    {
+        return new DbItemImage();
+    }
 }

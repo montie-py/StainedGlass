@@ -1,0 +1,129 @@
+﻿@page
+@using StainedGlass.Transfer.DTOs
+
+@{
+    Layout = "_AdminLayout";
+    var sanctuaryRegions = ViewBag.SanctuaryRegions as List<SanctuaryRegionDTO>;
+    var relatedItems = ViewBag.RelatedItems as List<ItemDTO>;
+    var itemTypes = ViewBag.ItemTypes as List<ItemTypeDTO>;
+    var redirectUrl = Url.Action("All", "Item");
+    var itemImagesCount = 0;
+}
+<form action="" method="post" id="editForm" data-type="item" data-slug="@ViewBag.Item.Slug" data-redirect-url="@redirectUrl" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" name="Title" value="@ViewBag.Item.Title" required class="form-control" id="title" placeholder="Title">
+    </div>
+    <div class="form-group">
+        <label for="title">Slug</label>
+        <input type="text" name="Slug" value="@ViewBag.Item.Slug" required class="form-control" id="slug" placeholder="Slug">
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="text">Description</label>
+        <textarea class="form-control" name="Description" required id="description" rows="6">@ViewBag.Item.Description</textarea>
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="text">Images</label><br/>
+        @foreach (var itemImage in ViewBag.ItemImages)
+        {
+            ++itemImagesCount;
+            <div class="position-image-container" style="margin-right: 10px;">
+                <img width="150px" src="data:image/jpeg;base64,@itemImage.Value" alt="Item Image @itemImagesCount" />
+                <i 
+                    class="bi bi-trash3-fill" 
+                    hx-delete="/item/itemimage/@itemImage.Key" 
+                    id="@itemImage.Key"
+                    hx-target="closest div"
+                    hx-swap="delete"
+                    style="position: absolute; top: 0; right: 0; cursor: pointer;"></i>
+                &nbsp;
+            </div>
+        }
+        <input type="file" name="ItemImages" multiple class="form-control-file" accept=".jpg, .jpeg">
+    </div>
+    <br/>
+    <div class="form-group">
+        <label for="title">Sanctuary Region</label>
+        <br/>
+        <select class="custom-select" id="parentSlug" data-type="sanctuary region" required name="SanctuaryRegionSlug">
+            <option selected value="0">Choose...</option>
+            @foreach (var sanctuaryRegion in sanctuaryRegions)
+            {
+                @if (sanctuaryRegion.Slug.Equals(ViewBag.Item.SanctuaryRegionSlug))
+                {
+                    <option selected value="@sanctuaryRegion.Slug">@sanctuaryRegion.Name</option>
+                }
+                else
+                {
+                    <option value="@sanctuaryRegion.Slug">@sanctuaryRegion.Name</option>   
+                }
+            }
+        </select>
+    </div>
+    <br/>
+    <div class="form-group">
+        <label>ItemType</label>
+        <br/>
+        <select class="custom-select" id="itemTypeSelect" data-type="item type" required name="ItemTypeSlug">
+            <option selected value="0">Choose...</option>
+            @foreach (var itemType in itemTypes)
+            {
+                @if (itemType.Slug.Equals(ViewBag.Item.ItemTypeSlug))
+                {
+                    <option value="@itemType.Slug" selected>@itemType.Name</option>
+                }
+                else
+                {
+                    <option value="@itemType.Slug">@itemType.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <br/>
+    <div class="form-group">
+        <label for="title">Related Items</label>
+        <br/>
+        <select class="custom-select" id="relatedItemsSelect" data-type="related items" multiple name="RelatedItemsSlugs">
+            @if (relatedItems.Count > 0)
+            {
+                @foreach (var relatedItem in relatedItems)
+                {
+                    if (relatedItem.Slug.Equals(ViewBag.Item.Slug))
+                    {
+                        continue;
+                    }
+
+                    if (ViewBag.RelatedItemsSlugs.Count > 0)
+                    {
+                        if (ViewBag.RelatedItemsSlugs.Contains(relatedItem.Slug))
+                        {
+                            <option value="@relatedItem.Slug" selected>@relatedItem.Title</option>
+                        }
+                        else
+                        {
+                            <option value="@relatedItem.Slug">@relatedItem.Title</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="@relatedItem.Slug">@relatedItem.Title</option>
+                    }
+                }
+            }
+        </select>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<div style="display:none;" id="parentImages">
+    @if(ViewBag.SanctuaryRegionsImages != null)
+    {
+        @foreach (var kvp in ViewBag.SanctuaryRegionsImages)
+        {
+            <p class="@kvp.Key">@kvp.Value</p>
+        }
+    }
+</div>

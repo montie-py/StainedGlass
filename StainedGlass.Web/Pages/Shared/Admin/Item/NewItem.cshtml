@@ -26,7 +26,7 @@
         <textarea class="form-control" name="Description" required id="description" rows="6"></textarea>
     </div>
     <br/>
-    <div class="form-group" id="imagesbundles">
+    <div class="form-group">
         <label>Images</label>
         <br/>
         <input type="file" name="ItemImages" multiple required class="form-control-file" accept=".jpg, .jpeg">
@@ -86,18 +86,12 @@
         <label for="title">Related Items</label>
         <br/>
         <select class="custom-select" id="relatedItemsSelect" data-type="related items" multiple name="RelatedItemsSlugs">
-            @if (sanctuaryRegions.Count > 0)
+            @if (relatedItems.Count > 0)
             {
                 @foreach (var relatedItem in relatedItems)
                 {
                     <option value="@relatedItem.Slug">@relatedItem.Title</option>
                 }
-            }
-            else
-            {
-                <div class="alert alert-danger" role="alert">
-                    There are no sanctuary regions available. You need to create one first!
-                </div>
             }
         </select>
     </div>

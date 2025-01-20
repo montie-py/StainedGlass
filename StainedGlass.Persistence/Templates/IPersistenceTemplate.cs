@@ -9,4 +9,5 @@ public interface IPersistenceTemplate
     public IPersistenceService GetSanctuaryRegionInstance();
     public IPersistenceService GetSanctuarySideInstance();
     public IPersistenceService GetChurchInstance();
+    public IPersistenceService GetItemImageInstance();
 }

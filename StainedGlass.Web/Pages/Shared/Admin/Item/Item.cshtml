@@ -33,4 +33,14 @@
             </div>
         }
     </dd>
+    @if (ViewBag.Item.RelatedItems != null)
+    {
+        <dt>RelatedItems:</dt>
+        <dd>
+            @foreach (var relatedItem in ViewBag.Item.RelatedItems)
+            {
+                <a href="/admin/item/@relatedItem.Key">@relatedItem.Value.Title</a>
+            }
+        </dd>
+    }
 </dl>
