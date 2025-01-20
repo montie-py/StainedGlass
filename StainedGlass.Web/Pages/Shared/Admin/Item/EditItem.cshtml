@@ -9,6 +9,9 @@
     var redirectUrl = Url.Action("All", "Item");
     var itemImagesCount = 0;
 }
+
+<h2>Item @ViewBag.Item.Slug</h2>
+
 <form action="" method="post" id="editForm" data-type="item" data-slug="@ViewBag.Item.Slug" data-redirect-url="@redirectUrl" enctype="multipart/form-data">
     <div class="form-group">
         <label for="title">Title</label>
@@ -26,6 +29,7 @@
     <br>
     <div class="form-group">
         <label for="text">Images</label><br/>
+        <h6>Existing images:</h6>
         @foreach (var itemImage in ViewBag.ItemImages)
         {
             ++itemImagesCount;
@@ -41,6 +45,7 @@
                 &nbsp;
             </div>
         }
+        <h6>Add new images:</h6>
         <input type="file" name="ItemImages" multiple class="form-control-file" accept=".jpg, .jpeg">
     </div>
     <br/>
@@ -61,6 +66,19 @@
                 }
             }
         </select>
+    </div>
+    <div class="form-group">
+        <label for="title">Position</label>
+        <br/>
+        <div id="positionContainer" class="position-image-container crosshair">
+            <img 
+                width="150px"
+                id="parentImage"
+                src="data:image/jpeg;base64,@ViewBag.SanctuaryRegionsImages[ViewBag.Item.SanctuaryRegionSlug]" 
+                alt="SanctuaryRegion @ViewBag.Item.SanctuaryRegion.Name Image" />
+            <i class="bi bi-asterisk" id="elementPosition" style="position: absolute; @ViewBag.Item.Position"></i>
+        </div>
+        <input type="hidden" name="Position" id="positionInput">
     </div>
     <br/>
     <div class="form-group">
