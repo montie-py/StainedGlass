@@ -39,7 +39,7 @@ internal class DbItem : DatabasePersistenceService
         {
             foreach (var relatedItemsSlug in itemStruct.RelatedItemsSlugs)
             {
-                AddRelatedItem(newItem.Slug, relatedItemsSlug);
+                await AddRelatedItem(newItem.Slug, relatedItemsSlug);
             }
             await _dbContext.SaveChangesAsync();
         }
@@ -80,11 +80,11 @@ internal class DbItem : DatabasePersistenceService
         return GetDtoFromEntity(entity);
     }
     
-    public override async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    public override async Task<bool> ReplaceEntity(string itemSlug, IPersistanceTransferStruct transferStruct)
     {
         var itemEntity = await _dbContext.Items
             .Include(x => x.RelatedItems)
-            .FirstOrDefaultAsync(x => x.Slug == slug);
+            .FirstOrDefaultAsync(x => x.Slug == itemSlug);
         if (itemEntity != null)
         {
             var transferItemDto = (ItemDTO)GetDtoFromTransfer(transferStruct);
@@ -92,7 +92,7 @@ internal class DbItem : DatabasePersistenceService
             itemEntity.Description = transferItemDto.Description;
             itemEntity.Position = transferItemDto.Position;
             itemEntity.ItemTypeSlug = transferItemDto.ItemTypeSlug;
-            itemEntity.SanctuaryRegionSlug = itemEntity.SanctuaryRegionSlug;
+            itemEntity.SanctuaryRegionSlug = transferItemDto.SanctuaryRegionSlug;
             
             //handle itemimages
             if (transferItemDto.ItemImages.Count > 0)
@@ -111,20 +111,32 @@ internal class DbItem : DatabasePersistenceService
             
             await _dbContext.SaveChangesAsync();
 
+            var existingRelatedItems = itemEntity.RelatedItems;
+
+            //handle related items
             if (transferItemDto.RelatedItemsSlugs != null)
             {
                 //if this item has any related items at all
-                if (itemEntity.RelatedItems.Count > 0)
+                if (existingRelatedItems.Count > 0)
                 {
+                    //remove existing related items, if needed
+                    foreach (var existentRelatedItem in existingRelatedItems)
+                    {
+                        if (!transferItemDto.RelatedItemsSlugs.Contains(existentRelatedItem.RelatedItemSlug))
+                        {
+                            RemoveRelatedItem(existentRelatedItem.RelatedItemSlug, itemSlug);
+                        }
+                    }
+                    
+                    //add a new related item relationship only if it doesn't exist yet
                     foreach (var relatedItemSlug in transferItemDto.RelatedItemsSlugs)
                     {
-                        //if there is no relateditem with such a slug - add one
-                        var existingRelatedItem = itemEntity.RelatedItems.FirstOrDefault(
+                        var existingRelatedItem = existingRelatedItems.FirstOrDefault(
                             x => x.ItemSlug == relatedItemSlug || x.RelatedItemSlug == relatedItemSlug
                             );
                         if (existingRelatedItem is null)
                         {
-                            AddRelatedItem(itemEntity.Slug, relatedItemSlug);
+                            await AddRelatedItem(itemEntity.Slug, relatedItemSlug);
                         }
                     }
                     await _dbContext.SaveChangesAsync();
@@ -134,11 +146,15 @@ internal class DbItem : DatabasePersistenceService
                 {
                     foreach (var relatedItemSlug in transferItemDto.RelatedItemsSlugs)
                     {
-                        AddRelatedItem(itemEntity.Slug, relatedItemSlug);
+                        await AddRelatedItem(itemEntity.Slug, relatedItemSlug);
                     }
                     await _dbContext.SaveChangesAsync();
                 }
-                
+            } 
+            //delete all the existent related items for the current item, if needed
+            else if (existingRelatedItems.Count > 0)
+            {
+                RemoveAllRelatedItems(itemSlug);
             }
         }
 
@@ -151,10 +167,10 @@ internal class DbItem : DatabasePersistenceService
         if (item != null)
         {
             //removing itemRelation first
-            var list = _dbContext.ItemRelations
-                .Where(x => x.ItemSlug == slug || x.RelatedItemSlug == slug)
-                .ToList();
-            _dbContext.RemoveRange(list);
+            RemoveAllRelatedItems(slug);
+            
+            //removing itemImages
+            await _dbContext.ItemImages.Where(x => x.ItemSlug == slug).ExecuteDeleteAsync();
             
             _dbContext.Items.Remove(item);
             await _dbContext.SaveChangesAsync();
@@ -243,7 +259,7 @@ internal class DbItem : DatabasePersistenceService
         return newItemDto;
     }
     
-    private void AddRelatedItem(string itemSlug, string relatedItemSlug)
+    private async Task<bool> AddRelatedItem(string itemSlug, string relatedItemSlug)
     {
         var itemRelation = new ItemRelation
         {
@@ -256,7 +272,29 @@ internal class DbItem : DatabasePersistenceService
             ItemSlug = relatedItemSlug,
             RelatedItemSlug = itemSlug,
         };
-        _dbContext.ItemRelations.Add(itemRelation);
+        await _dbContext.ItemRelations.AddAsync(itemRelation);
+        return true;
+    }
+
+    private async Task<bool> RemoveRelatedItem(string itemSlug, string relatedItemSlug)
+    {
+        var itemRelations = await _dbContext.ItemRelations
+            .Where(x => 
+                (x.ItemSlug == itemSlug && x.RelatedItemSlug == relatedItemSlug) || 
+                (x.RelatedItemSlug == itemSlug && x.ItemSlug == relatedItemSlug))
+            .ToListAsync();
+        _dbContext.ItemRelations.RemoveRange(itemRelations);
+        return true;
+    }
+
+    private async Task<bool> RemoveAllRelatedItems(string itemSlug)
+    {
+        var list = await _dbContext.ItemRelations
+            .Where(x => x.ItemSlug == itemSlug || x.RelatedItemSlug == itemSlug)
+            .ToListAsync();
+        _dbContext.RemoveRange(list);
+        
+        return true;
     }
     
     private async Task<byte[]> FormFileToBytes(IFormFile image)

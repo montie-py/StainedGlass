@@ -111,8 +111,10 @@ public class ItemController : AdminController
         return View("Admin/Item/EditItem");
     }
 
+    [HttpDelete("{slug}")]
     public override async Task<IActionResult> Delete(string slug)
     {
-        throw new NotImplementedException();
+        await _useCaseInteractor.RemoveEntity<ItemDTO>(slug);
+        return Ok();
     }
 }

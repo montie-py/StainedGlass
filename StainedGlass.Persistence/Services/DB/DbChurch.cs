@@ -43,7 +43,9 @@ internal class DbChurch : DatabasePersistenceService
 
     public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
     {
-        var entity = await _dbContext.Churches.FirstOrDefaultAsync(e => e.Slug == slug);
+        var entity = await _dbContext.Churches
+            .Include(c => c.SanctuarySides)
+            .FirstOrDefaultAsync(e => e.Slug == slug);
         if (entity is null)
         {
             return null;
@@ -94,13 +96,29 @@ internal class DbChurch : DatabasePersistenceService
     protected override IPersistanceTransferStruct GetDtoFromEntity(IEntity entity)
     {
         var churchEntity = (Church)entity;
-        
-        return new ChurchDTO
+
+        var sanctuarySideDTOs = new HashSet<SanctuarySideDTO>();
+
+        if (churchEntity.SanctuarySides != null && churchEntity.SanctuarySides.Count > 0)
+        {
+            foreach (var sanctuarySide in churchEntity.SanctuarySides)
+            {
+                sanctuarySideDTOs.Add(new SanctuarySideDTO
+                {
+                    Name = sanctuarySide.Name,
+                    Slug = sanctuarySide.Slug,
+                    Position = sanctuarySide.Position
+                });
+            }
+        }
+
+    return new ChurchDTO
         {
             Name = churchEntity.Name,
             Description = churchEntity.Description,
             Image = new FormFile(churchEntity.Image, FileName, fileType),
             Slug = churchEntity.Slug,
+            Sides = sanctuarySideDTOs
         };
     }
 

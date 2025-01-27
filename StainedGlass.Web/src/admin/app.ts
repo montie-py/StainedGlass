@@ -38,11 +38,6 @@ document.querySelectorAll('.delete').forEach( button => {
     });
 });
 
-function addRemoveItemImage() {
-    const plusElement = document.getElementById('addone') as HTMLElement;
-    let minusElement = document.getElementById('removeone') as HTMLElement;
-}
-
 function filePositioning()
 {
     const parentImage = document.getElementById("parentImage") as HTMLImageElement;
@@ -56,22 +51,28 @@ function filePositioning()
             {
                 elementPosition.remove();
             }
+            
+            var parentImage = element.target as HTMLImageElement;
+            const parentImageHeight = parentImage.clientHeight;
+            const parentImageWidth = parentImage.clientWidth;
 
             //creating new position
             const iElement = document.createElement('i') as HTMLElement;
             const offsetY = element.offsetY-10;
             const offsetX = element.offsetX-8;
+            const offsetYPercent = (offsetY * 100 / parentImageHeight) + "%"
+            const offsetXPercent = (offsetX * 100 / parentImageWidth) + "%";
 
             iElement.classList.add('bi', 'bi-asterisk');
             iElement.id = "elementPosition";
             iElement.style.position = 'absolute';
-            iElement.style.top = offsetY + "px";
-            iElement.style.left = offsetX + "px";
+            iElement.style.top = offsetYPercent;
+            iElement.style.left = offsetXPercent;
             parentImage.insertAdjacentElement('afterend', iElement);
 
             //insert position into the input
             var positionInput = document.getElementById("positionInput") as HTMLInputElement;
-            positionInput.value = "left:" + offsetX + "px; top:" + offsetY + "px;";
+            positionInput.value = "left:" + offsetXPercent + "; top:" + offsetYPercent + ";";
         });
     }
 }
@@ -101,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
         editForm.addEventListener('submit', async (event): Promise<void> => {
             event.preventDefault();
             const formData = new FormData(editForm);
-            console.log(type);
             const response = await fetch('/' + type + '/' + slug, {
                 method: 'PUT',
                 body: formData

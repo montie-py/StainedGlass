@@ -1,7 +1,7 @@
-using StainedGlass.Persistence.Services.Entities;
 using StainedGlass.Persistence.Templates;
 using StainedGlass.Persistence.Transfer;
 using ChurchDTO = StainedGlass.Transfer.DTOs.ChurchDTO;
+using SanctuarySideDTO = StainedGlass.Transfer.DTOs.SanctuarySideDTO;
 
 namespace StainedGlass.Transfer.Mapper;
 
@@ -56,6 +56,21 @@ internal class ChurchMapper : Mapper
     protected override Transferable GetDtoFromTransferable(IPersistanceTransferStruct transferStruct)
     {
         var churchTransferStruct = (Persistence.Transfer.ChurchDTO)transferStruct;
+        
+        var sanctuarySideDTOs = new HashSet<SanctuarySideDTO>();
+
+        if (churchTransferStruct.Sides.Count > 0)
+        {
+            foreach (var sanctuarySide in churchTransferStruct.Sides)
+            {
+                sanctuarySideDTOs.Add(new SanctuarySideDTO
+                {
+                    Name = sanctuarySide.Name,
+                    Slug = sanctuarySide.Slug,
+                    Position = sanctuarySide.Position
+                });
+            }
+        }
 
         return new ChurchDTO
         {
@@ -63,6 +78,7 @@ internal class ChurchMapper : Mapper
             Slug = churchTransferStruct.Slug,
             Image = churchTransferStruct.Image,
             Description = churchTransferStruct.Description,
+            Sides = sanctuarySideDTOs
         };
     }
 }

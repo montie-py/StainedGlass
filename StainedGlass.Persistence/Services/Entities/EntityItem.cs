@@ -62,26 +62,26 @@ public class EntityItem : IRelatable, IPersistenceService
         return true;
     }
 
-    public async Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct)
+    public async Task<bool> ReplaceEntity(string itemSlug, IPersistanceTransferStruct transferStruct)
     {
-        if (!EntitiesCollection.Items.ContainsKey(slug))
+        if (!EntitiesCollection.Items.ContainsKey(itemSlug))
         {
             return false;
         }
 
         var entity = GetEntity(transferStruct) as Item;
-        entity.Slug = slug;
-        var oldEntity = EntitiesCollection.Items[slug];
-        EntitiesCollection.Items[slug] = entity;
+        entity.Slug = itemSlug;
+        var oldEntity = EntitiesCollection.Items[itemSlug];
+        EntitiesCollection.Items[itemSlug] = entity;
         //if old entity has an assigned itemType - new one cannot lack one
-        if (EntitiesCollection.Items[slug].ItemType is null)
+        if (EntitiesCollection.Items[itemSlug].ItemType is null)
         {
-            EntitiesCollection.Items[slug].ItemType = oldEntity.ItemType;
+            EntitiesCollection.Items[itemSlug].ItemType = oldEntity.ItemType;
         }
         //if old entity has an assigned region - new one cannot lack one
-        if (EntitiesCollection.Items[slug].SanctuaryRegion is null)
+        if (EntitiesCollection.Items[itemSlug].SanctuaryRegion is null)
         {
-            EntitiesCollection.Items[slug].SanctuaryRegion = oldEntity.SanctuaryRegion;
+            EntitiesCollection.Items[itemSlug].SanctuaryRegion = oldEntity.SanctuaryRegion;
         }
 
         //if the item has related items - update this related item with the newer version
@@ -91,7 +91,7 @@ public class EntityItem : IRelatable, IPersistenceService
             {
                 //if a related item doesn't have the present item as a related one - add it
                 
-                if (relatedItem.RelatedItems.FirstOrDefault(e => e.RelatedItemSlug == slug) == null)
+                if (relatedItem.RelatedItems.FirstOrDefault(e => e.RelatedItemSlug == itemSlug) == null)
                 {
                     var itemRelation = new ItemRelation
                     {
@@ -105,7 +105,7 @@ public class EntityItem : IRelatable, IPersistenceService
                 else
                 {
                     relatedItem.RelatedItems
-                        .FirstOrDefault(e => e.RelatedItemSlug == slug)
+                        .FirstOrDefault(e => e.RelatedItemSlug == itemSlug)
                         .RelatedItem = entity;
                 }
             }

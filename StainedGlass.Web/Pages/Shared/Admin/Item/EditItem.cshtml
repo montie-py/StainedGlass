@@ -17,10 +17,6 @@
         <label for="title">Title</label>
         <input type="text" name="Title" value="@ViewBag.Item.Title" required class="form-control" id="title" placeholder="Title">
     </div>
-    <div class="form-group">
-        <label for="title">Slug</label>
-        <input type="text" name="Slug" value="@ViewBag.Item.Slug" required class="form-control" id="slug" placeholder="Slug">
-    </div>
     <br>
     <div class="form-group">
         <label for="text">Description</label>
@@ -78,7 +74,7 @@
                 alt="SanctuaryRegion @ViewBag.Item.SanctuaryRegion.Name Image" />
             <i class="bi bi-asterisk" id="elementPosition" style="position: absolute; @ViewBag.Item.Position"></i>
         </div>
-        <input type="hidden" name="Position" id="positionInput">
+        <input type="hidden" name="Position" id="positionInput" value="@ViewBag.Item.Position">
     </div>
     <br/>
     <div class="form-group">
