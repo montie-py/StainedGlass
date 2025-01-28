@@ -23,7 +23,8 @@ public class IndexModel : PageModel
 
     public async void OnGet()
     {
-        Church = await _useCaseInteractor.GetDTOBySlug<ChurchDTO>("knoxunited");
+        var includeChildrenToTheResponse = true;
+        Church = await _useCaseInteractor.GetDTOBySlug<ChurchDTO>("knoxunited", includeChildrenToTheResponse);
         ChurchImage = await IFormFileToBase64(Church.Image);
     }
     

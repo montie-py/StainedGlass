@@ -7,7 +7,7 @@ public interface IPersistenceService
 {
     public Task<bool> AddEntity(IPersistanceTransferStruct transferStruct);
     public Task<ICollection<IPersistanceTransferStruct>> GetAllDtos();
-    public Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug);
+    public Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug, bool includeChildrenToTheResponse);
     public Task<bool> RemoveEntity(string slug);
     public Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct);
 }

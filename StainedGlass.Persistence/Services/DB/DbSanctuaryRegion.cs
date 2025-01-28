@@ -40,11 +40,24 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
         return sanctuaryRegionDtos;
     }
 
-    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
+    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug, bool includeChildrenToTheResponse)
     {
-        var entity = await _dbContext.SanctuaryRegions
-            .Include(s => s.SanctuarySide)
-            .FirstOrDefaultAsync(s => s.Slug == slug);
+        SanctuaryRegion? entity;
+        if (includeChildrenToTheResponse)
+        {
+            entity = await _dbContext.SanctuaryRegions
+                .Include(s => s.SanctuarySide)
+                .Include(s => s.Items)
+                .FirstOrDefaultAsync(s => s.Slug == slug);
+        }
+        else
+        {
+            entity = await _dbContext.SanctuaryRegions
+                .Include(s => s.SanctuarySide)
+                .FirstOrDefaultAsync(s => s.Slug == slug);
+        }
+        
+        
         if (entity is null)
         {
             return null;

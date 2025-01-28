@@ -71,7 +71,7 @@ public class EntitySanctuarySide : INonRelatable, IPersistenceService
         return sanctuarySideDTO;
     }
 
-    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
+    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug, bool includeChildrenToTheResponse)
     {
         if (!EntitiesCollection.SanctuarySides.ContainsKey(slug))
         {

@@ -41,11 +41,21 @@ internal class DbChurch : DatabasePersistenceService
         return churchDtos;
     }
 
-    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
+    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug, bool includeChildrenToTheResponse)
     {
-        var entity = await _dbContext.Churches
-            .Include(c => c.SanctuarySides)
-            .FirstOrDefaultAsync(e => e.Slug == slug);
+        Church? entity;
+        if (includeChildrenToTheResponse)
+        {
+            entity = await _dbContext.Churches
+                .Include(c => c.SanctuarySides)
+                .FirstOrDefaultAsync(e => e.Slug == slug);
+        }
+        else
+        {
+            entity = await _dbContext.Churches
+                .FirstOrDefaultAsync(e => e.Slug == slug);
+        }
+        
         if (entity is null)
         {
             return null;

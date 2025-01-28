@@ -63,7 +63,7 @@ internal class DbItem : DatabasePersistenceService
         return itemDtos;
     }
 
-    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
+    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug, bool includeChildrenToTheResponse)
     {
         var entity = await _dbContext.Items
             .Include(i => i.ItemType)

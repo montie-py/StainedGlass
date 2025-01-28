@@ -18,7 +18,7 @@ internal abstract class DatabasePersistenceService : IPersistenceService
     }
     public abstract Task<bool> AddEntity(IPersistanceTransferStruct transferStruct);
     public abstract Task<ICollection<IPersistanceTransferStruct>> GetAllDtos();
-    public abstract Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug);
+    public abstract Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug, bool includeChildrenToTheResponse);
     public abstract Task<bool> RemoveEntity(string slug);
     public abstract Task<bool> ReplaceEntity(string slug, IPersistanceTransferStruct transferStruct);
     protected abstract IPersistanceTransferStruct GetDtoFromTransfer(IPersistanceTransferStruct transferStruct);

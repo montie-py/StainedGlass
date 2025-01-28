@@ -20,7 +20,7 @@ public class EntityItem : IRelatable, IPersistenceService
         return EntitiesCollection.Items.Select(e => GetDTOForEntity(e.Value)).ToList();
     }
 
-    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
+    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug, bool includeChildrenToTheResponse)
     {
         if (!EntitiesCollection.Items.ContainsKey(slug))
         {

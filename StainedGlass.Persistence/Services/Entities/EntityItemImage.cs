@@ -26,7 +26,7 @@ public class EntityItemImage: INonRelatable, IPersistenceService
         throw new NotImplementedException();
     }
 
-    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
+    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug, bool includeChildrenToTheResponse)
     {
         throw new NotImplementedException();
     }

@@ -10,7 +10,7 @@ internal class ItemImageMapper : Mapper
         _persistenceService = template.GetItemImageInstance();
     }
 
-    public override async Task<Transferable?> GetDTOBySlug(string slug)
+    public override async Task<Transferable?> GetDTOBySlug(string slug, bool includeChildrenToTheResponse)
     {
         throw new NotImplementedException();
     }

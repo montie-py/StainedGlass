@@ -26,9 +26,9 @@ internal class SanctuaryRegionMapper : Mapper
         return await _persistenceService.ReplaceEntity(slug, transferSanctuaryRegionDto);
     }
 
-    public override async Task<Transferable?> GetDTOBySlug(string slug)
+    public override async Task<Transferable?> GetDTOBySlug(string slug, bool includeChildrenToTheResponse)
     {
-        var nullableTransferSanctuaryRegionDto = await _persistenceService.GetDtoBySlug(slug);
+        var nullableTransferSanctuaryRegionDto = await _persistenceService.GetDtoBySlug(slug, includeChildrenToTheResponse);
         if (nullableTransferSanctuaryRegionDto == null)
         {
             return null;

@@ -16,9 +16,9 @@ internal class DTOGeneric<T> where T : Transferable
         mapper.SetInstance(persistenceTemplate);
     }
 
-    internal async Task<T?> GetDTOBySlug(string slug)
+    internal async Task<T?> GetDTOBySlug(string slug, bool includeChildrenToTheResponse)
     {
-        return (T?)await mapper.GetDTOBySlug(slug);
+        return (T?)await mapper.GetDTOBySlug(slug, includeChildrenToTheResponse);
     }
 
     internal async Task<ICollection<T>> GetAllDTOs()

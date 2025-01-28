@@ -113,7 +113,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Admin\Church\" />
+    <Folder Include="Views\" />
   </ItemGroup>
 
   <PropertyGroup>

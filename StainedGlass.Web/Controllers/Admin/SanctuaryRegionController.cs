@@ -35,7 +35,8 @@ public class SanctuaryRegionController : AdminController
         ViewBag.SanctuaryRegion = await _useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(slug);
         if (ViewBag.SanctuaryRegion.Image != null && ViewBag.SanctuaryRegion.Image.Length > 0) 
         { 
-            ViewBag.SanctuaryRegionImage = await IFormFileToBase64(ViewBag.SanctuaryRegion.Image);
+            ViewBag.SanctuaryRegionImage = 
+                await ((ImageDisplayingInterface)this).IFormFileToBase64(ViewBag.SanctuaryRegion.Image);
         }
         return View("Admin/SanctuaryRegion/SanctuaryRegion");
     }
@@ -47,7 +48,8 @@ public class SanctuaryRegionController : AdminController
         ViewBag.SanctuaryRegion = await _useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(slug);
         if (ViewBag.SanctuaryRegion.Image != null && ViewBag.SanctuaryRegion.Image.Length > 0) 
         { 
-            ViewBag.SanctuaryRegionImage = IFormFileToBase64(ViewBag.SanctuaryRegion.Image);
+            ViewBag.SanctuaryRegionImage = 
+                ((ImageDisplayingInterface)this).IFormFileToBase64(ViewBag.SanctuaryRegion.Image);
         }
         return View("Admin/SanctuaryRegion/EditSanctuaryRegion");
     }

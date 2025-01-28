@@ -73,7 +73,7 @@ public class EntitySanctuaryRegion : INonRelatable, IPersistenceService
         return sanctuaryRegionDTO;
     }
 
-    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
+    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug, bool includeChildrenToTheResponse)
     {
         if (!EntitiesCollection.ItemsTypes.ContainsKey(slug))
         {

@@ -36,11 +36,23 @@ internal class DbSanctuarySide : DatabasePersistenceService
         return sanctuarySideDtos;
     }
 
-    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
+    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug, bool includeChildrenToTheResponse)
     {
-        var entity = await _dbContext.SanctuarySides
-            .Include(s => s.Church)
-            .FirstOrDefaultAsync(s => s.Slug == slug);
+        SanctuarySide? entity;
+        if (includeChildrenToTheResponse)
+        {
+            entity = await _dbContext.SanctuarySides
+                .Include(s => s.Church)
+                .Include(s => s.Regions)
+                .FirstOrDefaultAsync(s => s.Slug == slug);
+        }
+        else
+        {
+            entity = await _dbContext.SanctuarySides
+                .Include(s => s.Church)
+                .FirstOrDefaultAsync(s => s.Slug == slug); 
+        }
+        
         if (entity is null)
         {
             return null;
@@ -99,6 +111,21 @@ internal class DbSanctuarySide : DatabasePersistenceService
                 Image = new FormFile(sanctuarySideEntity.Church.Image, FileName, fileType)
             };
         }
+        
+        List<SanctuaryRegionDTO> sanctuaryRegionsDtos = new();
+
+        if (sanctuarySideEntity.Regions != null && sanctuarySideEntity.Regions.Count > 0)
+        {
+            foreach (var sanctuaryRegionEntity in sanctuarySideEntity.Regions)
+            {
+                sanctuaryRegionsDtos.Add(new SanctuaryRegionDTO
+                {
+                    Name = sanctuaryRegionEntity.Name,
+                    Slug = sanctuaryRegionEntity.Slug,
+                    Image = new FormFile(sanctuaryRegionEntity.Image, FileName, fileType)
+                });
+            }
+        }
 
         return new SanctuarySideDTO
         {
@@ -106,20 +133,8 @@ internal class DbSanctuarySide : DatabasePersistenceService
             Slug = sanctuarySideEntity.Slug,
             Position = sanctuarySideEntity.Position,
             ChurchSlug = sanctuarySideEntity.ChurchSlug,
-            Church = churchDto
+            Church = churchDto,
+            Regions = sanctuaryRegionsDtos
         };
-    }
-    
-    private async Task<byte[]> FormFileToBytes(IFormFile image)
-    {
-        //transferring file from IFormFile to byte[]
-        byte[] filebytes;
-        using (var ms = new MemoryStream())
-        {
-            await image.CopyToAsync(ms);
-            filebytes = ms.ToArray();
-        }
-
-        return filebytes;
     }
 }

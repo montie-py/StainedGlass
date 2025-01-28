@@ -25,9 +25,9 @@ internal class ChurchMapper : Mapper
         return await _persistenceService.ReplaceEntity(slug, transferChurchDto);
     }
 
-    public override async Task<Transferable?> GetDTOBySlug(string slug)
+    public override async Task<Transferable?> GetDTOBySlug(string slug, bool includeChildrenToTheResponse)
     {
-        var nullableTransferChurchDto = await _persistenceService.GetDtoBySlug(slug);
+        var nullableTransferChurchDto = await _persistenceService.GetDtoBySlug(slug, includeChildrenToTheResponse);
         if (nullableTransferChurchDto is null)
         {
             return null;

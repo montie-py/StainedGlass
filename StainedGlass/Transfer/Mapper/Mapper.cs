@@ -8,7 +8,7 @@ internal abstract class Mapper : Mappable
 {
     protected IPersistenceService _persistenceService;
     public abstract void SetInstance(IPersistenceTemplate template);
-    public abstract Task<Transferable?> GetDTOBySlug(string slug);
+    public abstract Task<Transferable?> GetDTOBySlug(string slug, bool includeChildrenToTheResponse);
 
     public abstract Task<ICollection<Transferable?>> GetAllDTOs();
 

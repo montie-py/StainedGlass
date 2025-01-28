@@ -27,7 +27,8 @@ public class ItemController : AdminController
             ViewBag.SanctuaryRegionsImages = new Dictionary<string, string>();
             foreach (var region in ViewBag.SanctuaryRegions)
             {
-                ViewBag.SanctuaryRegionsImages[region.Slug] = await IFormFileToBase64(region.Image);
+                ViewBag.SanctuaryRegionsImages[region.Slug] = 
+                    await ((ImageDisplayingInterface)this).IFormFileToBase64(region.Image);
             }
         }
         return View("Admin/Item/NewItem");
@@ -60,7 +61,8 @@ public class ItemController : AdminController
         }
         if (ViewBag.Item.SanctuaryRegion.Image != null && ViewBag.Item.SanctuaryRegion.Image.Length > 0)
         {
-            ViewBag.SanctuaryRegionImage = await IFormFileToBase64(ViewBag.Item.SanctuaryRegion.Image);
+            ViewBag.SanctuaryRegionImage = 
+                await ((ImageDisplayingInterface)this).IFormFileToBase64(ViewBag.Item.SanctuaryRegion.Image);
         }
         return View("Admin/Item/Item");
     }
@@ -91,7 +93,8 @@ public class ItemController : AdminController
         
         if (item.SanctuaryRegion.Image != null && item.SanctuaryRegion.Image.Length > 0)
         {
-            ViewBag.SanctuaryRegionImage = await IFormFileToBase64(item.SanctuaryRegion.Image);
+            ViewBag.SanctuaryRegionImage = 
+                await ((ImageDisplayingInterface)this).IFormFileToBase64(item.SanctuaryRegion.Image);
         }
         
         if (ViewBag.SanctuaryRegions != null)
@@ -99,7 +102,8 @@ public class ItemController : AdminController
             ViewBag.SanctuaryRegionsImages = new Dictionary<string, string>();
             foreach (var region in ViewBag.SanctuaryRegions)
             {
-                ViewBag.SanctuaryRegionsImages[region.Slug] = await IFormFileToBase64(region.Image);
+                ViewBag.SanctuaryRegionsImages[region.Slug] = 
+                    await ((ImageDisplayingInterface)this).IFormFileToBase64(region.Image);
             }
         }
         

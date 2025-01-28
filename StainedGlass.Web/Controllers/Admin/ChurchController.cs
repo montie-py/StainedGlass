@@ -34,7 +34,7 @@ public class ChurchController : AdminController
         ViewBag.Church = await _useCaseInteractor.GetDTOBySlug<ChurchDTO>(slug);
         if (ViewBag.Church.Image != null && ViewBag.Church.Image.Length > 0) 
         { 
-            ViewBag.ChurchImage = await IFormFileToBase64(ViewBag.Church.Image);
+            ViewBag.ChurchImage = await ((ImageDisplayingInterface)this).IFormFileToBase64(ViewBag.Church.Image);
         }
         return View("Admin/Church/Church");
     }
@@ -45,7 +45,7 @@ public class ChurchController : AdminController
         ViewBag.Church = await _useCaseInteractor.GetDTOBySlug<ChurchDTO>(slug);
         if (ViewBag.Church.Image != null && ViewBag.Church.Image.Length > 0) 
         { 
-            ViewBag.ChurchImage = await IFormFileToBase64(ViewBag.Church.Image);
+            ViewBag.ChurchImage = await ((ImageDisplayingInterface)this).IFormFileToBase64(ViewBag.Church.Image);
         }
         return View("Admin/Church/EditChurch");
     }

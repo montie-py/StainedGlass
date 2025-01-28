@@ -18,7 +18,7 @@ public class EntityChurch : INonRelatable, IPersistenceService
         return EntitiesCollection.Churches.Select(e => GetDTOForEntity(e.Value)).ToList();
     }
 
-    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
+    public async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug, bool includeChildrenToTheResponse)
     {
         if (!EntitiesCollection.Churches.ContainsKey(slug))
         {

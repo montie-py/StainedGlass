@@ -16,7 +16,7 @@ internal class DbItemImage : DatabasePersistenceService
         throw new NotImplementedException();
     }
 
-    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug)
+    public override async Task<IPersistanceTransferStruct?> GetDtoBySlug(string slug, bool includeChildrenToTheResponse)
     {
         throw new NotImplementedException();
     }

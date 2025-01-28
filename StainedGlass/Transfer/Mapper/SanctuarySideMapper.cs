@@ -2,6 +2,7 @@ using StainedGlass.Persistence.Templates;
 using StainedGlass.Persistence.Transfer;
 using ChurchDTO = StainedGlass.Transfer.DTOs.ChurchDTO;
 using SanctuarySideDTO = StainedGlass.Transfer.DTOs.SanctuarySideDTO;
+using SanctuaryRegionDTO = StainedGlass.Transfer.DTOs.SanctuaryRegionDTO;
 
 namespace StainedGlass.Transfer.Mapper;
 
@@ -26,9 +27,9 @@ internal class SanctuarySideMapper : Mapper
         return await _persistenceService.ReplaceEntity(slug, transferSanctuarySideDTO);
     }
 
-    public override async Task<Transferable?> GetDTOBySlug(string slug)
+    public override async Task<Transferable?> GetDTOBySlug(string slug, bool includeChildrenToTheResponse)
     {
-        var nullableTransferSanctuarySideDto = await _persistenceService.GetDtoBySlug(slug);
+        var nullableTransferSanctuarySideDto = await _persistenceService.GetDtoBySlug(slug, includeChildrenToTheResponse);
         if (nullableTransferSanctuarySideDto is null)
         {
             return null;
@@ -70,6 +71,21 @@ internal class SanctuarySideMapper : Mapper
                 Image = church.Image
             };
         }
+        
+        List<SanctuaryRegionDTO> sanctuaryRegionDtos = new List<SanctuaryRegionDTO>();
+
+        if (transferSanctuarySideDto.Regions != null && transferSanctuarySideDto.Regions.Count > 0)
+        {
+            foreach (var transferSanctuaryRegionDto in transferSanctuarySideDto.Regions)
+            {
+                sanctuaryRegionDtos.Add(new SanctuaryRegionDTO
+                {
+                    Name = transferSanctuaryRegionDto.Name,
+                    Slug = transferSanctuaryRegionDto.Slug,
+                    Image = transferSanctuaryRegionDto.Image
+                });
+            }
+        }
 
         return new SanctuarySideDTO
         {
@@ -77,7 +93,8 @@ internal class SanctuarySideMapper : Mapper
             Slug = transferSanctuarySideDto.Slug,
             Position = transferSanctuarySideDto.Position,
             ChurchSlug = transferSanctuarySideDto.ChurchSlug,
-            Church = churchDto
+            Church = churchDto,
+            Regions = sanctuaryRegionDtos
         };
     }
 }

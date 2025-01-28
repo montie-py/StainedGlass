@@ -24,9 +24,9 @@ internal class ItemTypeMapper : Mapper
         return await _persistenceService.ReplaceEntity(slug, transferItemTypeDto);
     }
 
-    public override async Task<Transferable?> GetDTOBySlug(string slug)
+    public override async Task<Transferable?> GetDTOBySlug(string slug, bool includeChildrenToTheResponse)
     {
-        var nullableTransferItemTypeDto = await _persistenceService.GetDtoBySlug(slug);
+        var nullableTransferItemTypeDto = await _persistenceService.GetDtoBySlug(slug, includeChildrenToTheResponse);
         if (nullableTransferItemTypeDto is null)
         {
             return null;

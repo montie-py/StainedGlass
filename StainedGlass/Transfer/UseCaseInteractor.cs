@@ -34,12 +34,12 @@ public class UseCaseInteractor : Persistor, InputBoundary
         return await dtoGeneric.RemoveEntity(slug);
     }
 
-    public async Task<T?> GetDTOBySlug<T>(string slug) where T : Transferable, new()
+    public async Task<T?> GetDTOBySlug<T>(string slug, bool includeChildrenToTheResponse = false) where T : Transferable, new()
     {
         T tranferable = new T();
         DTOGeneric<T?> dtoGeneric = new(_persistenceTemplate, tranferable);
 
-        return await dtoGeneric.GetDTOBySlug(slug);
+        return await dtoGeneric.GetDTOBySlug(slug, includeChildrenToTheResponse);
     }
     
     public async Task<ICollection<T>> GetAllDTOs<T>() where T : Transferable, new()
