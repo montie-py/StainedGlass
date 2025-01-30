@@ -16,7 +16,7 @@
   \**************************/
 /***/ (() => {
 
-eval("\nconsole.log(\"Hello, TypeScript!\");\n\n\n//# sourceURL=webpack://stainedglass.web/./src/front/app.ts?");
+eval("\nconsole.log(\"Hello, TypeScript!\");\ndocument.addEventListener('htmx:afterRequest', function (event) {\n    // Your JavaScript function to be called after the AJAX request\n    console.log('done!');\n});\n\n\n//# sourceURL=webpack://stainedglass.web/./src/front/app.ts?");
 
 /***/ })
 

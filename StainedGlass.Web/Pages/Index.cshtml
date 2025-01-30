@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Sanctuary Map";
 }
-<div id="mapContent" class="inline-block">
+<div id="mapContent" class="inline-block relative">
     <h3>@Model.Church.Name</h3>
     <div class="inline-block relative" id="map">
         <img src="data:image/jpeg;base64,@Model.ChurchImage" alt="@Model.Church.Name Sanctuary Map" class="w-full">
@@ -16,10 +16,12 @@
                 text-2xl cursor-pointer font-bold border-4 border-black 
                 rounded side"
                     style="@sanctuarySide.Position"
-                    data-type="@sanctuarySide.Slug">
+                    hx-get="/front/sanctuaryside/@sanctuarySide.Slug"
+                    hx-target="#popup">
                     @sanctuarySide.Name
                 </div>
             }
         }
     </div>
+    <div class="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]" id="popup"></div>
 </div>

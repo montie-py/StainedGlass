@@ -1,0 +1,12 @@
+﻿<div class="" style="width: 150px;">
+    @foreach(var SanctuaryRegion in ViewBag.SanctuarySide.Regions)
+    {
+        <div class="inline-block border mb-5 cursor-pointer">
+            <img 
+                width="150px"
+                src="data:image/jpeg;base64,@ViewBag.SanctuaryRegionImages[SanctuaryRegion.Slug]" 
+                alt="Sanctuary Region >@SanctuaryRegion.Name Image" />
+            <p class="text-center" >@SanctuaryRegion.Name</p>
+        </div>
+    }
+</div>

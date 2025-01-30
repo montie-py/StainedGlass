@@ -31,6 +31,6 @@ public class FrontController : Controller, ImageDisplayingInterface
             }   
         }
         
-        return PartialView("_SanctuarySide");
+        return PartialView("_SanctuaryRegions");
     }
 }
