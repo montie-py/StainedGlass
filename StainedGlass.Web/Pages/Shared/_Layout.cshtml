@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="~/css/bootstrap-icons.min.css" asp-append-version="true" />
 </head>
 <body>
-    
+<div 
+    id="overlay"
+    class="fixed top-[0] left-0 top-0 w-full h-full bg-black opacity-40 z-10 hidden"
+    ></div>
 <div class="container">
     <main role="main" class="pb-3">
         @RenderBody()

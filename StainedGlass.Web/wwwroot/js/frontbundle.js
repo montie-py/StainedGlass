@@ -16,7 +16,7 @@
   \**************************/
 /***/ (() => {
 
-eval("\nconsole.log(\"Hello, TypeScript!\");\ndocument.addEventListener('htmx:afterRequest', function (event) {\n    // Your JavaScript function to be called after the AJAX request\n    console.log('done!');\n});\n\n\n//# sourceURL=webpack://stainedglass.web/./src/front/app.ts?");
+eval("\nconsole.log(\"Hello, TypeScript!\");\nvar overlayElement = document.getElementById('overlay');\ndocument.addEventListener('htmx:afterRequest', function (event) {\n    // Your JavaScript function to be called after the AJAX request\n    if (overlayElement) {\n        overlayElement.style.display = 'block';\n    }\n    closePopupFunctionality();\n});\nfunction closePopupFunctionality() {\n    var closePopupElement = document.getElementById('closePopup');\n    if (closePopupElement) {\n        closePopupElement.addEventListener('click', function (event) {\n            if (overlayElement) {\n                overlayElement.style.display = 'none';\n            }\n            var popupContentElement = closePopupElement.closest('.popup-content');\n            if (popupContentElement) {\n                popupContentElement.remove();\n            }\n        });\n    }\n}\n\n\n//# sourceURL=webpack://stainedglass.web/./src/front/app.ts?");
 
 /***/ })
 
