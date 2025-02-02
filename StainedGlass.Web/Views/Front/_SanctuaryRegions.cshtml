@@ -16,7 +16,12 @@
             marginBottomStyle = "";
         }
 
-        <div class="inline-block border border-black rounded-sm cursor-pointer opacity-100 hover:opacity-60 @marginBottomStyle">
+        <div 
+            class="inline-block border border-black rounded-sm cursor-pointer opacity-100 hover:opacity-60 @marginBottomStyle"
+            hx-get="/front/sanctuaryregion/@SanctuaryRegion.Slug"
+            hx-target="#popup"
+            hx-swap="beforeend" 
+        >
             <img
                 width="350px"
                 src="data:image/jpeg;base64,@ViewBag.SanctuaryRegionImages[SanctuaryRegion.Slug]"
@@ -24,5 +29,5 @@
             <p class="text-center mt-5 bg-[wheat]">@SanctuaryRegion.Name</p>
         </div>
     }
-    <span class="absolute -right-3 -top-4 cursor-pointer" id="closePopup">X</span>
+    <span class="absolute -right-3 -top-4 cursor-pointer close-popup">X</span>
 </div>

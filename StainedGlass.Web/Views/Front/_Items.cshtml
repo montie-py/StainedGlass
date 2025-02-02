@@ -1,17 +1,4 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - StainedGlass.Web</title>
-    <link rel="stylesheet" href="~/css/tailwind.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/tailwind_output.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/StainedGlass.Web.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/bootstrap-icons.min.css" asp-append-version="true" />
-</head>
-<body>
-
-<div
+﻿<div
     class="popup-content bg-white rounded-sm relative"
     style="width: 350px;">
     <div class="relative">
@@ -34,11 +21,6 @@
             }
         }
     </div>
-    <i class="bi bi-arrow-return-left absolute right-2 -top-4 cursor-pointer" id="returnToPrevious"></i>
-    <span class="absolute -right-3 -top-4 cursor-pointer" id="closePopup">X</span>
+    <i class="bi bi-arrow-return-left absolute right-2 -top-4 cursor-pointer" id="back"></i>
+    <span class="absolute -right-3 -top-4 cursor-pointer close-popup">X</span>
 </div>
-
-<script src="~/js/htmx.min.js" asp-append-version="true"></script>
-<script src="~/js/frontbundle.js"></script>
-</body>
-</html>
