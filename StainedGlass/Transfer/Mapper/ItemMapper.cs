@@ -63,6 +63,7 @@ internal class  ItemMapper : Mapper
         {
             Name = transferItemDto.ItemType.Name,
             Slug = transferItemDto.ItemType.Slug,
+            IconSlug = transferItemDto.ItemType.IconSlug
         };
         
         //setting relatedItems

@@ -14,6 +14,7 @@ internal class DbItemType : DatabasePersistenceService
         {
             Name = itemStruct.Name,
             Slug = itemStruct.Slug,
+            IconSlug = itemStruct.IconSlug
         };
         _dbContext.ItemTypes.Add(itemTypeEntity);
         await _dbContext.SaveChangesAsync();
@@ -29,6 +30,7 @@ internal class DbItemType : DatabasePersistenceService
             {
                 Name = itemType.Name,
                 Slug = itemType.Slug,
+                IconSlug = itemType.IconSlug
             };
             itemTypeDtos.Add(itemTypeDto);
         }
@@ -66,6 +68,7 @@ internal class DbItemType : DatabasePersistenceService
         {
             Name = entity.Name,
             Slug = entity.Slug,
+            IconSlug = entity.IconSlug,
             Items = itemTypeItems
         };
     }
@@ -78,6 +81,7 @@ internal class DbItemType : DatabasePersistenceService
         {
             var itemStruct = (ItemTypeDTO)GetDtoFromTransfer(transferStruct);
             itemType.Name = itemStruct.Name;
+            itemType.IconSlug = itemStruct.IconSlug;
             await _dbContext.SaveChangesAsync();
         }
 
@@ -109,6 +113,7 @@ internal class DbItemType : DatabasePersistenceService
         {
             Name = itemTypeEntity.Name,
             Slug = itemTypeEntity.Slug,
+            IconSlug = itemTypeEntity.IconSlug
         };
     }
     

@@ -89,7 +89,7 @@ namespace StainedGlass.Persistence.Migrations
 
                     b.HasIndex("ItemSlug");
 
-                    b.ToTable("ItemImages");
+                    b.ToTable("ItemImages", (string)null);
                 });
 
             modelBuilder.Entity("StainedGlass.Persistence.Entities.ItemRelation", b =>
@@ -110,6 +110,10 @@ namespace StainedGlass.Persistence.Migrations
             modelBuilder.Entity("StainedGlass.Persistence.Entities.ItemType", b =>
                 {
                     b.Property<string>("Slug")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("IconSlug")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")

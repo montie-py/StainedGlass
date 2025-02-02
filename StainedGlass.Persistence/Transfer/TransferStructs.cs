@@ -59,6 +59,7 @@ namespace StainedGlass.Persistence.Transfer
     {
         public string Name { get; set; }
         public string Slug { get; set; }
+        public string IconSlug { get; set; }
         public ICollection<ItemDTO> Items { get; set; }
     }
 

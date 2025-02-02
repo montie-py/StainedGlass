@@ -234,6 +234,7 @@ internal class DbItem : DatabasePersistenceService
         {
             Name = itemEntity.ItemType.Name,
             Slug = itemEntity.ItemType.Slug,
+            IconSlug = itemEntity.ItemType.IconSlug
         };
 
         var newItemDto = new ItemDTO

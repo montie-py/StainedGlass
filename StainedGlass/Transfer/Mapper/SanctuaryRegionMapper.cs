@@ -2,6 +2,8 @@ using StainedGlass.Persistence.Templates;
 using StainedGlass.Persistence.Transfer;
 using SanctuarySideDTO = StainedGlass.Transfer.DTOs.SanctuarySideDTO;
 using SanctuaryRegionDTO = StainedGlass.Transfer.DTOs.SanctuaryRegionDTO;
+using ItemDTO = StainedGlass.Transfer.DTOs.ItemDTO;
+using ItemTypeDTO = StainedGlass.Transfer.DTOs.ItemTypeDTO;
 
 namespace StainedGlass.Transfer.Mapper;
 
@@ -71,6 +73,22 @@ internal class SanctuaryRegionMapper : Mapper
             };
         }
 
+        var itemsDtos = new HashSet<ItemDTO>();
+        if (transferSanctuaryRegionDto.Items != null && transferSanctuaryRegionDto.Items.Count > 0)
+        {
+            transferSanctuaryRegionDto.Items.ToList().ForEach(i => itemsDtos.Add(new ItemDTO
+            {
+                Title = i.Title,
+                Slug = i.Slug,
+                Position = i.Position,
+                ItemType = new ItemTypeDTO
+                {
+                    Slug = i.ItemType.Slug,
+                    IconSlug = i.ItemType.IconSlug,
+                }
+            }));
+        }
+
         return new SanctuaryRegionDTO
         {
             Name = transferSanctuaryRegionDto.Name,
@@ -78,7 +96,8 @@ internal class SanctuaryRegionMapper : Mapper
             Description = transferSanctuaryRegionDto.Description,
             Image = transferSanctuaryRegionDto.Image,
             SanctuarySideSlug = transferSanctuaryRegionDto.SanctuarySideSlug,
-            SanctuarySide = sanctuarySideDto
+            SanctuarySide = sanctuarySideDto,
+            Items = itemsDtos
         };
     }
 }

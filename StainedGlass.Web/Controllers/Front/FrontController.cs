@@ -17,7 +17,7 @@ public class FrontController : Controller, ImageDisplayingInterface
     }
 
     [HttpGet("sanctuaryside/{slug}")]
-    public async Task<IActionResult> SanctuarySide(string slug)
+    public async Task<IActionResult> SanctuaryRegionsBySide(string slug)
     {
         var includeChildrenToTheResponse = true;
         ViewBag.SanctuarySide = await _useCaseInteractor.GetDTOBySlug<SanctuarySideDTO>(slug, includeChildrenToTheResponse);
@@ -32,5 +32,14 @@ public class FrontController : Controller, ImageDisplayingInterface
         }
         
         return PartialView("_SanctuaryRegions");
+    }
+
+    [HttpGet("sanctuaryregion/{slug}")]
+    public async Task<IActionResult> ItemsByRegion(string slug)
+    {
+        var includeChildrenToTheResponse = true;
+        ViewBag.SanctuaryRegion = await _useCaseInteractor.GetDTOBySlug<SanctuaryRegionDTO>(slug, includeChildrenToTheResponse);
+        ViewBag.SanctuaryRegionImage = await ((ImageDisplayingInterface)this).IFormFileToBase64(ViewBag.SanctuaryRegion.Image);
+        return PartialView("_Items");
     }
 }

@@ -48,6 +48,7 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
             entity = await _dbContext.SanctuaryRegions
                 .Include(s => s.SanctuarySide)
                 .Include(s => s.Items)
+                .ThenInclude(item => item.ItemType)
                 .FirstOrDefaultAsync(s => s.Slug == slug);
         }
         else
@@ -120,6 +121,22 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
             };
         }
 
+        var ItemsDtos = new HashSet<ItemDTO>();
+        if (sanctuaryRegionEntity.Items != null && sanctuaryRegionEntity.Items.Count > 0)
+        {
+            sanctuaryRegionEntity.Items.ToList().ForEach(i => ItemsDtos.Add(new ItemDTO
+            {
+                Title = i.Title,
+                Slug = i.Slug,
+                Position = i.Position,
+                ItemType = new ItemTypeDTO
+                {
+                    Slug = i.ItemType.Slug,
+                    IconSlug = i.ItemType.IconSlug,
+                }
+            }));
+        }
+
         return new SanctuaryRegionDTO
         {
             Name = sanctuaryRegionEntity.Name,
@@ -127,7 +144,8 @@ internal class DbSanctuaryRegion : DatabasePersistenceService
             Image = new FormFile(sanctuaryRegionEntity.Image, FileName, fileType),
             Description = sanctuaryRegionEntity.Description,
             SanctuarySideSlug = sanctuaryRegionEntity.SanctuarySideSlug,
-            SanctuarySide = sanctuarySideDto
+            SanctuarySide = sanctuarySideDto,
+            Items = ItemsDtos
         };
     }
     

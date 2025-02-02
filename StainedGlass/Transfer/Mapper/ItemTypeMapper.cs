@@ -76,6 +76,7 @@ internal class ItemTypeMapper : Mapper
         {
             Name = transferItemTypeDto.Name,
             Slug = transferItemTypeDto.Slug,
+            IconSlug = transferItemTypeDto.IconSlug,
             Items = itemDtos
         };
     }

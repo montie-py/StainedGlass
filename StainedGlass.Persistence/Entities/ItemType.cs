@@ -7,6 +7,7 @@ internal class ItemType : IEntity
     [Key]
     public required string Slug { get; set; }
     public required string Name { get; set; }
+    public required string IconSlug { get; set; }
 
     public ICollection<Item>? Items { get; set; }
 }

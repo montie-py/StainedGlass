@@ -4,7 +4,7 @@
     ViewData["Title"] = "Sanctuary Map";
 }
 <div id="mapContent" class="inline-block relative">
-    <h3>@Model.Church.Name</h3>
+    <h3 class="text-center">@Model.Church.Name</h3>
     <div class="inline-block relative" id="map">
         <img src="data:image/jpeg;base64,@Model.ChurchImage" alt="@Model.Church.Name Sanctuary Map" class="w-full">
         @if (Model.Church.Sides.Count > 0)
@@ -17,7 +17,8 @@
                 rounded side"
                     style="@sanctuarySide.Position"
                     hx-get="/front/sanctuaryside/@sanctuarySide.Slug"
-                    hx-target="#popup">
+                    hx-target="#popup"
+                    hx-swap="beforeend">
                     @sanctuarySide.Name
                 </div>
             }

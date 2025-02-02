@@ -4,21 +4,23 @@
     int elementsCount = 0;
     string marginBottomStyle = "mb-2";
 }
-<div 
+<div
     class="popup-content bg-white rounded-sm relative"
-    style="width: 150px;">
-    @foreach(var SanctuaryRegion in sanctuaryRegions)
+    style="width: 350px;">
+    <p class="text-center">@ViewBag.SanctuarySide.Name Side</p>
+    @foreach (var SanctuaryRegion in sanctuaryRegions)
     {
         elementsCount++;
         @if (elementsCount == sanctuaryRegions.Count)
         {
             marginBottomStyle = "";
         }
+
         <div class="inline-block border border-black rounded-sm cursor-pointer opacity-100 hover:opacity-60 @marginBottomStyle">
-            <img 
-                width="150px"
-                src="data:image/jpeg;base64,@ViewBag.SanctuaryRegionImages[SanctuaryRegion.Slug]" 
-                alt="Sanctuary Region >@SanctuaryRegion.Name Image" />
+            <img
+                width="350px"
+                src="data:image/jpeg;base64,@ViewBag.SanctuaryRegionImages[SanctuaryRegion.Slug]"
+                alt="Sanctuary Region >@SanctuaryRegion.Name Image"/>
             <p class="text-center mt-5 bg-[wheat]">@SanctuaryRegion.Name</p>
         </div>
     }

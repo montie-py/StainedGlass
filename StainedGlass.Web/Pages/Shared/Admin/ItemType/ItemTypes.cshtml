@@ -16,6 +16,7 @@
         <th scope="col">#</th>
         <th scope="col">Name</th>
         <th scope="col">Slug</th>
+        <th scope="col">Icon Slug</th>
         <th scope="col">Actions</th>
     </tr>
     </thead>
@@ -28,6 +29,7 @@
                 <th scope="row">@count</th>
                 <td>@item.Name</td>
                 <td><a href="/admin/itemtype/@item.Slug">@item.Slug</a></td>
+                <td>@item.IconSlug</td>
                 <td>
                     <a href="/admin/itemtype/@item.Slug/edit">Edit</a>
                     <form>

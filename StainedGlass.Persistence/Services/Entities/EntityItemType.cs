@@ -63,6 +63,7 @@ public class EntityItemType : INonRelatable, IPersistenceService
         {
             Name = ItemTypeEntity.Name,
             Slug = ItemTypeEntity.Slug,
+            IconSlug = ItemTypeEntity.IconSlug
         };
     }
 
@@ -77,6 +78,7 @@ public class EntityItemType : INonRelatable, IPersistenceService
         {
             Name = itemTypeDTO.Value.Name,
             Slug = itemTypeDTO.Value.Slug,
+            IconSlug = itemTypeDTO.Value.IconSlug
         };
     }
 }
