@@ -1,0 +1,39 @@
+﻿<div
+    class="popup-content bg-white rounded-sm relative"
+    style="width: 350px;">
+    <div class="relative">
+        <h3 class="text-center text-xl font-bold">@ViewBag.Item.Title</h3>
+        <br/>
+        <p class="italic bg-neutral-400/50 rounded py-4 px-1">@ViewBag.Item.Description</p>
+        <br/>
+        <p class="underline underline-offset-2">Type:</p>
+        <p>@ViewBag.Item.ItemType.Name</p>
+        <br/>
+        @if (ViewBag.Item.RelatedItems.Count > 0)
+        {
+            <p class="underline underline-offset-2">Related items:</p>
+            foreach (var RelatedItem in ViewBag.Item.RelatedItems)
+            {
+                <span
+                    hx-get="/front/item/@RelatedItem.Key"
+                    hx-target="#popup"
+                    hx-swap="beforeend"
+                    class="text-sky-400 hover:underline cursor-pointer"
+                >@RelatedItem.Value.Title</span>
+            }
+            <br/>
+            <br/>
+        }
+        
+        @foreach (string itemImage in ViewBag.ItemImages)
+        {
+            <img
+                width="350px"
+                src="data:image/jpeg;base64,@itemImage"
+                alt="Item @ViewBag.Item.Title Image"/>
+            <br/>
+        }
+    </div>
+    <i class="bi bi-arrow-return-left absolute right-2 -top-4 cursor-pointer back"></i>
+    <span class="absolute -right-3 -top-4 cursor-pointer close-popup">X</span>
+</div>

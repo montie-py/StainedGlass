@@ -5,6 +5,7 @@
 }
 <div id="mapContent" class="inline-block relative">
     <h3 class="text-center">@Model.Church.Name</h3>
+    <p class="italic">@Model.Church.Description</p>
     <div class="inline-block relative" id="map">
         <img src="data:image/jpeg;base64,@Model.ChurchImage" alt="@Model.Church.Name Sanctuary Map" class="w-full">
         @if (Model.Church.Sides.Count > 0)
@@ -25,6 +26,7 @@
         }
     </div>
     <div 
-        class="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-50 p-3 bg-white" 
+        class="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-50 p-3 bg-white overflow-auto"
+        style="max-height: 500px;"
         id="popup"></div>
 </div>

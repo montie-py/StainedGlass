@@ -1,6 +1,9 @@
 ﻿<div
     class="popup-content bg-white rounded-sm relative"
     style="width: 350px;">
+    <h3 class="text-center">@ViewBag.SanctuaryRegion.Name</h3>
+    <p class="italic">@ViewBag.SanctuaryRegion.Description</p>
+
     <div class="relative">
         <img
             width="350px"
@@ -14,13 +17,14 @@
                 text-l cursor-pointer text-3xl
                 side bi @item.ItemType.IconSlug"
                     style="@item.Position"
-                    hx-get="/front/sanctuaryside/@item.Slug"
+                    hx-get="/front/item/@item.Slug"
                     hx-target="#popup"
                     hx-swap="beforeend">
+                    <img id="indicator" class="htmx-indicator absolute" src="/img/spinner.gif"/>
                 </i>
             }
         }
     </div>
-    <i class="bi bi-arrow-return-left absolute right-2 -top-4 cursor-pointer" id="back"></i>
+    <i class="bi bi-arrow-return-left absolute right-2 -top-4 cursor-pointer back"></i>
     <span class="absolute -right-3 -top-4 cursor-pointer close-popup">X</span>
 </div>

@@ -25,15 +25,19 @@ document.addEventListener('htmx:afterRequest', function(event) {
 
 class PopupFunctionality {
     goBack() {
-        const backButton = document.getElementById('back') as HTMLElement;
-        if (backButton)
+        const backButtons = document.getElementsByClassName('back') as unknown as HTMLCollection;
+        if (backButtons)
         {
-            backButton.addEventListener('click', (e) => {
-                const popupContentDivs = document.querySelectorAll('.popup-content') as unknown as HTMLDivElement[];
+            const backButtonsElementsArray = Array.from(backButtons);
+            
+            backButtonsElementsArray.forEach(backButtonElement => {
+                backButtonElement.addEventListener('click', (e) => {
+                    const popupContentDivs = document.querySelectorAll('.popup-content') as unknown as HTMLDivElement[];
 
-                //removing the current .popup-content element and revealing the previous one 
-                popupContentDivs[popupContentDivs.length - 1].remove();
-                popupContentDivs[popupContentDivs.length - 2].style.display = 'block';
+                    //removing the current .popup-content element and revealing the previous one 
+                    popupContentDivs[popupContentDivs.length - 1].remove();
+                    popupContentDivs[popupContentDivs.length - 2].style.display = 'block';
+                }); 
             });
         }
     }

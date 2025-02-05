@@ -42,4 +42,16 @@ public class FrontController : Controller, ImageDisplayingInterface
         ViewBag.SanctuaryRegionImage = await ((ImageDisplayingInterface)this).IFormFileToBase64(ViewBag.SanctuaryRegion.Image);
         return PartialView("_Items");
     }
+
+    [HttpGet("item/{slug}")]
+    public async Task<IActionResult> Item(string slug)
+    {
+        ViewBag.Item = await _useCaseInteractor.GetDTOBySlug<ItemDTO>(slug);
+        ViewBag.ItemImages = new List<string>();
+        foreach (var ItemImage in ViewBag.Item.ItemImages)
+        {
+            ViewBag.ItemImages.Add(await ((ImageDisplayingInterface)this).IFormFileToBase64(ItemImage));
+        }
+        return PartialView("_Item");
+    }
 }
