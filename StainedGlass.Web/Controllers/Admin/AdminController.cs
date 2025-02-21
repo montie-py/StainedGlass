@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace StainedGlass.Web.Controllers.Admin;
 
+[Authorize(Policy = "AdminOnly")]
 public abstract class AdminController : Controller, ImageDisplayingInterface
 {
     public abstract Task<IActionResult> New();
